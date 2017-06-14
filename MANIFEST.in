@@ -1,0 +1,4 @@
+include *.txt
+include nixnet/VERSION
+recursive-include nixnet_examples *.py
+recursive-include tests *.py
