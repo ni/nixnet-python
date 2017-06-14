@@ -1,6 +1,8 @@
-[ ] This contribution adheres to [CONTRIBUTING.md](https://github.com/ni/<reponame>/blob/master/CONTRIBUTING.md).
+[ ] This contribution adheres to [CONTRIBUTING.md](https://github.com/ni/nixnet-python/blob/master/CONTRIBUTING.rst).
+[ ] New tests have been created for any new features or regression tests for bugfixes.
+[ ] `tox` successfully runs, including unit tests and style checks (see [CONTRIBUTING.md](https://github.com/ni/nixnet-python/blob/master/CONTRIBUTING.rst)).
 
-TODO: Check the above box with an 'x' indicating you've read and followed [CONTRIBUTING.md](https://github.com/ni/<reponame>/blob/master/CONTRIBUTING.md).
+TODO: Check the above boxes with an 'x' to indicate what steps you have taken in preparing this Pull Request.
 
 ### What does this Pull Request accomplish?
 
