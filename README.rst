@@ -3,6 +3,10 @@ Info         Contains a Python API for interacting with NI-XNET. See `GitHub <ht
 Author       National Instruments
 ===========  =================================================================================================================================
 
+.. image:: https://pyup.io/repos/github/ni/nixnet-python/shield.svg
+     :target: https://pyup.io/repos/github/ni/nixnet-python/
+     :alt: Updates
+
 About
 =====
 
