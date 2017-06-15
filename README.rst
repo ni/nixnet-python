@@ -5,7 +5,7 @@ Author       National Instruments
 
 .. image:: https://travis-ci.org/ni/nixnet-python.svg?branch=master
     :target: https://travis-ci.org/ni/nixnet-python
-     :alt: Build
+    :alt: Build
 
 .. image:: https://pyup.io/repos/github/ni/nixnet-python/shield.svg
      :target: https://pyup.io/repos/github/ni/nixnet-python/
