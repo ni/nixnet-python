@@ -4,7 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 
-import ctypes
+import ctypes  # type: ignore
 import sys
 
 
