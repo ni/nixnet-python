@@ -50,7 +50,7 @@ class XnetLibrary(object):
             raise XnetFunctionNotSupportedError(function)
 
 
-def _import_win_lib(self):
+def _import_win_lib():
     lib_name = "nixnet"
     try:
         cdll = ctypes.cdll.LoadLibrary(lib_name)
@@ -59,7 +59,7 @@ def _import_win_lib(self):
     return XnetLibrary(cdll)
 
 
-def _import_unsupported(self):
+def _import_unsupported():
     raise PlatformUnsupportedError(sys.platform)
 
 
