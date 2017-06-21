@@ -641,7 +641,7 @@ class XnetLibrary(object):
         cfunc = self.cdll.nxdbCloseDatabase
         cfunc.argtypes = [
             _ctypedefs.nxDatabaseRef_t,
-            _ctypedefs.u32]
+            _ctypedefs.bool32]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
             database_ref,
