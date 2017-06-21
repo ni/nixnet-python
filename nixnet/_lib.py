@@ -7,36 +7,34 @@ from __future__ import unicode_literals
 import ctypes
 import sys
 
-
-class Error(Exception):
-    pass
+from nixnet import errors
 
 
-class PlatformUnsupportedError(Error):
+class PlatformUnsupportedError(errors.Error):
 
     def __init__(self, platform):
         message = '{0} is unsupported by this package.'.format(platform)
-        Error.__init__(self, message, platform)
+        super(PlatformUnsupportedError, self).__init__(message, platform)
 
 
-class XnetNotFoundError(Error):
+class XnetNotFoundError(errors.Error):
 
     def __init__(self, *args):
         message = (
             'Could not find an installation of NI-XNET. Please '
             'ensure that NI-XNET is installed on this machine or '
             'contact National Instruments for support.')
-        Error.__init__(self, message, *args)
+        super(XnetNotFoundError, self).__init__(message, *args)
 
 
-class XnetFunctionNotSupportedError(Error):
+class XnetFunctionNotSupportedError(errors.Error):
 
     def __init__(self, function):
         message = (
             'The NI-XNET function "{0}" is not supported in this '
             'version of NI-XNET. Visit ni.com/downloads to upgrade your '
             'version of NI-XNET.'.format(function))
-        Error.__init__(self, message, function)
+        super(XnetFunctionNotSupportedError, self).__init__(message, function)
 
 
 class XnetLibrary(object):
@@ -52,7 +50,7 @@ class XnetLibrary(object):
             raise XnetFunctionNotSupportedError(function)
 
 
-def _import_win_lib(self):
+def _import_win_lib():
     lib_name = "nixnet"
     try:
         cdll = ctypes.cdll.LoadLibrary(lib_name)
@@ -61,7 +59,7 @@ def _import_win_lib(self):
     return XnetLibrary(cdll)
 
 
-def _import_unsupported(self):
+def _import_unsupported():
     raise PlatformUnsupportedError(sys.platform)
 
 
