@@ -18,6 +18,10 @@ class char(ctypes.c_char):  # NOQA: N801
     pass
 
 
+class char_p(ctypes.c_char_p):  # NOQA: N801
+    pass
+
+
 class bool32(ctypes.c_uint):  # NOQA: N801
     """32-bit boolean C-type."""
 
