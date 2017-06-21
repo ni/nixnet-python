@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import warnings
 
+from nixnet import _props
 from nixnet import constants
 from nixnet import errors
 
@@ -79,11 +80,11 @@ class Session(object):
 
     @property
     def intf_baud_rate(self):
-        raise NotImplementedError("Placeholder")
+        return _props.get_session_intf_baud_rate(self._handle)
 
     @intf_baud_rate.setter
     def intf_baud_rate(self, value):
-        raise NotImplementedError("Placeholder")
+        _props.set_session_intf_baud_rate(self._handle, value)
 
 
 def create_session_by_ref(
