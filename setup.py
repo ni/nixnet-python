@@ -44,7 +44,7 @@ setup(
         'enum34;python_version<"3.4"',
         'six'
     ],
-    tests_require=['pytest'],
+    tests_require=['pytest', 'mock'],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",

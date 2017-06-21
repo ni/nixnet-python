@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import unittest.mock
+import mock
 
 import pytest
 
@@ -14,15 +14,15 @@ from nixnet import _errors
 from nixnet import errors
 
 
-MockXnetLibrary = unittest.mock.create_autospec(_cfuncs.XnetLibrary, spec_set=True, instance=True)
+MockXnetLibrary = mock.create_autospec(_cfuncs.XnetLibrary, spec_set=True, instance=True)
 
 
-@unittest.mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 def test_success():
     _errors.check_for_error(_cconsts.NX_SUCCESS)
 
 
-@unittest.mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 def test_known_error():
     with pytest.raises(errors.XnetError) as excinfo:
         _errors.check_for_error(_enums.Err.SELF_TEST_ERROR1.value)
@@ -31,7 +31,7 @@ def test_known_error():
     assert excinfo.value.args == ('', )
 
 
-@unittest.mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 def test_unknown_error():
     error_code = -201232  # Arbitrary number
     # Ensure it is an unknown error
@@ -47,7 +47,7 @@ def test_unknown_error():
     assert excinfo.value.args == ('', )
 
 
-@unittest.mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 def test_known_warning():
     with pytest.warns(errors.XnetWarning) as record:
         _errors.check_for_error(_enums.Warn.DATABASE_IMPORT.value)
@@ -57,7 +57,7 @@ def test_known_warning():
     assert record[0].message.args == ('Warning 1073098885 occurred.\n\n', )
 
 
-@unittest.mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 def test_unknown_warning():
     error_code = 201232  # Arbitrary number
     # Ensure it is an unknown error
