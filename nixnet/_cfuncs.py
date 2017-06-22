@@ -36,10 +36,10 @@ class XnetLibrary(object):
             session_ref):
         cfunc = self.cdll.nxCreateSession
         cfunc.argtypes = [
-            ctypes.POINTER(_ctypedefs.char),
-            ctypes.POINTER(_ctypedefs.char),
-            ctypes.POINTER(_ctypedefs.char),
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
+            _ctypedefs.char_p,
+            _ctypedefs.char_p,
+            _ctypedefs.char_p,
             _ctypedefs.u32,
             ctypes.POINTER(_ctypedefs.nxSessionRef_t)]
         cfunc.restype = _ctypedefs.nxStatus_t
@@ -62,7 +62,7 @@ class XnetLibrary(object):
         cfunc.argtypes = [
             _ctypedefs.u32,
             ctypes.POINTER(_ctypedefs.nxDatabaseRef_t),
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             _ctypedefs.u32,
             ctypes.POINTER(_ctypedefs.nxSessionRef_t)]
         cfunc.restype = _ctypedefs.nxStatus_t
@@ -503,8 +503,8 @@ class XnetLibrary(object):
         cfunc = self.cdll.nxConnectTerminals
         cfunc.argtypes = [
             _ctypedefs.nxSessionRef_t,
-            ctypes.POINTER(_ctypedefs.char),
-            ctypes.POINTER(_ctypedefs.char)]
+            _ctypedefs.char_p,
+            _ctypedefs.char_p]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
             session_ref,
@@ -519,8 +519,8 @@ class XnetLibrary(object):
         cfunc = self.cdll.nxDisconnectTerminals
         cfunc.argtypes = [
             _ctypedefs.nxSessionRef_t,
-            ctypes.POINTER(_ctypedefs.char),
-            ctypes.POINTER(_ctypedefs.char)]
+            _ctypedefs.char_p,
+            _ctypedefs.char_p]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
             session_ref,
@@ -572,7 +572,7 @@ class XnetLibrary(object):
         cfunc.argtypes = [
             _ctypedefs.nxStatus_t,
             _ctypedefs.u32,
-            ctypes.POINTER(_ctypedefs.char)]
+            _ctypedefs.char_p]
         cfunc.restype = None
         return cfunc(
             status,
@@ -627,7 +627,7 @@ class XnetLibrary(object):
             database_ref):
         cfunc = self.cdll.nxdbOpenDatabase
         cfunc.argtypes = [
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
@@ -641,7 +641,7 @@ class XnetLibrary(object):
         cfunc = self.cdll.nxdbCloseDatabase
         cfunc.argtypes = [
             _ctypedefs.nxDatabaseRef_t,
-            _ctypedefs.u32]
+            _ctypedefs.bool32]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
             database_ref,
@@ -657,7 +657,7 @@ class XnetLibrary(object):
         cfunc.argtypes = [
             _ctypedefs.nxDatabaseRef_t,
             _ctypedefs.u32,
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
@@ -676,7 +676,7 @@ class XnetLibrary(object):
         cfunc.argtypes = [
             _ctypedefs.nxDatabaseRef_t,
             _ctypedefs.u32,
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
@@ -702,7 +702,7 @@ class XnetLibrary(object):
         cfunc = self.cdll.nxdbSaveDatabase
         cfunc.argtypes = [
             _ctypedefs.nxDatabaseRef_t,
-            ctypes.POINTER(_ctypedefs.char)]
+            _ctypedefs.char_p]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
             database_ref,
@@ -772,7 +772,7 @@ class XnetLibrary(object):
         cfunc.argtypes = [
             _ctypedefs.nxDatabaseRef_t,
             _ctypedefs.u32,
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             ctypes.POINTER(_ctypedefs.u32)]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
@@ -793,9 +793,9 @@ class XnetLibrary(object):
         cfunc.argtypes = [
             _ctypedefs.nxDatabaseRef_t,
             _ctypedefs.u32,
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             _ctypedefs.u32,
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             ctypes.POINTER(_ctypedefs.u32)]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
@@ -819,7 +819,7 @@ class XnetLibrary(object):
             _ctypedefs.nxDatabaseRef_t,
             _ctypedefs.nxDatabaseRef_t,
             _ctypedefs.u32,
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             _ctypedefs.u32,
             ctypes.POINTER(_ctypedefs.u32)]
         cfunc.restype = _ctypedefs.nxStatus_t
@@ -838,8 +838,8 @@ class XnetLibrary(object):
             default_baud_rate):
         cfunc = self.cdll.nxdbAddAlias
         cfunc.argtypes = [
-            ctypes.POINTER(_ctypedefs.char),
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
+            _ctypedefs.char_p,
             _ctypedefs.u32]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
@@ -854,8 +854,8 @@ class XnetLibrary(object):
             default_baud_rate):
         cfunc = self.cdll.nxdbAddAlias64
         cfunc.argtypes = [
-            ctypes.POINTER(_ctypedefs.char),
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
+            _ctypedefs.char_p,
             _ctypedefs.u64]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
@@ -868,7 +868,7 @@ class XnetLibrary(object):
             database_alias):
         cfunc = self.cdll.nxdbRemoveAlias
         cfunc.argtypes = [
-            ctypes.POINTER(_ctypedefs.char)]
+            _ctypedefs.char_p]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
             database_alias)
@@ -881,8 +881,8 @@ class XnetLibrary(object):
             percent_complete):
         cfunc = self.cdll.nxdbDeploy
         cfunc.argtypes = [
-            ctypes.POINTER(_ctypedefs.char),
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
+            _ctypedefs.char_p,
             _ctypedefs.u32,
             ctypes.POINTER(_ctypedefs.u32)]
         cfunc.restype = _ctypedefs.nxStatus_t
@@ -898,8 +898,8 @@ class XnetLibrary(object):
             database_alias):
         cfunc = self.cdll.nxdbUndeploy
         cfunc.argtypes = [
-            ctypes.POINTER(_ctypedefs.char),
-            ctypes.POINTER(_ctypedefs.char)]
+            _ctypedefs.char_p,
+            _ctypedefs.char_p]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
             ip_address,
@@ -915,11 +915,11 @@ class XnetLibrary(object):
             number_of_databases):
         cfunc = self.cdll.nxdbGetDatabaseList
         cfunc.argtypes = [
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             _ctypedefs.u32,
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             _ctypedefs.u32,
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             ctypes.POINTER(_ctypedefs.u32)]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
@@ -937,7 +937,7 @@ class XnetLibrary(object):
             sizeof_filepath_buffer):
         cfunc = self.cdll.nxdbGetDatabaseListSizes
         cfunc.argtypes = [
-            ctypes.POINTER(_ctypedefs.char),
+            _ctypedefs.char_p,
             ctypes.POINTER(_ctypedefs.u32),
             ctypes.POINTER(_ctypedefs.u32)]
         cfunc.restype = _ctypedefs.nxStatus_t

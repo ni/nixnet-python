@@ -18,6 +18,18 @@ class char(ctypes.c_char):  # NOQA: N801
     pass
 
 
+class char_p(ctypes.c_char_p):  # NOQA: N801
+    pass
+
+
+class bool32(ctypes.c_uint):  # NOQA: N801
+    """32-bit boolean C-type."""
+
+    @classmethod
+    def from_param(cls, param):
+        return ctypes.c_uint16(1) if bool(param) else ctypes.c_uint16(0)
+
+
 class i8(ctypes.c_byte):  # NOQA: N801
     pass
 
@@ -75,6 +87,7 @@ class nxStatus_t(i32):  # NOQA: N801
 
 
 class nxTimeStamp_t(u64):  # NOQA: N801
+    """"Absolute time, given in 100 ns increments since Jan 1, 1601, 12:00 AM UTC."""
     pass
 
 
