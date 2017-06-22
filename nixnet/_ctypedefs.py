@@ -19,14 +19,7 @@ class char(ctypes.c_char):  # NOQA: N801
 
 
 class bool32(ctypes.c_uint):  # NOQA: N801
-    """32-bit boolean C-type.
-
-    For this to be as transparent as possible, b.value is not settable.
-    """
-
-    @property
-    def value(self):
-        return bool(super(bool32, self).value)
+    """32-bit boolean C-type."""
 
     @classmethod
     def from_param(cls, param):
