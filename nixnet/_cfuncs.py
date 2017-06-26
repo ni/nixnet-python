@@ -820,7 +820,7 @@ class XnetLibrary(object):
             _ctypedefs.nxDatabaseRef_t,
             _ctypedefs.u32,
             _ctypedefs.char_p,
-            _ctypedefs.u32,
+            _ctypedefs.bool32,
             ctypes.POINTER(_ctypedefs.u32)]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
@@ -883,7 +883,7 @@ class XnetLibrary(object):
         cfunc.argtypes = [
             _ctypedefs.char_p,
             _ctypedefs.char_p,
-            _ctypedefs.u32,
+            _ctypedefs.bool32,
             ctypes.POINTER(_ctypedefs.u32)]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
