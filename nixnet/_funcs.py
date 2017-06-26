@@ -390,7 +390,7 @@ def nxdb_merge(
     source_obj_ref_ctypes = _ctypedefs.nxDatabaseRef_t(source_obj_ref)
     copy_mode_ctypes = _ctypedefs.u32(copy_mode)
     prefix_ctypes = _ctypedefs.char_p(prefix)
-    wait_for_complete_ctypes = _ctypedefs.u32(wait_for_complete)
+    wait_for_complete_ctypes = _ctypedefs.bool32(wait_for_complete)
     percent_complete_ctypes = ctypes.POINTER(_ctypedefs.u32)()
     status = _cfuncs.lib.nxdb_merge(
         target_cluster_ref_ctypes,
@@ -445,7 +445,7 @@ def nxdb_deploy(
         wait_for_complete):
     ip_address_ctypes = _ctypedefs.char_p(ip_address)
     database_alias_ctypes = _ctypedefs.char_p(database_alias)
-    wait_for_complete_ctypes = _ctypedefs.u32(wait_for_complete)
+    wait_for_complete_ctypes = _ctypedefs.bool32(wait_for_complete)
     percent_complete_ctypes = ctypes.POINTER(_ctypedefs.u32)()
     status = _cfuncs.lib.nxdb_deploy(
         ip_address_ctypes,
