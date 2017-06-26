@@ -129,9 +129,9 @@ def undeploy(
 
 def get_database_list(
         ip_address,
-        sizeof_alias_buffer,
+        size_of_alias_buffer,
         alias_buffer,
-        sizeof_filepath_buffer,
+        size_of_filepath_buffer,
         filepath_buffer,
         number_of_databases):
     raise NotImplementedError("Placeholder")

@@ -53,8 +53,8 @@ class XnetLibrary(object):
 
     def nx_create_session_by_ref(
             self,
-            number_of_database_ref,
-            array_of_database_ref,
+            size_of_database_refs,
+            database_refs,
             interface,
             mode,
             session_ref):
@@ -67,8 +67,8 @@ class XnetLibrary(object):
             ctypes.POINTER(_ctypedefs.nxSessionRef_t)]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
-            number_of_database_ref,
-            array_of_database_ref,
+            size_of_database_refs,
+            database_refs,
             interface,
             mode,
             session_ref)
@@ -566,7 +566,7 @@ class XnetLibrary(object):
     def nx_status_to_string(
             self,
             status,
-            sizeof_string,
+            size_of_status_description,
             status_description):
         cfunc = self.cdll.nxStatusToString
         cfunc.argtypes = [
@@ -576,7 +576,7 @@ class XnetLibrary(object):
         cfunc.restype = None
         return cfunc(
             status,
-            sizeof_string,
+            size_of_status_description,
             status_description)
 
     def nx_system_open(
@@ -908,9 +908,9 @@ class XnetLibrary(object):
     def nxdb_get_database_list(
             self,
             ip_address,
-            sizeof_alias_buffer,
+            size_of_alias_buffer,
             alias_buffer,
-            sizeof_filepath_buffer,
+            size_of_filepath_buffer,
             filepath_buffer,
             number_of_databases):
         cfunc = self.cdll.nxdbGetDatabaseList
@@ -924,9 +924,9 @@ class XnetLibrary(object):
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
             ip_address,
-            sizeof_alias_buffer,
+            size_of_alias_buffer,
             alias_buffer,
-            sizeof_filepath_buffer,
+            size_of_filepath_buffer,
             filepath_buffer,
             number_of_databases)
 

@@ -88,8 +88,8 @@ class Session(object):
 
 
 def create_session_by_ref(
-        number_of_database_ref,
-        array_of_database_ref,
+        size_of_database_refs,
+        database_refs,
         interface,
         mode,
         session_ref):
@@ -271,7 +271,7 @@ def stop(
 
 def status_to_string(
         status,
-        sizeof_string,
+        size_of_status_description,
         status_description):
     raise NotImplementedError("Placeholder")
 
