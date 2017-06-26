@@ -3,85 +3,42 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from nixnet import _funcs
+
 
 def open_database(
-        database_name,
-        database_ref):
-    raise NotImplementedError("Placeholder")
+        database_name):
+    return _funcs.nxdb_open_database(database_name)
 
 
 def close_database(
         database_ref,
         close_all_refs):
-    raise NotImplementedError("Placeholder")
+    _funcs.nxdb_close_database(database_ref, close_all_refs)
 
 
 def create_object(
         parent_object_ref,
         object_class,
-        object_name,
-        db_object_ref):
-    raise NotImplementedError("Placeholder")
+        object_name):
+    return _funcs.nxdb_create_object(parent_object_ref, object_class, object_name)
 
 
 def find_object(
         parent_object_ref,
         object_class,
-        object_name,
-        db_object_ref):
-    raise NotImplementedError("Placeholder")
+        object_name):
+    return _funcs.nxdb_find_object(parent_object_ref, object_class, object_name)
 
 
-def delete_object(
-        db_object_ref):
-    raise NotImplementedError("Placeholder")
+def delete_object(db_object_ref):
+    _funcs.nxdb_delete_object(db_object_ref)
 
 
 def save_database(
         database_ref,
         db_filepath):
-    raise NotImplementedError("Placeholder")
-
-
-def get_property(
-        db_object_ref,
-        property_id,
-        property_size,
-        property_value):
-    raise NotImplementedError("Placeholder")
-
-
-def get_property_size(
-        db_object_ref,
-        property_id,
-        property_size):
-    raise NotImplementedError("Placeholder")
-
-
-def set_property(
-        db_object_ref,
-        property_id,
-        property_size,
-        property_value):
-    raise NotImplementedError("Placeholder")
-
-
-def get_dbc_attribute_size(
-        db_object_ref,
-        mode,
-        attribute_name,
-        attribute_text_size):
-    raise NotImplementedError("Placeholder")
-
-
-def get_dbc_attribute(
-        db_object_ref,
-        mode,
-        attribute_name,
-        attribute_text_size,
-        attribute_text,
-        is_default):
-    raise NotImplementedError("Placeholder")
+    _funcs.nxdb_save_database(database_ref, db_filepath)
 
 
 def merge(
@@ -89,42 +46,33 @@ def merge(
         source_obj_ref,
         copy_mode,
         prefix,
-        wait_for_complete,
-        percent_complete):
-    raise NotImplementedError("Placeholder")
-
-
-def add_alias(
-        database_alias,
-        database_filepath,
-        default_baud_rate):
-    raise NotImplementedError("Placeholder")
+        wait_for_complete):
+    return _funcs.nxdb_merge(target_cluster_ref, source_obj_ref, copy_mode, prefix, wait_for_complete)
 
 
 def add_alias64(
         database_alias,
         database_filepath,
         default_baud_rate):
-    raise NotImplementedError("Placeholder")
+    _funcs.nxdb_add_alias64(database_alias, database_filepath, default_baud_rate)
 
 
 def remove_alias(
         database_alias):
-    raise NotImplementedError("Placeholder")
+    _funcs.nxdb_remove_alias(database_alias)
 
 
 def deploy(
         ip_address,
         database_alias,
-        wait_for_complete,
-        percent_complete):
-    raise NotImplementedError("Placeholder")
+        wait_for_complete):
+    return _funcs.nxdb_deploy(ip_address, database_alias, wait_for_complete)
 
 
 def undeploy(
         ip_address,
         database_alias):
-    raise NotImplementedError("Placeholder")
+    _funcs.nxdb_undeploy(ip_address, database_alias)
 
 
 def get_database_list(
@@ -134,11 +82,4 @@ def get_database_list(
         size_of_filepath_buffer,
         filepath_buffer,
         number_of_databases):
-    raise NotImplementedError("Placeholder")
-
-
-def get_database_list_sizes(
-        ip_address,
-        sizeof_alias_buffer,
-        sizeof_filepath_buffer):
     raise NotImplementedError("Placeholder")
