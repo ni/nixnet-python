@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import warnings
 
+from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
 from nixnet import errors
@@ -20,9 +21,7 @@ class Session(object):
             interface,
             mode):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
-        # What about http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesessionbyref/
-        # Store sessionRef as a member variable
-        raise NotImplementedError("Placeholder")
+        self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface, mode)
 
     def __del__(self):
         if self._handle is not None:
@@ -59,7 +58,7 @@ class Session(object):
                 'closed', errors.XnetResourceWarning)
             return
 
-        raise NotImplementedError("Placeholder")
+        _funcs.nx_clear(self._handle)
 
         self._handle = None
 
@@ -88,38 +87,10 @@ class Session(object):
 
 
 def create_session_by_ref(
-        number_of_database_ref,
-        array_of_database_ref,
+        database_refs,
         interface,
-        mode,
-        session_ref):
-    raise NotImplementedError("Placeholder")
-
-
-def get_sub_property(
-        session_ref,
-        active_index,
-        property_id,
-        property_size,
-        property_value):
-    raise NotImplementedError("Placeholder")
-
-
-def get_sub_property_size(
-        session_ref,
-        active_index,
-        property_id,
-        property_size):
-    raise NotImplementedError("Placeholder")
-
-
-def set_sub_property(
-        session_ref,
-        active_index,
-        property_id,
-        property_size,
-        property_value):
-    raise NotImplementedError("Placeholder")
+        mode):
+    return _funcs.nx_create_session_by_ref(database_refs, interface, mode)
 
 
 def read_signal_single_point(
@@ -173,9 +144,8 @@ def write_frame(
 
 def write_signal_single_point(
         session_ref,
-        value_buffer,
-        size_of_value_buffer):
-    raise NotImplementedError("Placeholder")
+        value_buffer):
+    _funcs.nx_write_signal_single_point(session_ref, value_buffer)
 
 
 def write_state(
@@ -189,21 +159,17 @@ def write_state(
 def write_signal_waveform(
         session_ref,
         timeout,
-        value_buffer,
-        size_of_value_buffer):
-    raise NotImplementedError("Placeholder")
+        value_buffer):
+    _funcs.nx_write_signal_waveform(session_ref, timeout, value_buffer)
 
 
 def write_signal_xy(
         session_ref,
         timeout,
         value_buffer,
-        size_of_value_buffer,
         timestamp_buffer,
-        size_of_timestamp_buffer,
-        num_pairs_buffer,
-        size_of_num_pairs_buffer):
-    raise NotImplementedError("Placeholder")
+        num_pairs_buffer):
+    _funcs.nx_write_signal_xy(session_ref, timeout, value_buffer, timestamp_buffer, num_pairs_buffer)
 
 
 def convert_frames_to_signals_single_point(
@@ -230,66 +196,57 @@ def convert_signals_to_frames_single_point(
 def blink(
         interface_ref,
         modifier):
-    raise NotImplementedError("Placeholder")
+    _funcs.nx_blink(interface_ref, modifier)
 
 
 def clear(
         session_ref):
-    raise NotImplementedError("Placeholder")
+    _funcs.nx_clear(session_ref)
 
 
 def connect_terminals(
         session_ref,
         source,
         destination):
-    raise NotImplementedError("Placeholder")
+    _funcs.nx_connect_terminals(session_ref, source, destination)
 
 
 def disconnect_terminals(
         session_ref,
         source,
         destination):
-    raise NotImplementedError("Placeholder")
+    _funcs.nx_disconnect_terminals(session_ref, source, destination)
 
 
 def flush(
         session_ref):
-    raise NotImplementedError("Placeholder")
+    _funcs.nx_flush(session_ref)
 
 
 def start(
         session_ref,
         scope):
-    raise NotImplementedError("Placeholder")
+    _funcs.nx_start(session_ref, scope)
 
 
 def stop(
         session_ref,
         scope):
-    raise NotImplementedError("Placeholder")
+    _funcs.nx_stop(session_ref, scope)
 
 
-def status_to_string(
-        status,
-        sizeof_string,
-        status_description):
-    raise NotImplementedError("Placeholder")
-
-
-def system_open(
-        system_ref):
-    raise NotImplementedError("Placeholder")
+def system_open():
+    return _funcs.nx_system_open()
 
 
 def system_close(
         system_ref):
-    raise NotImplementedError("Placeholder")
+    _funcs.nx_system_open(system_ref)
 
 
 def wait(
         session_ref,
         condition,
         param_in,
-        timeout,
-        param_out):
-    raise NotImplementedError("Placeholder")
+        timeout):
+    return _funcs.nx_wait(session_ref, condition, param_in, timeout)
