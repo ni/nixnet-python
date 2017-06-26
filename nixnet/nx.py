@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import warnings
 
 from nixnet import _props
+from nixnet import _funcs
 from nixnet import constants
 from nixnet import errors
 
@@ -20,9 +21,7 @@ class Session(object):
             interface,
             mode):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
-        # What about http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesessionbyref/
-        # Store sessionRef as a member variable
-        raise NotImplementedError("Placeholder")
+        self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface, mode)
 
     def __del__(self):
         if self._handle is not None:
@@ -59,7 +58,7 @@ class Session(object):
                 'closed', errors.XnetResourceWarning)
             return
 
-        raise NotImplementedError("Placeholder")
+        _funcs.nx_clear(self._handle)
 
         self._handle = None
 
