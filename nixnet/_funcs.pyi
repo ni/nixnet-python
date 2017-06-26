@@ -3,13 +3,10 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import ctypes
 import typing
 
-from nixnet import _cfuncs
 from nixnet import _ctypedefs
 from nixnet import _enums
-from nixnet import _errors
 
 
 def nx_create_session(
@@ -123,7 +120,7 @@ def nx_stop(
 
 
 def nx_status_to_string(
-        status: Unknown) -> typing.List[Unknown]:
+        status: typing.Any) -> typing.Any:
     ...
 
 
@@ -244,7 +241,7 @@ def nxdb_undeploy(
 
 
 def nxdb_get_database_list(
-        ip_address: typing.Text) -> typing.Tuple[typing.List[Unknown], typing.List[Unknown], int]:
+        ip_address: typing.Text) -> typing.Any:
     ...
 
 

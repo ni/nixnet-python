@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import ctypes
+import typing
 
 from nixnet import _ctypedefs
 from nixnet import _lib
@@ -25,16 +25,16 @@ class XnetLibrary(object):
             list: _ctypedefs.char_p,
             interface: _ctypedefs.char_p,
             mode: _ctypedefs.u32,
-            session_ref: ctypes.POINTER(_ctypedefs.nxSessionRef_t)) -> _ctypedefs.nxStatus_t:
+            session_ref: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nx_create_session_by_ref(
             self: XnetLibrary,
             size_of_database_refs: _ctypedefs.u32,
-            database_refs: ctypes.POINTER(_ctypedefs.nxDatabaseRef_t),
+            database_refs: typing.Any,
             interface: _ctypedefs.char_p,
             mode: _ctypedefs.u32,
-            session_ref: ctypes.POINTER(_ctypedefs.nxSessionRef_t)) -> _ctypedefs.nxStatus_t:
+            session_ref: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nx_get_property(
@@ -49,7 +49,7 @@ class XnetLibrary(object):
             self: XnetLibrary,
             session_ref: _ctypedefs.nxSessionRef_t,
             property_id: _ctypedefs.u32,
-            property_size: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            property_size: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nx_set_property(
@@ -74,7 +74,7 @@ class XnetLibrary(object):
             session_ref: _ctypedefs.nxSessionRef_t,
             active_index: _ctypedefs.u32,
             property_id: _ctypedefs.u32,
-            property_size: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            property_size: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nx_set_sub_property(
@@ -89,18 +89,18 @@ class XnetLibrary(object):
     def nx_read_frame(
             self: XnetLibrary,
             session_ref: _ctypedefs.nxSessionRef_t,
-            buffer,
+            buffer: typing.Any,
             size_of_buffer: _ctypedefs.u32,
             timeout: _ctypedefs.f64,
-            number_of_bytes_returned: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            number_of_bytes_returned: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nx_read_signal_single_point(
             self: XnetLibrary,
             session_ref: _ctypedefs.nxSessionRef_t,
-            value_buffer: ctypes.POINTER(_ctypedefs.f64),
+            value_buffer: typing.Any,
             size_of_value_buffer: _ctypedefs.u32,
-            timestamp_buffer: ctypes.POINTER(_ctypedefs.nxTimestamp_t),
+            timestamp_buffer: typing.Any,
             size_of_timestamp_buffer: _ctypedefs.u32) -> _ctypedefs.nxStatus_t:
         ...
 
@@ -108,22 +108,22 @@ class XnetLibrary(object):
             self: XnetLibrary,
             session_ref: _ctypedefs.nxSessionRef_t,
             timeout: _ctypedefs.f64,
-            start_time: ctypes.POINTER(_ctypedefs.nxTimestamp_t),
-            delta_time: ctypes.POINTER(_ctypedefs.f64),
-            value_buffer: ctypes.POINTER(_ctypedefs.f64),
+            start_time: typing.Any,
+            delta_time: typing.Any,
+            value_buffer: typing.Any,
             size_of_value_buffer: _ctypedefs.u32,
-            number_of_values_returned: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            number_of_values_returned: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nx_read_signal_xy(
             self: XnetLibrary,
             session_ref: _ctypedefs.nxSessionRef_t,
-            time_limit: ctypes.POINTER(_ctypedefs.nxTimestamp_t),
-            value_buffer: ctypes.POINTER(_ctypedefs.f64),
+            time_limit: typing.Any,
+            value_buffer: typing.Any,
             size_of_value_buffer: _ctypedefs.u32,
-            timestamp_buffer: ctypes.POINTER(_ctypedefs.nxTimestamp_t),
+            timestamp_buffer: typing.Any,
             size_of_timestamp_buffer: _ctypedefs.u32,
-            num_pairs_buffer: ctypes.POINTER(_ctypedefs.u32),
+            num_pairs_buffer: typing.Any,
             size_of_num_pairs_buffer: _ctypedefs.u32) -> _ctypedefs.nxStatus_t:
         ...
 
@@ -133,7 +133,7 @@ class XnetLibrary(object):
             state_id: _ctypedefs.u32,
             state_size: _ctypedefs.u32,
             state_value: _ctypedefs.nxVoidPtr,
-            fault: ctypes.POINTER(_ctypedefs.nxStatus_t)) -> _ctypedefs.nxStatus_t:
+            fault: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nx_write_frame(
@@ -147,7 +147,7 @@ class XnetLibrary(object):
     def nx_write_signal_single_point(
             self: XnetLibrary,
             session_ref: _ctypedefs.nxSessionRef_t,
-            value_buffer: ctypes.POINTER(_ctypedefs.f64),
+            value_buffer: typing.Any,
             size_of_value_buffer: _ctypedefs.u32) -> _ctypedefs.nxStatus_t:
         ...
 
@@ -163,7 +163,7 @@ class XnetLibrary(object):
             self: XnetLibrary,
             session_ref: _ctypedefs.nxSessionRef_t,
             timeout: _ctypedefs.f64,
-            value_buffer: ctypes.POINTER(_ctypedefs.f64),
+            value_buffer: typing.Any,
             size_of_value_buffer: _ctypedefs.u32) -> _ctypedefs.nxStatus_t:
         ...
 
@@ -171,11 +171,11 @@ class XnetLibrary(object):
             self: XnetLibrary,
             session_ref: _ctypedefs.nxSessionRef_t,
             timeout: _ctypedefs.f64,
-            value_buffer: ctypes.POINTER(_ctypedefs.f64),
+            value_buffer: typing.Any,
             size_of_value_buffer: _ctypedefs.u32,
-            timestamp_buffer: ctypes.POINTER(_ctypedefs.nxTimestamp_t),
+            timestamp_buffer: typing.Any,
             size_of_timestamp_buffer: _ctypedefs.u32,
-            num_pairs_buffer: ctypes.POINTER(_ctypedefs.u32),
+            num_pairs_buffer: typing.Any,
             size_of_num_pairs_buffer: _ctypedefs.u32) -> _ctypedefs.nxStatus_t:
         ...
 
@@ -184,9 +184,9 @@ class XnetLibrary(object):
             session_ref: _ctypedefs.nxSessionRef_t,
             frame_buffer: _ctypedefs.nxVoidPtr,
             number_of_bytes_for_frames: _ctypedefs.u32,
-            value_buffer: ctypes.POINTER(_ctypedefs.f64),
+            value_buffer: typing.Any,
             size_of_value_buffer: _ctypedefs.u32,
-            timestamp_buffer: ctypes.POINTER(_ctypedefs.nxTimestamp_t),
+            timestamp_buffer: typing.Any,
             size_of_timestamp_buffer: _ctypedefs.u32) -> _ctypedefs.nxStatus_t:
         ...
 
@@ -241,7 +241,7 @@ class XnetLibrary(object):
 
     def nx_system_open(
             self: XnetLibrary,
-            system_ref: ctypes.POINTER(_ctypedefs.nxSessionRef_t)) -> _ctypedefs.nxStatus_t:
+            system_ref: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nx_system_close(
@@ -255,13 +255,13 @@ class XnetLibrary(object):
             condition: _ctypedefs.u32,
             param_in: _ctypedefs.u32,
             timeout: _ctypedefs.f64,
-            param_out: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            param_out: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_open_database(
             self: XnetLibrary,
             database_name: _ctypedefs.char_p,
-            database_ref: ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)) -> _ctypedefs.nxStatus_t:
+            database_ref: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_close_database(
@@ -275,7 +275,7 @@ class XnetLibrary(object):
             parent_object_ref: _ctypedefs.nxDatabaseRef_t,
             object_class: _ctypedefs.u32,
             object_name: _ctypedefs.char_p,
-            db_object_ref: ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)) -> _ctypedefs.nxStatus_t:
+            db_object_ref: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_find_object(
@@ -283,7 +283,7 @@ class XnetLibrary(object):
             parent_object_ref: _ctypedefs.nxDatabaseRef_t,
             object_class: _ctypedefs.u32,
             object_name: _ctypedefs.char_p,
-            db_object_ref: ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)) -> _ctypedefs.nxStatus_t:
+            db_object_ref: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_delete_object(
@@ -309,7 +309,7 @@ class XnetLibrary(object):
             self: XnetLibrary,
             db_object_ref: _ctypedefs.nxDatabaseRef_t,
             property_id: _ctypedefs.u32,
-            property_size: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            property_size: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_set_property(
@@ -325,7 +325,7 @@ class XnetLibrary(object):
             db_object_ref: _ctypedefs.nxDatabaseRef_t,
             mode: _ctypedefs.u32,
             attribute_name: _ctypedefs.char_p,
-            attribute_text_size: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            attribute_text_size: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_get_dbc_attribute(
@@ -335,7 +335,7 @@ class XnetLibrary(object):
             attribute_name: _ctypedefs.char_p,
             attribute_text_size: _ctypedefs.u32,
             attribute_text: _ctypedefs.char_p,
-            is_default: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            is_default: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_merge(
@@ -345,7 +345,7 @@ class XnetLibrary(object):
             copy_mode: _ctypedefs.u32,
             prefix: _ctypedefs.char_p,
             wait_for_complete: _ctypedefs.bool32,
-            percent_complete: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            percent_complete: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_add_alias(
@@ -372,7 +372,7 @@ class XnetLibrary(object):
             ip_address: _ctypedefs.char_p,
             database_alias: _ctypedefs.char_p,
             wait_for_complete: _ctypedefs.bool32,
-            percent_complete: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            percent_complete: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_undeploy(
@@ -388,7 +388,7 @@ class XnetLibrary(object):
             alias_buffer: _ctypedefs.char_p,
             size_of_filepath_buffer: _ctypedefs.u32,
             filepath_buffer: _ctypedefs.char_p,
-            number_of_databases: ctypes.POINTER(_ctypedefs.u32)) -> _ctypedefs.nxStatus_t:
+            number_of_databases: typing.Any) -> _ctypedefs.nxStatus_t:
         ...
 
     def nxdb_get_database_list_sizes(

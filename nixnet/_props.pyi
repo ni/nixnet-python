@@ -3,12 +3,6 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import ctypes
-
-from nixnet import _cconsts
-from nixnet import _cprops
-from nixnet import _errors
-
 
 def get_session_application_protocol(
         ref):
@@ -21,7 +15,7 @@ def get_session_auto_start(
 
 
 def set_session_auto_start(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -82,7 +76,7 @@ def get_session_queue_size(
 
 
 def set_session_queue_size(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -93,7 +87,7 @@ def get_session_resamp_rate(
 
 
 def set_session_resamp_rate(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -104,7 +98,7 @@ def get_session_intf_baud_rate(
 
 
 def set_session_intf_baud_rate(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -115,7 +109,7 @@ def get_session_intf_baud_rate64(
 
 
 def set_session_intf_baud_rate64(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -126,7 +120,7 @@ def get_session_intf_bus_err_to_in_strm(
 
 
 def set_session_intf_bus_err_to_in_strm(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -137,7 +131,7 @@ def get_session_intf_echo_tx(
 
 
 def set_session_intf_echo_tx(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -153,7 +147,7 @@ def get_session_intf_out_strm_list(
 
 
 def set_session_intf_out_strm_list(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -164,7 +158,7 @@ def get_session_intf_out_strm_timng(
 
 
 def set_session_intf_out_strm_timng(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -175,13 +169,13 @@ def get_session_intf_start_trig_to_in_strm(
 
 
 def set_session_intf_start_trig_to_in_strm(
-        ref
+        ref,
         value) -> None:
     ...
 
 
 def set_session_intf_can_ext_tcvr_config(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -192,7 +186,7 @@ def get_session_intf_can_lstn_only(
 
 
 def set_session_intf_can_lstn_only(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -203,7 +197,7 @@ def get_session_intf_can_pend_tx_order(
 
 
 def set_session_intf_can_pend_tx_order(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -214,7 +208,7 @@ def get_session_intf_can_sing_shot(
 
 
 def set_session_intf_can_sing_shot(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -225,7 +219,7 @@ def get_session_intf_can_term(
 
 
 def set_session_intf_can_term(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -236,7 +230,7 @@ def get_session_intf_can_tcvr_state(
 
 
 def set_session_intf_can_tcvr_state(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -247,7 +241,7 @@ def get_session_intf_can_tcvr_type(
 
 
 def set_session_intf_can_tcvr_type(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -258,7 +252,7 @@ def get_session_intf_can_out_strm_list_by_id(
 
 
 def set_session_intf_can_out_strm_list_by_id(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -274,7 +268,7 @@ def get_session_intf_can_fd_baud_rate(
 
 
 def set_session_intf_can_fd_baud_rate(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -285,7 +279,7 @@ def get_session_intf_can_fd_baud_rate64(
 
 
 def set_session_intf_can_fd_baud_rate64(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -296,7 +290,7 @@ def get_session_intf_can_tx_io_mode(
 
 
 def set_session_intf_can_tx_io_mode(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -307,7 +301,7 @@ def get_session_intf_can_fd_iso_mode(
 
 
 def set_session_intf_can_fd_iso_mode(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -318,7 +312,7 @@ def get_session_intf_flex_ray_acc_start_rng(
 
 
 def set_session_intf_flex_ray_acc_start_rng(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -329,7 +323,7 @@ def get_session_intf_flex_ray_alw_hlt_clk(
 
 
 def set_session_intf_flex_ray_alw_hlt_clk(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -340,7 +334,7 @@ def get_session_intf_flex_ray_alw_pass_act(
 
 
 def set_session_intf_flex_ray_alw_pass_act(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -351,7 +345,7 @@ def get_session_intf_flex_ray_auto_aslp_whn_stp(
 
 
 def set_session_intf_flex_ray_auto_aslp_whn_stp(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -362,7 +356,7 @@ def get_session_intf_flex_ray_clst_drift_dmp(
 
 
 def set_session_intf_flex_ray_clst_drift_dmp(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -378,7 +372,7 @@ def get_session_intf_flex_ray_dec_corr(
 
 
 def set_session_intf_flex_ray_dec_corr(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -389,7 +383,7 @@ def get_session_intf_flex_ray_delay_comp_a(
 
 
 def set_session_intf_flex_ray_delay_comp_a(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -400,7 +394,7 @@ def get_session_intf_flex_ray_delay_comp_b(
 
 
 def set_session_intf_flex_ray_delay_comp_b(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -411,7 +405,7 @@ def get_session_intf_flex_ray_key_slot_id(
 
 
 def set_session_intf_flex_ray_key_slot_id(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -427,7 +421,7 @@ def get_session_intf_flex_ray_list_timo(
 
 
 def set_session_intf_flex_ray_list_timo(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -438,7 +432,7 @@ def get_session_intf_flex_ray_mac_init_off_a(
 
 
 def set_session_intf_flex_ray_mac_init_off_a(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -449,7 +443,7 @@ def get_session_intf_flex_ray_mac_init_off_b(
 
 
 def set_session_intf_flex_ray_mac_init_off_b(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -460,7 +454,7 @@ def get_session_intf_flex_ray_mic_init_off_a(
 
 
 def set_session_intf_flex_ray_mic_init_off_a(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -471,7 +465,7 @@ def get_session_intf_flex_ray_mic_init_off_b(
 
 
 def set_session_intf_flex_ray_mic_init_off_b(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -482,7 +476,7 @@ def get_session_intf_flex_ray_max_drift(
 
 
 def set_session_intf_flex_ray_max_drift(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -498,7 +492,7 @@ def get_session_intf_flex_ray_null_to_in_strm(
 
 
 def set_session_intf_flex_ray_null_to_in_strm(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -514,7 +508,7 @@ def get_session_intf_flex_ray_off_corr_out(
 
 
 def set_session_intf_flex_ray_off_corr_out(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -530,7 +524,7 @@ def get_session_intf_flex_ray_rate_corr_out(
 
 
 def set_session_intf_flex_ray_rate_corr_out(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -541,7 +535,7 @@ def get_session_intf_flex_ray_samp_per_micro(
 
 
 def set_session_intf_flex_ray_samp_per_micro(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -552,7 +546,7 @@ def get_session_intf_flex_ray_sing_slot_en(
 
 
 def set_session_intf_flex_ray_sing_slot_en(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -563,7 +557,7 @@ def get_session_intf_flex_ray_statistics_en(
 
 
 def set_session_intf_flex_ray_statistics_en(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -574,7 +568,7 @@ def get_session_intf_flex_ray_sym_to_in_strm(
 
 
 def set_session_intf_flex_ray_sym_to_in_strm(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -610,7 +604,7 @@ def get_session_intf_flex_ray_term(
 
 
 def set_session_intf_flex_ray_term(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -621,7 +615,7 @@ def get_session_intf_flex_ray_wakeup_ch(
 
 
 def set_session_intf_flex_ray_wakeup_ch(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -632,13 +626,13 @@ def get_session_intf_flex_ray_wakeup_ptrn(
 
 
 def set_session_intf_flex_ray_wakeup_ptrn(
-        ref
+        ref,
         value) -> None:
     ...
 
 
 def set_session_intf_flex_ray_sleep(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -649,7 +643,7 @@ def get_session_intf_flex_ray_connected_chs(
 
 
 def set_session_intf_flex_ray_connected_chs(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -660,7 +654,7 @@ def get_session_intf_lin_break_length(
 
 
 def set_session_intf_lin_break_length(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -671,7 +665,7 @@ def get_session_intf_lin_master(
 
 
 def set_session_intf_lin_master(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -682,7 +676,7 @@ def get_session_intf_lin_sched_names(
 
 
 def set_session_intf_lin_sleep(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -693,7 +687,7 @@ def get_session_intf_lin_term(
 
 
 def set_session_intf_lin_term(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -704,7 +698,7 @@ def get_session_intf_lin_diag_p_2min(
 
 
 def set_session_intf_lin_diag_p_2min(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -715,7 +709,7 @@ def get_session_intf_lin_diag_s_tmin(
 
 
 def set_session_intf_lin_diag_s_tmin(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -726,7 +720,7 @@ def get_session_intf_lin_alw_start_wo_bus_pwr(
 
 
 def set_session_intf_lin_alw_start_wo_bus_pwr(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -737,7 +731,7 @@ def get_session_intf_lino_str_slv_rsp_lst_by_nad(
 
 
 def set_session_intf_lino_str_slv_rsp_lst_by_nad(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -748,7 +742,7 @@ def get_session_intf_lin_no_response_to_in_strm(
 
 
 def set_session_intf_lin_no_response_to_in_strm(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -759,7 +753,7 @@ def get_session_intf_src_term_start_trigger(
 
 
 def set_session_intf_src_term_start_trigger(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -770,7 +764,7 @@ def get_session_j1939_address(
 
 
 def set_session_j1939_address(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -781,13 +775,13 @@ def get_session_j1939_name(
 
 
 def set_session_j1939_name(
-        ref
+        ref,
         value) -> None:
     ...
 
 
 def set_session_j1939ecu(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -798,7 +792,7 @@ def get_session_j1939_timeout_t1(
 
 
 def set_session_j1939_timeout_t1(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -809,7 +803,7 @@ def get_session_j1939_timeout_t2(
 
 
 def set_session_j1939_timeout_t2(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -820,7 +814,7 @@ def get_session_j1939_timeout_t3(
 
 
 def set_session_j1939_timeout_t3(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -831,7 +825,7 @@ def get_session_j1939_timeout_t4(
 
 
 def set_session_j1939_timeout_t4(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -842,7 +836,7 @@ def get_session_j1939_response_time_tr_sd(
 
 
 def set_session_j1939_response_time_tr_sd(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -853,7 +847,7 @@ def get_session_j1939_response_time_tr_gd(
 
 
 def set_session_j1939_response_time_tr_gd(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -864,7 +858,7 @@ def get_session_j1939_hold_time_th(
 
 
 def set_session_j1939_hold_time_th(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -875,7 +869,7 @@ def get_session_j1939_num_packets_recv(
 
 
 def set_session_j1939_num_packets_recv(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -886,7 +880,7 @@ def get_session_j1939_num_packets_resp(
 
 
 def set_session_j1939_num_packets_resp(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -897,7 +891,7 @@ def get_session_j1939_max_repeat_cts(
 
 
 def set_session_j1939_max_repeat_cts(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -908,7 +902,7 @@ def get_session_j1939_fill_byte(
 
 
 def set_session_j1939_fill_byte(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -919,7 +913,7 @@ def get_session_j1939_write_queue_size(
 
 
 def set_session_j1939_write_queue_size(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -930,7 +924,7 @@ def get_session_j1939ecu_busy(
 
 
 def set_session_j1939ecu_busy(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -941,7 +935,7 @@ def get_session_intf_can_edge_filter(
 
 
 def set_session_intf_can_edge_filter(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -952,7 +946,7 @@ def get_session_intf_can_transmit_pause(
 
 
 def set_session_intf_can_transmit_pause(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -963,49 +957,49 @@ def get_session_intf_can_disable_prot_exception_handling(
 
 
 def set_session_intf_can_disable_prot_exception_handling(
-        ref
+        ref,
         value) -> None:
     ...
 
 
 def set_session_can_start_time_off(
-        ref
-        sub,
+        ref,
+        sub: int,
         value) -> None:
     ...
 
 
 def set_session_can_tx_time(
-        ref
-        sub,
+        ref,
+        sub: int,
         value) -> None:
     ...
 
 
 def set_session_skip_n_cyclic_frames(
-        ref
-        sub,
+        ref,
+        sub: int,
         value) -> None:
     ...
 
 
 def set_session_output_queue_update_freq(
-        ref
-        sub,
+        ref,
+        sub: int,
         value) -> None:
     ...
 
 
 def set_session_lin_tx_n_corrupted_chksums(
-        ref
-        sub,
+        ref,
+        sub: int,
         value) -> None:
     ...
 
 
 def set_session_j1939_addr_filter(
-        ref
-        sub,
+        ref,
+        sub: int,
         value) -> None:
     ...
 
@@ -1066,7 +1060,7 @@ def get_system_cdaq_pkt_time(
 
 
 def set_system_cdaq_pkt_time(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1202,7 +1196,7 @@ def get_database_show_invalid_from_open(
 
 
 def set_database_show_invalid_from_open(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1213,7 +1207,7 @@ def get_cluster_baud_rate(
 
 
 def set_cluster_baud_rate(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1224,7 +1218,7 @@ def get_cluster_baud_rate64(
 
 
 def set_cluster_baud_rate64(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1235,7 +1229,7 @@ def get_cluster_comment(
 
 
 def set_cluster_comment(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1266,7 +1260,7 @@ def get_cluster_name(
 
 
 def set_cluster_name(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1287,7 +1281,7 @@ def get_cluster_protocol(
 
 
 def set_cluster_protocol(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1303,7 +1297,7 @@ def get_cluster_can_io_mode(
 
 
 def set_cluster_can_io_mode(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1314,7 +1308,7 @@ def get_cluster_can_fd_baud_rate(
 
 
 def set_cluster_can_fd_baud_rate(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1325,7 +1319,7 @@ def get_cluster_can_fd_baud_rate64(
 
 
 def set_cluster_can_fd_baud_rate64(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1336,7 +1330,7 @@ def get_cluster_flex_ray_act_pt_off(
 
 
 def set_cluster_flex_ray_act_pt_off(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1347,7 +1341,7 @@ def get_cluster_flex_ray_cas_rx_l_max(
 
 
 def set_cluster_flex_ray_cas_rx_l_max(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1358,7 +1352,7 @@ def get_cluster_flex_ray_channels(
 
 
 def set_cluster_flex_ray_channels(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1369,7 +1363,7 @@ def get_cluster_flex_ray_clst_drift_dmp(
 
 
 def set_cluster_flex_ray_clst_drift_dmp(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1380,7 +1374,7 @@ def get_cluster_flex_ray_cold_st_ats(
 
 
 def set_cluster_flex_ray_cold_st_ats(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1391,7 +1385,7 @@ def get_cluster_flex_ray_cycle(
 
 
 def set_cluster_flex_ray_cycle(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1407,7 +1401,7 @@ def get_cluster_flex_ray_dyn_slot_idl_ph(
 
 
 def set_cluster_flex_ray_dyn_slot_idl_ph(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1428,7 +1422,7 @@ def get_cluster_flex_ray_lis_noise(
 
 
 def set_cluster_flex_ray_lis_noise(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1439,7 +1433,7 @@ def get_cluster_flex_ray_macro_per_cycle(
 
 
 def set_cluster_flex_ray_macro_per_cycle(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1455,7 +1449,7 @@ def get_cluster_flex_ray_max_wo_clk_cor_fat(
 
 
 def set_cluster_flex_ray_max_wo_clk_cor_fat(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1466,7 +1460,7 @@ def get_cluster_flex_ray_max_wo_clk_cor_pas(
 
 
 def set_cluster_flex_ray_max_wo_clk_cor_pas(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1477,7 +1471,7 @@ def get_cluster_flex_ray_minislot_act_pt(
 
 
 def set_cluster_flex_ray_minislot_act_pt(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1488,7 +1482,7 @@ def get_cluster_flex_ray_minislot(
 
 
 def set_cluster_flex_ray_minislot(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1499,7 +1493,7 @@ def get_cluster_flex_ray_nm_vec_len(
 
 
 def set_cluster_flex_ray_nm_vec_len(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1510,7 +1504,7 @@ def get_cluster_flex_ray_nit(
 
 
 def set_cluster_flex_ray_nit(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1526,7 +1520,7 @@ def get_cluster_flex_ray_num_minislt(
 
 
 def set_cluster_flex_ray_num_minislt(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1537,7 +1531,7 @@ def get_cluster_flex_ray_num_stat_slt(
 
 
 def set_cluster_flex_ray_num_stat_slt(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1548,7 +1542,7 @@ def get_cluster_flex_ray_off_cor_st(
 
 
 def set_cluster_flex_ray_off_cor_st(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1559,7 +1553,7 @@ def get_cluster_flex_ray_payld_len_dyn_max(
 
 
 def set_cluster_flex_ray_payld_len_dyn_max(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1575,7 +1569,7 @@ def get_cluster_flex_ray_payld_len_st(
 
 
 def set_cluster_flex_ray_payld_len_st(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1586,7 +1580,7 @@ def get_cluster_flex_ray_stat_slot(
 
 
 def set_cluster_flex_ray_stat_slot(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1597,7 +1591,7 @@ def get_cluster_flex_ray_sym_win(
 
 
 def set_cluster_flex_ray_sym_win(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1613,7 +1607,7 @@ def get_cluster_flex_ray_sync_node_max(
 
 
 def set_cluster_flex_ray_sync_node_max(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1624,7 +1618,7 @@ def get_cluster_flex_ray_tss_tx(
 
 
 def set_cluster_flex_ray_tss_tx(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1635,7 +1629,7 @@ def get_cluster_flex_ray_wake_sym_rx_idl(
 
 
 def set_cluster_flex_ray_wake_sym_rx_idl(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1646,7 +1640,7 @@ def get_cluster_flex_ray_wake_sym_rx_low(
 
 
 def set_cluster_flex_ray_wake_sym_rx_low(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1657,7 +1651,7 @@ def get_cluster_flex_ray_wake_sym_rx_win(
 
 
 def set_cluster_flex_ray_wake_sym_rx_win(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1668,7 +1662,7 @@ def get_cluster_flex_ray_wake_sym_tx_idl(
 
 
 def set_cluster_flex_ray_wake_sym_tx_idl(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1679,7 +1673,7 @@ def get_cluster_flex_ray_wake_sym_tx_low(
 
 
 def set_cluster_flex_ray_wake_sym_tx_low(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1690,7 +1684,7 @@ def get_cluster_flex_ray_use_wakeup(
 
 
 def set_cluster_flex_ray_use_wakeup(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1706,7 +1700,7 @@ def get_cluster_lin_tick(
 
 
 def set_cluster_lin_tick(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1717,7 +1711,7 @@ def get_cluster_flex_ray_alw_pass_act(
 
 
 def set_cluster_flex_ray_alw_pass_act(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1728,7 +1722,7 @@ def get_cluster_application_protocol(
 
 
 def set_cluster_application_protocol(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1744,7 +1738,7 @@ def get_frame_application_protocol(
 
 
 def set_frame_application_protocol(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1760,7 +1754,7 @@ def get_frame_comment(
 
 
 def set_frame_comment(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1776,7 +1770,7 @@ def get_frame_default_payload(
 
 
 def set_frame_default_payload(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1787,7 +1781,7 @@ def get_frame_id(
 
 
 def set_frame_id(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1798,7 +1792,7 @@ def get_frame_name(
 
 
 def set_frame_name(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1809,7 +1803,7 @@ def get_frame_payload_len(
 
 
 def set_frame_payload_len(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1825,7 +1819,7 @@ def get_frame_can_ext_id(
 
 
 def set_frame_can_ext_id(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1836,7 +1830,7 @@ def get_frame_can_timing_type(
 
 
 def set_frame_can_timing_type(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1847,7 +1841,7 @@ def get_frame_can_tx_time(
 
 
 def set_frame_can_tx_time(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1858,7 +1852,7 @@ def get_frame_flex_ray_base_cycle(
 
 
 def set_frame_flex_ray_base_cycle(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1869,7 +1863,7 @@ def get_frame_flex_ray_ch_assign(
 
 
 def set_frame_flex_ray_ch_assign(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1880,7 +1874,7 @@ def get_frame_flex_ray_cycle_rep(
 
 
 def set_frame_flex_ray_cycle_rep(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1891,7 +1885,7 @@ def get_frame_flex_ray_preamble(
 
 
 def set_frame_flex_ray_preamble(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1902,7 +1896,7 @@ def get_frame_flex_ray_startup(
 
 
 def set_frame_flex_ray_startup(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1913,7 +1907,7 @@ def get_frame_flex_ray_sync(
 
 
 def set_frame_flex_ray_sync(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1924,7 +1918,7 @@ def get_frame_flex_ray_timing_type(
 
 
 def set_frame_flex_ray_timing_type(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1940,7 +1934,7 @@ def get_frame_flex_ray_in_cyc_rep_i_ds(
 
 
 def set_frame_flex_ray_in_cyc_rep_i_ds(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1951,7 +1945,7 @@ def get_frame_flex_ray_in_cyc_rep_ch_assigns(
 
 
 def set_frame_flex_ray_in_cyc_rep_ch_assigns(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1987,7 +1981,7 @@ def get_frame_pdu_refs(
 
 
 def set_frame_pdu_refs(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -1998,7 +1992,7 @@ def get_frame_pdu_start_bits(
 
 
 def set_frame_pdu_start_bits(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2009,7 +2003,7 @@ def get_frame_pdu_update_bits(
 
 
 def set_frame_pdu_update_bits(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2020,7 +2014,7 @@ def get_frame_variable_payload(
 
 
 def set_frame_variable_payload(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2031,7 +2025,7 @@ def get_frame_ca_nio_mode(
 
 
 def set_frame_ca_nio_mode(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2047,7 +2041,7 @@ def get_pdu_default_payload(
 
 
 def set_pdu_default_payload(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2058,7 +2052,7 @@ def get_pdu_comment(
 
 
 def set_pdu_comment(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2079,7 +2073,7 @@ def get_pdu_name(
 
 
 def set_pdu_name(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2090,7 +2084,7 @@ def get_pdu_payload_len(
 
 
 def set_pdu_payload_len(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2126,7 +2120,7 @@ def get_signal_byte_ordr(
 
 
 def set_signal_byte_ordr(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2137,7 +2131,7 @@ def get_signal_comment(
 
 
 def set_signal_comment(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2153,7 +2147,7 @@ def get_signal_data_type(
 
 
 def set_signal_data_type(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2164,7 +2158,7 @@ def get_signal_default(
 
 
 def set_signal_default(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2180,7 +2174,7 @@ def get_signal_max(
 
 
 def set_signal_max(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2191,7 +2185,7 @@ def get_signal_min(
 
 
 def set_signal_min(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2202,7 +2196,7 @@ def get_signal_name(
 
 
 def set_signal_name(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2218,7 +2212,7 @@ def get_signal_num_bits(
 
 
 def set_signal_num_bits(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2234,7 +2228,7 @@ def get_signal_scale_fac(
 
 
 def set_signal_scale_fac(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2245,7 +2239,7 @@ def get_signal_scale_off(
 
 
 def set_signal_scale_off(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2256,7 +2250,7 @@ def get_signal_start_bit(
 
 
 def set_signal_start_bit(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2267,7 +2261,7 @@ def get_signal_unit(
 
 
 def set_signal_unit(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2278,7 +2272,7 @@ def get_signal_mux_is_data_mux(
 
 
 def set_signal_mux_is_data_mux(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2319,7 +2313,7 @@ def get_subframe_mux_value(
 
 
 def set_subframe_mux_value(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2330,7 +2324,7 @@ def get_subframe_name(
 
 
 def set_subframe_name(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2356,7 +2350,7 @@ def get_ecu_comment(
 
 
 def set_ecu_comment(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2372,7 +2366,7 @@ def get_ecu_name(
 
 
 def set_ecu_name(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2383,7 +2377,7 @@ def get_ecu_rx_frm_refs(
 
 
 def set_ecu_rx_frm_refs(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2394,7 +2388,7 @@ def get_ecu_tx_frm_refs(
 
 
 def set_ecu_tx_frm_refs(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2415,7 +2409,7 @@ def get_ecu_flex_ray_wakeup_ptrn(
 
 
 def set_ecu_flex_ray_wakeup_ptrn(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2426,7 +2420,7 @@ def get_ecu_flex_ray_wakeup_chs(
 
 
 def set_ecu_flex_ray_wakeup_chs(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2437,7 +2431,7 @@ def get_ecu_flex_ray_connected_chs(
 
 
 def set_ecu_flex_ray_connected_chs(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2448,7 +2442,7 @@ def get_ecu_lin_master(
 
 
 def set_ecu_lin_master(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2459,7 +2453,7 @@ def get_ecu_lin_protocol_ver(
 
 
 def set_ecu_lin_protocol_ver(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2470,7 +2464,7 @@ def get_ecu_lin_initial_nad(
 
 
 def set_ecu_lin_initial_nad(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2481,7 +2475,7 @@ def get_ecu_lin_config_nad(
 
 
 def set_ecu_lin_config_nad(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2492,7 +2486,7 @@ def get_ecu_lin_supplier_id(
 
 
 def set_ecu_lin_supplier_id(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2503,7 +2497,7 @@ def get_ecu_lin_function_id(
 
 
 def set_ecu_lin_function_id(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2514,7 +2508,7 @@ def get_ecu_linp_2min(
 
 
 def set_ecu_linp_2min(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2525,7 +2519,7 @@ def get_ecu_lins_tmin(
 
 
 def set_ecu_lins_tmin(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2536,7 +2530,7 @@ def get_ecu_j1939_preferred_address(
 
 
 def set_ecu_j1939_preferred_address(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2547,7 +2541,7 @@ def get_ecu_j1939_node_name(
 
 
 def set_ecu_j1939_node_name(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2563,7 +2557,7 @@ def get_lin_sched_comment(
 
 
 def set_lin_sched_comment(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2584,7 +2578,7 @@ def get_lin_sched_name(
 
 
 def set_lin_sched_name(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2595,7 +2589,7 @@ def get_lin_sched_priority(
 
 
 def set_lin_sched_priority(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2606,7 +2600,7 @@ def get_lin_sched_run_mode(
 
 
 def set_lin_sched_run_mode(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2617,7 +2611,7 @@ def get_lin_sched_entry_collision_res_sched(
 
 
 def set_lin_sched_entry_collision_res_sched(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2628,7 +2622,7 @@ def get_lin_sched_entry_delay(
 
 
 def set_lin_sched_entry_delay(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2639,7 +2633,7 @@ def get_lin_sched_entry_event_id(
 
 
 def set_lin_sched_entry_event_id(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2650,7 +2644,7 @@ def get_lin_sched_entry_frames(
 
 
 def set_lin_sched_entry_frames(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2661,7 +2655,7 @@ def get_lin_sched_entry_name(
 
 
 def set_lin_sched_entry_name(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2682,7 +2676,7 @@ def get_lin_sched_entry_type(
 
 
 def set_lin_sched_entry_type(
-        ref
+        ref,
         value) -> None:
     ...
 
@@ -2693,7 +2687,7 @@ def get_lin_sched_entry_nc_ff_data_bytes(
 
 
 def set_lin_sched_entry_nc_ff_data_bytes(
-        ref
+        ref,
         value) -> None:
     ...
 
