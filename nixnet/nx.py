@@ -885,12 +885,6 @@ def convert_signals_to_frames_single_point(
     raise NotImplementedError("Placeholder")
 
 
-def blink(
-        interface_ref,
-        modifier):
-    _funcs.nx_blink(interface_ref, modifier)
-
-
 def clear(
         session_ref):
     _funcs.nx_clear(session_ref)
@@ -925,15 +919,6 @@ def stop(
         session_ref,
         scope):
     _funcs.nx_stop(session_ref, scope)
-
-
-def system_open():
-    return _funcs.nx_system_open()
-
-
-def system_close(
-        system_ref):
-    _funcs.nx_system_open(system_ref)
 
 
 def wait(
