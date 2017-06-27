@@ -79,7 +79,7 @@ class Session(object):
 
     @property
     def application_protocol(self):
-        return _props.get_session_application_protocol(self._handle)
+        return constants.AppProtocol(_props.get_session_application_protocol(self._handle))
 
     @property
     def auto_start(self):
@@ -103,7 +103,7 @@ class Session(object):
 
     @property
     def mode(self):
-        return _props.get_session_mode(self._handle)
+        return constants.CreateSessionMode(_props.get_session_mode(self._handle))
 
     @property
     def num_frames(self):
@@ -127,7 +127,7 @@ class Session(object):
 
     @property
     def protocol(self):
-        return _props.get_session_protocol(self._handle)
+        return constants.Protocol(_props.get_session_protocol(self._handle))
 
     @property
     def queue_size(self):
@@ -191,11 +191,11 @@ class Session(object):
 
     @property
     def intf_out_strm_timng(self):
-        return _props.get_session_intf_out_strm_timng(self._handle)
+        return constants.OutStrmTimng(_props.get_session_intf_out_strm_timng(self._handle))
 
     @intf_out_strm_timng.setter
     def intf_out_strm_timng(self, value):
-        _props.set_session_intf_out_strm_timng(self._handle, value)
+        _props.set_session_intf_out_strm_timng(self._handle, value.value)
 
     @property
     def intf_start_trig_to_in_strm(self):
@@ -218,11 +218,11 @@ class Session(object):
 
     @property
     def intf_can_pend_tx_order(self):
-        return _props.get_session_intf_can_pend_tx_order(self._handle)
+        return constants.CanPendTxOrder(_props.get_session_intf_can_pend_tx_order(self._handle))
 
     @intf_can_pend_tx_order.setter
     def intf_can_pend_tx_order(self, value):
-        _props.set_session_intf_can_pend_tx_order(self._handle, value)
+        _props.set_session_intf_can_pend_tx_order(self._handle, value.value)
 
     @property
     def intf_can_sing_shot(self):
@@ -234,27 +234,27 @@ class Session(object):
 
     @property
     def intf_can_term(self):
-        return _props.get_session_intf_can_term(self._handle)
+        return constants.CanTerm(_props.get_session_intf_can_term(self._handle))
 
     @intf_can_term.setter
     def intf_can_term(self, value):
-        _props.set_session_intf_can_term(self._handle, value)
+        _props.set_session_intf_can_term(self._handle, value.value)
 
     @property
     def intf_can_tcvr_state(self):
-        return _props.get_session_intf_can_tcvr_state(self._handle)
+        return constants.CanTcvrState(_props.get_session_intf_can_tcvr_state(self._handle))
 
     @intf_can_tcvr_state.setter
     def intf_can_tcvr_state(self, value):
-        _props.set_session_intf_can_tcvr_state(self._handle, value)
+        _props.set_session_intf_can_tcvr_state(self._handle, value.value)
 
     @property
     def intf_can_tcvr_type(self):
-        return _props.get_session_intf_can_tcvr_type(self._handle)
+        return constants.CanTcvrType(_props.get_session_intf_can_tcvr_type(self._handle))
 
     @intf_can_tcvr_type.setter
     def intf_can_tcvr_type(self, value):
-        _props.set_session_intf_can_tcvr_type(self._handle, value)
+        _props.set_session_intf_can_tcvr_type(self._handle, value.value)
 
     @property
     def intf_can_out_strm_list_by_id(self):
@@ -266,7 +266,7 @@ class Session(object):
 
     @property
     def intf_can_io_mode(self):
-        return _props.get_session_intf_can_io_mode(self._handle)
+        return constants.CaNioMode(_props.get_session_intf_can_io_mode(self._handle))
 
     @property
     def intf_can_fd_baud_rate(self):
@@ -286,19 +286,19 @@ class Session(object):
 
     @property
     def intf_can_tx_io_mode(self):
-        return _props.get_session_intf_can_tx_io_mode(self._handle)
+        return constants.CaNioMode(_props.get_session_intf_can_tx_io_mode(self._handle))
 
     @intf_can_tx_io_mode.setter
     def intf_can_tx_io_mode(self, value):
-        _props.set_session_intf_can_tx_io_mode(self._handle, value)
+        _props.set_session_intf_can_tx_io_mode(self._handle, value.value)
 
     @property
     def intf_can_fd_iso_mode(self):
-        return _props.get_session_intf_can_fd_iso_mode(self._handle)
+        return constants.CanFdIsoMode(_props.get_session_intf_can_fd_iso_mode(self._handle))
 
     @intf_can_fd_iso_mode.setter
     def intf_can_fd_iso_mode(self, value):
-        _props.set_session_intf_can_fd_iso_mode(self._handle, value)
+        _props.set_session_intf_can_fd_iso_mode(self._handle, value.value)
 
     @property
     def intf_flex_ray_acc_start_rng(self):
@@ -572,15 +572,15 @@ class Session(object):
         return _props.get_session_intf_lin_sched_names(self._handle)
 
     def set_intf_lin_sleep(self, value):
-        _props.set_session_intf_lin_sleep(self._handle, value)
+        _props.set_session_intf_lin_sleep(self._handle, value.value)
 
     @property
     def intf_lin_term(self):
-        return _props.get_session_intf_lin_term(self._handle)
+        return constants.LinTerm(_props.get_session_intf_lin_term(self._handle))
 
     @intf_lin_term.setter
     def intf_lin_term(self, value):
-        _props.set_session_intf_lin_term(self._handle, value)
+        _props.set_session_intf_lin_term(self._handle, value.value)
 
     @property
     def intf_lin_diag_p_2min(self):
