@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from nixnet import constants
 from nixnet import _props
 
 
@@ -27,7 +28,7 @@ class Device(object):
 
     @property
     def form_fac(self):
-        return _props.get_device_form_fac(self._handle)
+        return constants.DevForm(_props.get_device_form_fac(self._handle))
 
     @property
     def intf_refs(self):

@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 import warnings
 
+import constants
 from nixnet import _funcs
 from nixnet import _props
 from nixnet import errors
@@ -87,7 +88,7 @@ class System(object):
 
     @property
     def ver_phase(self):
-        return _props.get_system_ver_phase(self._handle)
+        return constants.Phase(_props.get_system_ver_phase(self._handle))
 
     @property
     def ver_update(self):

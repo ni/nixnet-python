@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+from nixnet import constants
 from nixnet import _funcs
 from nixnet import _props
 
@@ -44,23 +45,23 @@ class Interface(object):
 
     @property
     def protocol(self):
-        return _props.get_interface_protocol(self._handle)
+        return constants.Protocol(_props.get_interface_protocol(self._handle))
 
     @property
     def can_term_cap(self):
-        return _props.get_interface_can_term_cap(self._handle)
+        return constants.CanTermCap(_props.get_interface_can_term_cap(self._handle))
 
     @property
     def can_tcvr_cap(self):
-        return _props.get_interface_can_tcvr_cap(self._handle)
+        return constants.CanTcvrCap(_props.get_interface_can_tcvr_cap(self._handle))
 
     @property
     def dongle_state(self):
-        return _props.get_interface_dongle_state(self._handle)
+        return constants.DongleState(_props.get_interface_dongle_state(self._handle))
 
     @property
     def dongle_id(self):
-        return _props.get_interface_dongle_id(self._handle)
+        return constants.DongleId(_props.get_interface_dongle_id(self._handle))
 
     @property
     def dongle_revision(self):
