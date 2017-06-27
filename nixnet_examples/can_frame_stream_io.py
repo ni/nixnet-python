@@ -9,6 +9,7 @@ import time
 
 from nixnet import constants
 from nixnet import nx
+from nixnet import types
 
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -31,10 +32,10 @@ def main():
             print('Are you using a terminated cable? Enter Y or N')
             terminated_cable = six.input()
             if terminated_cable.lower() == "y":
-                output_session.intf_can_term = contants.CanTerm.OFF
+                output_session.intf_can_term = constants.CanTerm.OFF
             else:
-                input_session.intf_can_term = contants.CanTerm.ON
-                output_session.intf_can_term = contants.CanTerm.ON
+                input_session.intf_can_term = constants.CanTerm.ON
+                output_session.intf_can_term = constants.CanTerm.ON
 
             input_session.intf_baud_rate = 125000
             output_session.intf_baud_rate = 125000
@@ -51,20 +52,20 @@ def main():
                 print('Not a number')
 
             try:
-                payloadList = [int(x) for x in six.input('Enter payload: ').split()]
+                payload_list = [int(x) for x in six.input('Enter payload: ').split()]
             except ValueError:
                 print('Not a number')
 
-            payload = bytearray(payloadList)
+            payload = bytearray(payload_list)
             number_of_bytes_for_frames = len(payload)
             extended = False
 
             print('The same values should be received. Press q to quit')
             i = 0
-            while true:
+            while True:
                 for byte in payload:
                     byte = byte + i
-                with CANFrame(identifier, extended, constants.FRAME_TYPE_CAN_DATA, payload) as frame:
+                with types.CANFrame(id, extended, constants.FRAME_TYPE_CAN_DATA, payload) as frame:
                     output_session.write_frame(list(frame), number_of_bytes_for_frames, 10)
                     print('Sent frame with ID %s payload: %s' % (id, list(payload)))
 
