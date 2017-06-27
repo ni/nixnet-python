@@ -5,9 +5,9 @@ from __future__ import unicode_literals
 
 import warnings
 
-from nixnet import constants
 from nixnet import _funcs
 from nixnet import _props
+from nixnet import constants
 from nixnet import errors
 
 
