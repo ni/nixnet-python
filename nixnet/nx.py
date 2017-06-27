@@ -62,6 +62,10 @@ class Session(object):
 
         self._handle = None
 
+    def start(self, scope):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxstart/"
+        _funcs.nx_start(self, scope)
+
     def read_frame(
             self,
             number_to_read=constants.READ_ALL_AVAILABLE,
@@ -75,6 +79,14 @@ class Session(object):
         Frame: one or more
         http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
         """
+        raise NotImplementedError("Placeholder")
+
+    def write_frame(
+            self,
+            frames,
+            number_of_bytes_for_frames,
+            timeout=10):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
         raise NotImplementedError("Placeholder")
 
     @property
@@ -826,14 +838,6 @@ def read_state(
     raise NotImplementedError("Placeholder")
 
 
-def write_frame(
-        session_ref,
-        buffer,
-        number_of_bytes_for_frames,
-        timeout):
-    raise NotImplementedError("Placeholder")
-
-
 def write_signal_single_point(
         session_ref,
         value_buffer):
@@ -907,12 +911,6 @@ def disconnect_terminals(
 def flush(
         session_ref):
     _funcs.nx_flush(session_ref)
-
-
-def start(
-        session_ref,
-        scope):
-    _funcs.nx_start(session_ref, scope)
 
 
 def stop(
