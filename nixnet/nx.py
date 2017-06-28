@@ -84,7 +84,6 @@ class Session(object):
     def write_frame(
             self,
             frames,
-            number_of_bytes_for_frames,
             timeout=10):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
         raise NotImplementedError("Placeholder")

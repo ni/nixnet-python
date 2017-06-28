@@ -25,57 +25,57 @@ def main():
     output_mode = constants.CreateSessionMode.FRAME_OUT_STREAM
 
     with nx.Session(database_name, cluster_name, list, interface1, input_mode) as input_session:
-        print('Input session created successfully.')
         with nx.Session(database_name, cluster_name, list, interface2, output_mode) as output_session:
-            print('Output session created successfully.')
-
             print('Are you using a terminated cable? Enter Y or N')
             terminated_cable = six.input()
             if terminated_cable.lower() == "y":
                 output_session.intf_can_term = constants.CanTerm.OFF
+                input_session.intf_can_term = constants.CanTerm.ON
             else:
                 input_session.intf_can_term = constants.CanTerm.ON
                 output_session.intf_can_term = constants.CanTerm.ON
 
             input_session.intf_baud_rate = 125000
             output_session.intf_baud_rate = 125000
-            print('Properties set successfully.')
 
             # Start the input session manually to make sure that the first
             # frame value sent before the initial read will be received.
             input_session.start(constants.StartStopScope.NORMAL)
-            print('Input session started manually.')
 
             try:
-                id = int(six.input('Enter identifier: '))
+                id = int(six.input('Enter identifier (int): '))
             except ValueError:
-                print('Not a number')
+                print('Not a number. Setting identifier to 1')
+                id = 1
 
             try:
-                payload_list = [int(x) for x in six.input('Enter payload: ').split()]
+                payload_list = [int(x) for x in six.input('Enter payload [int, int, ...]: ').split()]
             except ValueError:
-                print('Not a number')
+                print('Not a valid list of numbers. Setting payload to [2, 4, 8, 16]')
+                payload_list = [2, 4, 8, 16]
 
             payload = bytearray(payload_list)
-            number_of_bytes_for_frames = len(payload)
             extended = False
+            frame = CanFrame(id, extended, constants.FrameType.CAN_DATA, payload)
+            write_timeout = 10
 
             print('The same values should be received. Press q to quit')
             i = 0
             while True:
-                for byte in payload:
-                    byte = byte + i
-                with types.CANFrame(id, extended, constants.FRAME_TYPE_CAN_DATA, payload) as frame:
-                    output_session.write_frame(list(frame), number_of_bytes_for_frames, 10)
-                    print('Sent frame with ID %s payload: %s' % (id, list(payload)))
+                for index, byte in enumerate(payload):
+                    payload[index] = byte + i
 
-                # Wait 100 ms and then read the received values.
+                frame.payload = payload
+                output_session.write_frame([frame], write_timeout)
+                print('Sent frame with ID %s payload: %s' % (id, list(payload)))
+
+                # Wait 1 s and then read the received values.
                 # They should be the same as the ones sent.
-                time.sleep(0.1)
+                time.sleep(1)
 
                 count = constants.READ_ALL_AVAILABLE
-                timeout = constants.TIMEOUT_NONE
-                frames = input_session.read_frame(count, timeout)
+                read_timeout = constants.TIMEOUT_NONE
+                frames = input_session.read_frame(count, read_timeout)
                 for frame in frames:
                     print('Received frame: ')
                     pp.pprint(frame)

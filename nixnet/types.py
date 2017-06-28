@@ -4,7 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 
-class CANFrame(object):
+class CanFrame(object):
     """CAN Frame.
 
     Attributes:
