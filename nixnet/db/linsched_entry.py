@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from nixnet import _props
+from nixnet import constants
 
 
 class LinSchedEntry(object):
@@ -75,11 +76,11 @@ class LinSchedEntry(object):
 
     @property
     def type(self):
-        return _props.get_lin_sched_entry_type(self._handle)
+        return constants.LinSchedEntryType(_props.get_lin_sched_entry_type(self._handle))
 
     @type.setter
     def type(self, value):
-        _props.set_lin_sched_entry_type(self._handle, value)
+        _props.set_lin_sched_entry_type(self._handle, value.value)
 
     @property
     def nc_ff_data_bytes(self):

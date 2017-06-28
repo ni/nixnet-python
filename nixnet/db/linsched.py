@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from nixnet import _props
+from nixnet import constants
 
 
 class LinSched(object):
@@ -63,8 +64,8 @@ class LinSched(object):
 
     @property
     def run_mode(self):
-        return _props.get_lin_sched_run_mode(self._handle)
+        return constants.LinSchedRunMode(_props.get_lin_sched_run_mode(self._handle))
 
     @run_mode.setter
     def run_mode(self, value):
-        _props.set_lin_sched_run_mode(self._handle, value)
+        _props.set_lin_sched_run_mode(self._handle, value.value)

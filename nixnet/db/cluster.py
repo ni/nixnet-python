@@ -5,6 +5,7 @@ from __future__ import unicode_literals
 
 from nixnet import _funcs
 from nixnet import _props
+from nixnet import constants
 
 
 class Cluster(object):
@@ -92,11 +93,11 @@ class Cluster(object):
 
     @property
     def protocol(self):
-        return _props.get_cluster_protocol(self._handle)
+        return constants.Protocol(_props.get_cluster_protocol(self._handle))
 
     @protocol.setter
     def protocol(self, value):
-        _props.set_cluster_protocol(self._handle, value)
+        _props.set_cluster_protocol(self._handle, value.value)
 
     @property
     def sig_refs(self):
@@ -104,11 +105,11 @@ class Cluster(object):
 
     @property
     def can_io_mode(self):
-        return _props.get_cluster_can_io_mode(self._handle)
+        return constants.CaNioMode(_props.get_cluster_can_io_mode(self._handle))
 
     @can_io_mode.setter
     def can_io_mode(self, value):
-        _props.set_cluster_can_io_mode(self._handle, value)
+        _props.set_cluster_can_io_mode(self._handle, value.value)
 
     @property
     def can_fd_baud_rate(self):
@@ -416,12 +417,12 @@ class Cluster(object):
 
     @property
     def application_protocol(self):
-        return _props.get_cluster_application_protocol(self._handle)
+        return constants.AppProtocol(_props.get_cluster_application_protocol(self._handle))
 
     @application_protocol.setter
     def application_protocol(self, value):
-        _props.set_cluster_application_protocol(self._handle, value)
+        _props.set_cluster_application_protocol(self._handle, value.value)
 
     @property
     def can_fd_iso_mode(self):
-        return _props.get_cluster_can_fd_iso_mode(self._handle)
+        return constants.CanFdIsoMode(_props.get_cluster_can_fd_iso_mode(self._handle))

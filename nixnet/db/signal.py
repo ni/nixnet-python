@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from nixnet import _props
+from nixnet import constants
 
 
 class Signal(object):
@@ -27,11 +28,11 @@ class Signal(object):
 
     @property
     def byte_ordr(self):
-        return _props.get_signal_byte_ordr(self._handle)
+        return constants.SigByteOrdr(_props.get_signal_byte_ordr(self._handle))
 
     @byte_ordr.setter
     def byte_ordr(self, value):
-        _props.set_signal_byte_ordr(self._handle, value)
+        _props.set_signal_byte_ordr(self._handle, value.value)
 
     @property
     def comment(self):
@@ -47,11 +48,11 @@ class Signal(object):
 
     @property
     def data_type(self):
-        return _props.get_signal_data_type(self._handle)
+        return constants.SigDataType(_props.get_signal_data_type(self._handle))
 
     @data_type.setter
     def data_type(self, value):
-        _props.set_signal_data_type(self._handle, value)
+        _props.set_signal_data_type(self._handle, value.value)
 
     @property
     def default(self):

@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from nixnet import _props
+from nixnet import constants
 
 
 class Frame(object):
@@ -95,11 +96,11 @@ class Frame(object):
 
     @property
     def can_timing_type(self):
-        return _props.get_frame_can_timing_type(self._handle)
+        return constants.TimeType(_props.get_frame_can_timing_type(self._handle))
 
     @can_timing_type.setter
     def can_timing_type(self, value):
-        _props.set_frame_can_timing_type(self._handle, value)
+        _props.set_frame_can_timing_type(self._handle, value.value)
 
     @property
     def can_tx_time(self):
@@ -239,8 +240,8 @@ class Frame(object):
 
     @property
     def ca_nio_mode(self):
-        return _props.get_frame_ca_nio_mode(self._handle)
+        return constants.CaNioMode(_props.get_frame_ca_nio_mode(self._handle))
 
     @ca_nio_mode.setter
     def ca_nio_mode(self, value):
-        _props.set_frame_ca_nio_mode(self._handle, value)
+        _props.set_frame_ca_nio_mode(self._handle, value.value)
