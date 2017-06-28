@@ -40,8 +40,6 @@ def test_unknown_error():
 
     with pytest.raises(errors.XnetError) as excinfo:
         _errors.check_for_error(error_code)
-    print(excinfo.value)
-    print(dir(excinfo.value))
     assert excinfo.value.error_code == error_code
     assert excinfo.value.error_type == _enums.Err.INTERNAL_ERROR
     assert excinfo.value.args == ('', )
