@@ -6,17 +6,6 @@ from __future__ import unicode_literals
 from nixnet import _funcs
 
 
-def open_database(
-        database_name):
-    return _funcs.nxdb_open_database(database_name)
-
-
-def close_database(
-        database_ref,
-        close_all_refs):
-    _funcs.nxdb_close_database(database_ref, close_all_refs)
-
-
 def create_object(
         parent_object_ref,
         object_class,
@@ -33,21 +22,6 @@ def find_object(
 
 def delete_object(db_object_ref):
     _funcs.nxdb_delete_object(db_object_ref)
-
-
-def save_database(
-        database_ref,
-        db_filepath):
-    _funcs.nxdb_save_database(database_ref, db_filepath)
-
-
-def merge(
-        target_cluster_ref,
-        source_obj_ref,
-        copy_mode,
-        prefix,
-        wait_for_complete):
-    return _funcs.nxdb_merge(target_cluster_ref, source_obj_ref, copy_mode, prefix, wait_for_complete)
 
 
 def add_alias64(
