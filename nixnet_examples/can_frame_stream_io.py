@@ -56,7 +56,7 @@ def main():
 
             payload = bytearray(payload_list)
             extended = False
-            frame = CanFrame(id, extended, constants.FrameType.CAN_DATA, payload)
+            frame = types.CanFrame(id, extended, constants.FrameType.CAN_DATA, payload)
             write_timeout = 10
 
             print('The same values should be received. Press q to quit')
