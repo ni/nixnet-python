@@ -81,12 +81,34 @@ class Session(object):
         """
         raise NotImplementedError("Placeholder")
 
+    def read_signal_single_point(
+            self,
+            num_signals):
+        """Read signal single point.
+
+        Valid modes
+        - Single Input Single-Point
+        Timestamps
+        - Optional in C API
+        - Timestamp per data point
+        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadsignalsinglepoint/
+        """
+        timestamps, values = _funcs.read_signal_single_point(self, num_signals)
+        for timestamp, value in zip(timestamps, values):
+            yield timestamp, value
+
     def write_frame(
             self,
             frames,
             timeout=10):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
         raise NotImplementedError("Placeholder")
+
+    def write_signal_single_point(
+            self,
+            value_buffer):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwritesignalsinglepoint/"
+        _funcs.nx_write_signal_single_point(self, value_buffer)
 
     @property
     def application_protocol(self):
@@ -796,14 +818,6 @@ def create_session_by_ref(
     return _funcs.nx_create_session_by_ref(database_refs, interface, mode)
 
 
-def read_signal_single_point(
-        session_ref,
-        num_signals):
-    timestamps, values = _funcs.read_signal_single_point(session_ref, num_signals)
-    for timestamp, value in zip(timestamps, values):
-        yield timestamp, value
-
-
 def read_signal_waveform(
         session_ref,
         timeout,
@@ -834,12 +848,6 @@ def read_state(
         state_value,
         fault):
     raise NotImplementedError("Placeholder")
-
-
-def write_signal_single_point(
-        session_ref,
-        value_buffer):
-    _funcs.nx_write_signal_single_point(session_ref, value_buffer)
 
 
 def write_state(
