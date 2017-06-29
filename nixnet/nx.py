@@ -798,11 +798,10 @@ def create_session_by_ref(
 
 def read_signal_single_point(
         session_ref,
-        value_buffer,
-        size_of_value_buffer,
-        timestamp_buffer,
-        size_of_timestamp_buffer):
-    raise NotImplementedError("Placeholder")
+        num_signals):
+    timestamps, values = _funcs.read_signal_single_point(session_ref, num_signals)
+    for timestamp, value in zip(timestamps, values):
+        yield timestamp, value
 
 
 def read_signal_waveform(

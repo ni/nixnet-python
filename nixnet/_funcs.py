@@ -83,6 +83,22 @@ def nx_get_sub_property_size(
     return property_size_ctypes.value
 
 
+def nx_read_signal_single_point(session_ref, num_signals):
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
+    value_buffer_ctypes = _ctypedefs.f64 * num_signals
+    size_of_value_buffer_ctypes = _ctypedefs.f64.BYTES * num_signals
+    timestamp_buffer_ctypes = _ctypedefs.nxTimestamp_t * num_signals
+    size_of_timestamp_buffer_ctypes = _ctypedefs.nxTimestamp_t.BYTES * num_signals
+    status = _cfuncs.lib.nx_read_signal_single_point(
+        session_ref_ctypes,
+        value_buffer_ctypes,
+        size_of_value_buffer_ctypes,
+        timestamp_buffer_ctypes,
+        size_of_timestamp_buffer_ctypes)
+    _errors.check_for_error(status)
+    return timestamp_buffer_ctypes.value, value_buffer_ctypes.value
+
+
 def nx_write_signal_single_point(
         session_ref,
         value_buffer):
