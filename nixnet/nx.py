@@ -5,10 +5,12 @@ from __future__ import unicode_literals
 
 import warnings
 
+from nixnet import _frames
 from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
 from nixnet import errors
+from nixnet import types
 
 
 class Session(object):
@@ -67,9 +69,9 @@ class Session(object):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxstart/"
         _funcs.nx_start(self._handle, scope)
 
-    def read_frame(
+    def read_frame_bytes(
             self,
-            number_to_read=constants.READ_ALL_AVAILABLE,
+            number_of_bytes_to_read,
             timeout=constants.TIMEOUT_NONE):
         """Read frames.
 
@@ -80,7 +82,44 @@ class Session(object):
         Frame: one or more
         http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
         """
-        raise NotImplementedError("Placeholder")
+        buffer, number_of_bytes_returned = _funcs.nx_read_frame(self._handle, number_of_bytes_to_read, timeout)
+        return buffer[0:number_of_bytes_returned]
+
+    def read_raw_frame(
+            self,
+            number_to_read,
+            timeout=constants.TIMEOUT_NONE):
+        """Read frames.
+
+        Valid modes
+        - Frame Input Stream Mode
+        - Frame Input Queued Mode
+        - Frame Input Single-Point Mode
+        Frame: one or more
+        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        """
+        # NOTE: If the frame payload excedes the base unit, this will return
+        # less than number_to_read
+        number_of_bytes_to_read = number_to_read * _frames.nxFrameFixed_t.size
+        buffer = self.read_frame_bytes(number_of_bytes_to_read, timeout)
+        for frame in _frames.iterate_frames(buffer):
+            yield frame
+
+    def read_can_frame(
+            self,
+            number_to_read,
+            timeout=constants.TIMEOUT_NONE):
+        """Read frames.
+
+        Valid modes
+        - Frame Input Stream Mode
+        - Frame Input Queued Mode
+        - Frame Input Single-Point Mode
+        Frame: one or more
+        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        """
+        for frame in self.read_raw_frame(number_to_read, timeout):
+            yield types.CanFrame.from_raw(frame)
 
     def read_signal_single_point(
             self,

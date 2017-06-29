@@ -133,30 +133,3 @@ class nxJ1939CommState_t(ctypes.Structure):  # NOQA: N801
         ("ReceiveError", u8),
         ("Reserved1", u32),
         ("Reserved2", u32)]
-
-
-class nxFrameFixed_t(ctypes.Structure):  # NOQA: N801
-    _fields_ = [
-        ("Timestamp", nxTimestamp_t),
-        ("Identifier", u32),
-        ("Type", u8),
-        ("Flags", u8),
-        ("Info", u8)]
-
-
-class nxFrameCAN_t(nxFrameFixed_t):  # NOQA: N801
-    _fields_ = [
-        ("PayloadLength", u8),
-        ("Payload", u8 * 8)]
-
-
-class nxFrameLIN_t(nxFrameFixed_t):  # NOQA: N801
-    _fields_ = [
-        ("PayloadLength", u8),
-        ("Payload", u8 * 8)]
-
-
-class nxFrameVar_t(nxFrameFixed_t):  # NOQA: N801
-    _fields_ = [
-        ("PayloadLength", u8),
-        ("Payload", u8 * 8)]
