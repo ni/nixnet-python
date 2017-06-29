@@ -97,9 +97,9 @@ def nx_read_signal_single_point(
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     value_buffer_ctypes = (_ctypedefs.f64 * num_signals)()
-    size_of_value_buffer_ctypes = _ctypedefs.f64.BYTES * num_signals
+    size_of_value_buffer_ctypes = _ctypedefs.u32(_ctypedefs.f64.BYTES * num_signals)
     timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * num_signals)()
-    size_of_timestamp_buffer_ctypes = _ctypedefs.nxTimestamp_t.BYTES * num_signals
+    size_of_timestamp_buffer_ctypes = _ctypedefs.u32(_ctypedefs.nxTimestamp_t.BYTES * num_signals)
     result = _cfuncs.lib.nx_read_signal_single_point(
         session_ref_ctypes,
         value_buffer_ctypes,
