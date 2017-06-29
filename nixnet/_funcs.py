@@ -37,7 +37,7 @@ def nx_create_session_by_ref(
         database_refs,
         interface,
         mode):
-    size_of_database_refs_ctypes = _ctypedefs.u32(len(database_refs) * 4)
+    size_of_database_refs_ctypes = _ctypedefs.u32(len(database_refs) * _ctypedefs.nxDatabaseRef_t.BYTES)
     database_refs_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)(database_refs)
     interface_ctypes = _ctypedefs.char_p(interface)
     mode_ctypes = _ctypedefs.u32(mode)
@@ -88,7 +88,7 @@ def nx_write_signal_single_point(
         value_buffer):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     value_buffer_ctypes = ctypes.POINTER(_ctypedefs.f64)(value_buffer)
-    size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * 8)
+    size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
     status = _cfuncs.lib.nx_write_signal_single_point(
         session_ref_ctypes,
         value_buffer_ctypes,
@@ -103,7 +103,7 @@ def nx_write_signal_waveform(
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     timeout_ctypes = _ctypedefs.f64(timeout)
     value_buffer_ctypes = ctypes.POINTER(_ctypedefs.f64)(value_buffer)
-    size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * 8)
+    size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
     status = _cfuncs.lib.nx_write_signal_waveform(
         session_ref_ctypes,
         timeout_ctypes,
@@ -121,11 +121,11 @@ def nx_write_signal_xy(
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     timeout_ctypes = _ctypedefs.f64(timeout)
     value_buffer_ctypes = ctypes.POINTER(_ctypedefs.f64)(value_buffer)
-    size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * 8)
+    size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
     timestamp_buffer_ctypes = ctypes.POINTER(_ctypedefs.nxTimestamp_t)(timestamp_buffer)
-    size_of_timestamp_buffer_ctypes = _ctypedefs.u32(len(timestamp_buffer) * 8)
+    size_of_timestamp_buffer_ctypes = _ctypedefs.u32(len(timestamp_buffer) * _ctypedefs.nxTimestamp_t.BYTES)
     num_pairs_buffer_ctypes = ctypes.POINTER(_ctypedefs.u32)(num_pairs_buffer)
-    size_of_num_pairs_buffer_ctypes = _ctypedefs.u32(len(num_pairs_buffer) * 4)
+    size_of_num_pairs_buffer_ctypes = _ctypedefs.u32(len(num_pairs_buffer) * _ctypedefs.u32.BYTES)
     status = _cfuncs.lib.nx_write_signal_xy(
         session_ref_ctypes,
         timeout_ctypes,

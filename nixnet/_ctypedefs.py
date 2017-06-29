@@ -15,15 +15,28 @@ import ctypes
 
 
 class char(ctypes.c_char):  # NOQA: N801
-    pass
+
+    BYTES = 1
 
 
 class char_p(ctypes.c_char_p):  # NOQA: N801
     pass
 
 
+class bool8(ctypes.c_ubyte):  # NOQA: N801
+    """32-bit boolean C-type."""
+
+    BYTES = 1
+
+    @classmethod
+    def from_param(cls, param):
+        return ctypes.c_ubyte(1) if bool(param) else ctypes.c_ubyte(0)
+
+
 class bool32(ctypes.c_uint):  # NOQA: N801
     """32-bit boolean C-type."""
+
+    BYTES = 4
 
     @classmethod
     def from_param(cls, param):
@@ -31,43 +44,53 @@ class bool32(ctypes.c_uint):  # NOQA: N801
 
 
 class i8(ctypes.c_byte):  # NOQA: N801
-    pass
+
+    BYTES = 1
 
 
 class i16(ctypes.c_short):  # NOQA: N801
-    pass
+
+    BYTES = 2
 
 
 class i32(ctypes.c_int):  # NOQA: N801
-    pass
+
+    BYTES = 4
 
 
 class i64(ctypes.c_longlong):  # NOQA: N801
-    pass
+
+    BYTES = 8
 
 
 class u8(ctypes.c_ubyte):  # NOQA: N801
-    pass
+
+    BYTES = 1
 
 
 class u16(ctypes.c_ushort):  # NOQA: N801
-    pass
+
+    BYTES = 2
 
 
 class u32(ctypes.c_uint):  # NOQA: N801
-    pass
+
+    BYTES = 4
 
 
 class u64(ctypes.c_ulonglong):  # NOQA: N801
-    pass
+
+    BYTES = 8
 
 
 class f32(ctypes.c_float):  # NOQA: N801
-    pass
+
+    BYTES = 4
 
 
 class f64(ctypes.c_double):  # NOQA: N801
-    pass
+
+    BYTES = 8
 
 
 class nxVoidPtr(ctypes.c_void_p):  # NOQA: N801
