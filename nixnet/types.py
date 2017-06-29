@@ -11,7 +11,7 @@ class CanFrame(object):
         identifier (int): CAN frame arbitration identifier
         extended (bool): identifier uses extended format
         echo (bool): Frame is an echo of a successful transmit rather than being received from the network.
-        type (_enums.FrameType): Frame Type
+        type (consants.FrameType): Frame Type
         timestamp (Optional[datetime]): Absolute time the XNET interface received the end-of-frame.
         payload (bytearray): Data bytes.
     """
