@@ -27,7 +27,7 @@ class bool32(ctypes.c_uint):  # NOQA: N801
 
     @classmethod
     def from_param(cls, param):
-        return ctypes.c_uint16(1) if bool(param) else ctypes.c_uint16(0)
+        return ctypes.c_uint(1) if bool(param) else ctypes.c_uint(0)
 
 
 class i8(ctypes.c_byte):  # NOQA: N801
