@@ -34,7 +34,7 @@ class Session(object):
     def __enter__(self):
         return self
 
-    def __exit__(self):
+    def __exit__(self, type, value, traceback):
         self.close()
 
     def __eq__(self, other):
