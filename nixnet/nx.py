@@ -21,6 +21,7 @@ class Session(object):
             interface,
             mode):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        self._handle = None  # To satisfy `__del__` in case nx_create_session throws
         self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface, mode)
 
     def __del__(self):
