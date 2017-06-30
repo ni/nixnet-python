@@ -94,7 +94,7 @@ class Session(object):
         - Timestamp per data point
         http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadsignalsinglepoint/
         """
-        timestamps, values = _funcs.read_signal_single_point(self._handle, num_signals)
+        timestamps, values = _funcs.nx_read_signal_single_point(self._handle, num_signals)
         for timestamp, value in zip(timestamps, values):
             yield timestamp, value
 
