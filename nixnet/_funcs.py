@@ -21,7 +21,7 @@ def nx_create_session(
     cluster_name_ctypes = _ctypedefs.char_p(cluster_name)
     list_ctypes = _ctypedefs.char_p(list)
     interface_ctypes = _ctypedefs.char_p(interface)
-    mode_ctypes = _ctypedefs.u32(mode)
+    mode_ctypes = _ctypedefs.u32(mode.value)
     session_ref_ctypes = ctypes.POINTER(_ctypedefs.nxSessionRef_t)()
     result = _cfuncs.lib.nx_create_session(
         database_name_ctypes,
@@ -43,7 +43,7 @@ def nx_create_session_by_ref(
     size_of_database_refs_ctypes = _ctypedefs.u32(len(database_refs) * _ctypedefs.nxDatabaseRef_t.BYTES)
     database_refs_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)(database_refs)
     interface_ctypes = _ctypedefs.char_p(interface)
-    mode_ctypes = _ctypedefs.u32(mode)
+    mode_ctypes = _ctypedefs.u32(mode.value)
     session_ref_ctypes = ctypes.POINTER(_ctypedefs.nxSessionRef_t)()
     result = _cfuncs.lib.nx_create_session_by_ref(
         size_of_database_refs_ctypes,
@@ -177,7 +177,7 @@ def nx_blink(
     modifier,
 ):
     interface_ref_ctypes = _ctypedefs.nxSessionRef_t(interface_ref)
-    modifier_ctypes = _ctypedefs.u32(modifier)
+    modifier_ctypes = _ctypedefs.u32(modifier.value)
     result = _cfuncs.lib.nx_blink(
         interface_ref_ctypes,
         modifier_ctypes,
@@ -242,7 +242,7 @@ def nx_start(
     scope,
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    scope_ctypes = _ctypedefs.u32(scope)
+    scope_ctypes = _ctypedefs.u32(scope.value)
     result = _cfuncs.lib.nx_start(
         session_ref_ctypes,
         scope_ctypes,
@@ -255,7 +255,7 @@ def nx_stop(
     scope,
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    scope_ctypes = _ctypedefs.u32(scope)
+    scope_ctypes = _ctypedefs.u32(scope.value)
     result = _cfuncs.lib.nx_stop(
         session_ref_ctypes,
         scope_ctypes,
@@ -337,7 +337,7 @@ def nxdb_create_object(
     object_name,
 ):
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
-    object_class_ctypes = _ctypedefs.u32(object_class)
+    object_class_ctypes = _ctypedefs.u32(object_class.value)
     object_name_ctypes = _ctypedefs.char_p(object_name)
     db_object_ref_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)()
     result = _cfuncs.lib.nxdb_create_object(
@@ -356,7 +356,7 @@ def nxdb_find_object(
     object_name,
 ):
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
-    object_class_ctypes = _ctypedefs.u32(object_class)
+    object_class_ctypes = _ctypedefs.u32(object_class.value)
     object_name_ctypes = _ctypedefs.char_p(object_name)
     db_object_ref_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)()
     result = _cfuncs.lib.nxdb_find_object(
