@@ -65,7 +65,7 @@ class Session(object):
 
     def start(self, scope):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxstart/"
-        _funcs.nx_start(self, scope)
+        _funcs.nx_start(self._handle, scope)
 
     def read_frame(
             self,
@@ -94,9 +94,9 @@ class Session(object):
         - Timestamp per data point
         http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadsignalsinglepoint/
         """
-        timestamps, values = _funcs.read_signal_single_point(self, num_signals)
+        timestamps, values = _funcs.nx_read_signal_single_point(self._handle, num_signals)
         for timestamp, value in zip(timestamps, values):
-            yield timestamp, value
+            yield timestamp.value, value.value
 
     def write_frame(
             self,
@@ -109,7 +109,7 @@ class Session(object):
             self,
             value_buffer):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwritesignalsinglepoint/"
-        _funcs.nx_write_signal_single_point(self, value_buffer)
+        _funcs.nx_write_signal_single_point(self._handle, value_buffer)
 
     @property
     def application_protocol(self):
