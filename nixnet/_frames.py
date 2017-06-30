@@ -136,3 +136,42 @@ def iterate_frames(bytes):
             base_unit[FRAME_FLAG_INDEX],
             base_unit[FRAME_INFO_INDEX],
             payload)
+
+
+def serialize_frame(frame):
+    """Yields units that compose the frame."""
+    base_unit_payload = frame.payload[0:MAX_BASE_UNIT_PAYLOAD_LENGTH]
+    base_unit_padding_length = max(MAX_BASE_UNIT_PAYLOAD_LENGTH - len(base_unit_payload), 0)
+    base_unit_payload += b'\0' * base_unit_padding_length
+
+    payload_unit = frame.payload[MAX_BASE_UNIT_PAYLOAD_LENGTH:]
+    payload_unit_padding_length = _calculate_payload_unit_size(len(frame.payload)) - len(payload_unit)
+    payload_unit += b'\0' * payload_unit_padding_length
+
+    payload_length = len(frame.payload)
+    if frame.type == constants.FrameType.J1939_DATA:
+        if (frame.info & _cconsts.NX_FRAME_PAYLD_LEN_HIGH_MASK_J1939) != 0:
+            # Invalid data where info_length will go.
+            _errors.check_for_error(_cconsts.NX_ERR_INTERNAL_ERROR)
+        info_length = payload_length >> 8
+        if info_length != (info_length & _cconsts.NX_FRAME_PAYLD_LEN_HIGH_MASK_J1939):
+            _errors.check_for_error(_cconsts.NX_ERR_FRAME_WRITE_TOO_LARGE)
+        info = frame.info | info_length
+        payload_length &= 0xFF
+    else:
+        if payload_length != (payload_length & 0xFF):
+            _errors.check_for_error(_cconsts.NX_ERR_NON_J1939_FRAME_SIZE)
+        info = frame.info
+
+    base_unit = nxFrameFixed_t.pack(
+        frame.timestamp,
+        frame.identifier,
+        frame.type.value,
+        frame.flags,
+        info,
+        payload_length,
+        base_unit_payload)
+    yield base_unit
+
+    if payload_unit:
+        yield payload_unit

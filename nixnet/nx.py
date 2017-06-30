@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import itertools
 import warnings
 
 from nixnet import _frames
@@ -137,12 +138,31 @@ class Session(object):
         for timestamp, value in zip(timestamps, values):
             yield timestamp.value, value.value
 
-    def write_frame(
+    def write_frame_bytes(
+            self,
+            bytes,
+            timeout=10):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        _funcs.nx_write_frame(self._handle, bytes, timeout)
+
+    def write_raw_frame(
             self,
             frames,
             timeout=10):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
-        raise NotImplementedError("Placeholder")
+        units = itertools.chain.from_iterable(
+            _frames.serialize_frame(frame)
+            for frame in frames)
+        bytes = b"".join(units)
+        self.write_frame_bytes(bytes, timeout)
+
+    def write_can_frame(
+            self,
+            frames,
+            timeout=10):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        raw_frames = (frame.to_raw() for frame in frames)
+        self.write_raw_frame(raw_frames, timeout)
 
     def write_signal_single_point(
             self,
