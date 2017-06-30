@@ -13,6 +13,7 @@ from nixnet import errors
 class Database(object):
 
     def __init__(self, database_name):
+        self._handle = None  # To satisfy `__del__` in case nxdb_open_database throws
         self._handle = _funcs.nxdb_open_database(database_name)
 
     def __del__(self):

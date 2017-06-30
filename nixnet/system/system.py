@@ -14,6 +14,7 @@ from nixnet import errors
 class System(object):
 
     def __init__(self):
+        self._handle = None  # To satisfy `__del__` in case nx_system_open throws
         self._handle = _funcs.nx_system_open()
 
     def __del__(self):
