@@ -96,7 +96,7 @@ class Session(object):
         """
         timestamps, values = _funcs.nx_read_signal_single_point(self._handle, num_signals)
         for timestamp, value in zip(timestamps, values):
-            yield timestamp, value
+            yield timestamp.value, value.value
 
     def write_frame(
             self,

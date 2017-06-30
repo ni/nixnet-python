@@ -108,7 +108,7 @@ def nx_read_signal_single_point(
         size_of_timestamp_buffer_ctypes
     )
     _errors.check_for_error(result)
-    return timestamp_buffer_ctypes.value, value_buffer_ctypes.value
+    return timestamp_buffer_ctypes, value_buffer_ctypes
 
 
 def nx_write_signal_single_point(
