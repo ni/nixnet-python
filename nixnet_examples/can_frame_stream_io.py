@@ -27,11 +27,15 @@ def main():
     with nx.Session(database_name, cluster_name, list, interface1, input_mode) as input_session:
         with nx.Session(database_name, cluster_name, list, interface2, output_mode) as output_session:
             print('Are you using a terminated cable? Enter Y or N')
-            terminated_cable = six.input()
+            terminated_cable = six.moves.input()
             if terminated_cable.lower() == "y":
                 output_session.intf_can_term = constants.CanTerm.OFF
                 input_session.intf_can_term = constants.CanTerm.ON
+            elif terminated_cable.lower() == "n":
+                input_session.intf_can_term = constants.CanTerm.ON
+                output_session.intf_can_term = constants.CanTerm.ON
             else:
+                print("Unrecognised input ({}), assuming 'n'".format(terminated_cable))
                 input_session.intf_can_term = constants.CanTerm.ON
                 output_session.intf_can_term = constants.CanTerm.ON
 
@@ -42,20 +46,16 @@ def main():
             # frame value sent before the initial read will be received.
             input_session.start(constants.StartStopScope.NORMAL)
 
+            user_value = six.moves.input('Enter payload [int, int]: ')
             try:
-                id = int(six.input('Enter identifier (int): '))
+                payload_list = [int(x.strip()) for x in user_value.split(",")]
             except ValueError:
-                print('Not a number. Setting identifier to 1')
-                id = 1
-
-            try:
-                payload_list = [int(x) for x in six.input('Enter payload [int, int, ...]: ').split()]
-            except ValueError:
-                print('Not a valid list of numbers. Setting payload to [2, 4, 8, 16]')
                 payload_list = [2, 4, 8, 16]
+                print('Unrecognized input ({}). Setting data buffer to {}', user_value, payload_list)
 
-            payload = bytearray(payload_list)
+            id = 0
             extended = False
+            payload = bytearray(payload_list)
             frame = types.CanFrame(id, extended, constants.FrameType.CAN_DATA, payload)
             write_timeout = 10
 
@@ -84,7 +84,7 @@ def main():
                 if max(payload) + i > 0xFF:
                     i = 0
 
-                inp = six.input()
+                inp = six.moves.input()
                 if inp == 'q':
                     break
 
