@@ -63,16 +63,16 @@ def main():
                     payload[index] = byte + i
 
                 frame.payload = payload
-                output_session.write_frame([frame], write_timeout)
+                output_session.write_can_frame([frame], write_timeout)
                 print('Sent frame with ID %s payload: %s' % (id, list(payload)))
 
                 # Wait 1 s and then read the received values.
                 # They should be the same as the ones sent.
                 time.sleep(1)
 
-                count = constants.READ_ALL_AVAILABLE
+                count = 1
                 read_timeout = constants.TIMEOUT_NONE
-                frames = input_session.read_frame(count, read_timeout)
+                frames = input_session.read_can_frame(count, read_timeout)
                 for frame in frames:
                     print('Received frame: ')
                     pp.pprint(frame)
