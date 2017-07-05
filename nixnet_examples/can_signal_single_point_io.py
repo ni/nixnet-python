@@ -29,11 +29,15 @@ def main():
     with nx.Session(database_name, cluster_name, input_signal_list, interface1, input_mode) as input_session:
         with nx.Session(database_name, cluster_name, output_signal_list, interface2, output_mode) as output_session:
             print('Are you using a terminated cable? Enter Y or N')
-            terminated_cable = six.input()
+            terminated_cable = six.moves.input()
             if terminated_cable.lower() == "y":
                 output_session.intf_can_term = constants.CanTerm.OFF
                 input_session.intf_can_term = constants.CanTerm.ON
+            elif terminated_cable.lower() == "n":
+                input_session.intf_can_term = constants.CanTerm.ON
+                output_session.intf_can_term = constants.CanTerm.ON
             else:
+                print("Unrecognised input ({}), assuming 'n'".format(terminated_cable))
                 input_session.intf_can_term = constants.CanTerm.ON
                 output_session.intf_can_term = constants.CanTerm.ON
 
@@ -41,11 +45,19 @@ def main():
             # signal value sent before the initial read will be received.
             input_session.start(constants.StartStopScope.NORMAL)
 
+            user_value = six.moves.input('Enter two signal values [float, float]: ')
             try:
-                value_buffer = [float(x) for x in six.input('Enter single point data [float, float, ...]: ').split()]
+                value_buffer = [float(x.strip()) for x in user_value.split(",")]
             except ValueError:
-                print('Not a valid list of floats. Setting data buffer to [24.5343, 77.0129, 55.368]')
-                value_buffer = [24.5343, 77.0129, 55.368]
+                value_buffer = [24.5343, 77.0129]
+                print('Unrecognized input ({}). Setting data buffer to {}', user_value, value_buffer)
+
+            if len(value_buffer) != 2:
+                value_buffer = [24.5343, 77.0129]
+                print('Invalid number of signal values entered. Setting data buffer to {}', value_buffer)
+
+            epoch = time.gmtime(0)
+            delta = datetime.datetime(epoch.tm_year, epoch.tm_mon, epoch.tm_mday) - datetime.datetime(1601, 1, 1)
 
             print('The same values should be received. Press q to quit')
             i = 0
@@ -62,14 +74,14 @@ def main():
                 num_signals = len(value_buffer)
                 signals = input_session.read_signal_single_point(num_signals)
                 for timestamp, value in signals:
-                    date = datetime.datetime.fromtimestamp(timestamp / 1e9)
+                    date = datetime.datetime.fromtimestamp(timestamp / 1e9) + delta
                     print('Received signal with timepstamp %s and value %s' % (date, value))
 
                 i += 1
                 if max(value_buffer) + i > sys.float_info.max:
                     i = 0
 
-                inp = six.input()
+                inp = six.moves.input()
                 if inp == 'q':
                     break
 

@@ -31,7 +31,7 @@ def nx_create_session(
         mode_ctypes,
         ctypes.pointer(session_ref_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return session_ref_ctypes.value
 
 
@@ -96,9 +96,9 @@ def nx_read_signal_single_point(
     num_signals,
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    value_buffer_ctypes = _ctypedefs.f64 * num_signals
+    value_buffer_ctypes = (_ctypedefs.f64 * num_signals)()
     size_of_value_buffer_ctypes = _ctypedefs.f64.BYTES * num_signals
-    timestamp_buffer_ctypes = _ctypedefs.nxTimestamp_t * num_signals
+    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * num_signals)()
     size_of_timestamp_buffer_ctypes = _ctypedefs.nxTimestamp_t.BYTES * num_signals
     result = _cfuncs.lib.nx_read_signal_single_point(
         session_ref_ctypes,
@@ -107,7 +107,7 @@ def nx_read_signal_single_point(
         timestamp_buffer_ctypes,
         size_of_timestamp_buffer_ctypes
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return timestamp_buffer_ctypes, value_buffer_ctypes
 
 
@@ -116,14 +116,14 @@ def nx_write_signal_single_point(
     value_buffer,
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    value_buffer_ctypes = ctypes.POINTER(_ctypedefs.f64)(value_buffer)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
     size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
     result = _cfuncs.lib.nx_write_signal_single_point(
         session_ref_ctypes,
         value_buffer_ctypes,
         size_of_value_buffer_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_write_signal_waveform(
@@ -192,7 +192,7 @@ def nx_clear(
     result = _cfuncs.lib.nx_clear(
         session_ref_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_connect_terminals(
@@ -247,7 +247,7 @@ def nx_start(
         session_ref_ctypes,
         scope_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_stop(
