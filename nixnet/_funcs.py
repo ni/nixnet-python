@@ -52,7 +52,7 @@ def nx_create_session_by_ref(
         mode_ctypes,
         ctypes.pointer(session_ref_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return session_ref_ctypes.value
 
 
@@ -68,7 +68,7 @@ def nx_get_property_size(
         property_id_ctypes,
         ctypes.pointer(property_size_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return property_size_ctypes.value
 
 
@@ -87,7 +87,7 @@ def nx_get_sub_property_size(
         property_id_ctypes,
         ctypes.pointer(property_size_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return property_size_ctypes.value
 
 
@@ -141,7 +141,7 @@ def nx_write_signal_waveform(
         value_buffer_ctypes,
         size_of_value_buffer_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_write_signal_xy(
@@ -169,7 +169,7 @@ def nx_write_signal_xy(
         num_pairs_buffer_ctypes,
         size_of_num_pairs_buffer_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_blink(
@@ -182,7 +182,7 @@ def nx_blink(
         interface_ref_ctypes,
         modifier_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_clear(
@@ -208,7 +208,7 @@ def nx_connect_terminals(
         source_ctypes,
         destination_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_disconnect_terminals(
@@ -224,7 +224,7 @@ def nx_disconnect_terminals(
         source_ctypes,
         destination_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_flush(
@@ -234,7 +234,7 @@ def nx_flush(
     result = _cfuncs.lib.nx_flush(
         session_ref_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_start(
@@ -260,7 +260,7 @@ def nx_stop(
         session_ref_ctypes,
         scope_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_system_open(
@@ -269,7 +269,7 @@ def nx_system_open(
     result = _cfuncs.lib.nx_system_open(
         ctypes.pointer(system_ref_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return system_ref_ctypes.value
 
 
@@ -280,7 +280,7 @@ def nx_system_close(
     result = _cfuncs.lib.nx_system_close(
         system_ref_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nx_wait(
@@ -301,7 +301,7 @@ def nx_wait(
         timeout_ctypes,
         ctypes.pointer(param_out_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return param_out_ctypes.value
 
 
@@ -314,7 +314,7 @@ def nxdb_open_database(
         database_name_ctypes,
         ctypes.pointer(database_ref_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return database_ref_ctypes.value
 
 
@@ -328,7 +328,7 @@ def nxdb_close_database(
         database_ref_ctypes,
         close_all_refs_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nxdb_create_object(
@@ -346,7 +346,7 @@ def nxdb_create_object(
         object_name_ctypes,
         ctypes.pointer(db_object_ref_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return db_object_ref_ctypes.value
 
 
@@ -365,7 +365,7 @@ def nxdb_find_object(
         object_name_ctypes,
         ctypes.pointer(db_object_ref_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return db_object_ref_ctypes.value
 
 
@@ -376,7 +376,7 @@ def nxdb_delete_object(
     result = _cfuncs.lib.nxdb_delete_object(
         db_object_ref_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nxdb_save_database(
@@ -389,7 +389,7 @@ def nxdb_save_database(
         database_ref_ctypes,
         db_filepath_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nxdb_get_property_size(
@@ -404,7 +404,7 @@ def nxdb_get_property_size(
         property_id_ctypes,
         ctypes.pointer(property_size_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return property_size_ctypes.value
 
 
@@ -423,7 +423,7 @@ def nxdb_get_dbc_attribute_size(
         attribute_name_ctypes,
         ctypes.pointer(attribute_text_size_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return attribute_text_size_ctypes.value
 
 
@@ -448,7 +448,7 @@ def nxdb_get_dbc_attribute(
         attribute_text_ctypes,
         ctypes.pointer(is_default_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return is_default_ctypes.value
 
 
@@ -473,7 +473,7 @@ def nxdb_merge(
         wait_for_complete_ctypes,
         ctypes.pointer(percent_complete_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return percent_complete_ctypes.value
 
 
@@ -490,7 +490,7 @@ def nxdb_add_alias(
         database_filepath_ctypes,
         default_baud_rate_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nxdb_add_alias64(
@@ -506,7 +506,7 @@ def nxdb_add_alias64(
         database_filepath_ctypes,
         default_baud_rate_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nxdb_remove_alias(
@@ -516,7 +516,7 @@ def nxdb_remove_alias(
     result = _cfuncs.lib.nxdb_remove_alias(
         database_alias_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
 
 
 def nxdb_deploy(
@@ -534,7 +534,7 @@ def nxdb_deploy(
         wait_for_complete_ctypes,
         ctypes.pointer(percent_complete_ctypes),
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
     return percent_complete_ctypes.value
 
 
@@ -548,4 +548,4 @@ def nxdb_undeploy(
         ip_address_ctypes,
         database_alias_ctypes,
     )
-    _errors.check_for_error(result)
+    _errors.check_for_error(result.value)
