@@ -41,7 +41,7 @@ def nx_create_session_by_ref(
     mode,
 ):
     size_of_database_refs_ctypes = _ctypedefs.u32(len(database_refs) * _ctypedefs.nxDatabaseRef_t.BYTES)
-    database_refs_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)(database_refs)
+    database_refs_ctypes = (_ctypedefs.nxDatabaseRef_t * len(database_refs))(*database_refs)
     interface_ctypes = _ctypedefs.char_p(interface.encode('ascii'))
     mode_ctypes = _ctypedefs.u32(mode.value)
     session_ref_ctypes = _ctypedefs.nxSessionRef_t()
@@ -133,7 +133,7 @@ def nx_write_signal_waveform(
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     timeout_ctypes = _ctypedefs.f64(timeout)
-    value_buffer_ctypes = ctypes.POINTER(_ctypedefs.f64)(value_buffer)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
     size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
     result = _cfuncs.lib.nx_write_signal_waveform(
         session_ref_ctypes,
@@ -153,11 +153,11 @@ def nx_write_signal_xy(
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     timeout_ctypes = _ctypedefs.f64(timeout)
-    value_buffer_ctypes = ctypes.POINTER(_ctypedefs.f64)(value_buffer)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
     size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
-    timestamp_buffer_ctypes = ctypes.POINTER(_ctypedefs.nxTimestamp_t)(timestamp_buffer)
+    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * len(timestamp_buffer))(*timestamp_buffer)
     size_of_timestamp_buffer_ctypes = _ctypedefs.u32(len(timestamp_buffer) * _ctypedefs.nxTimestamp_t.BYTES)
-    num_pairs_buffer_ctypes = ctypes.POINTER(_ctypedefs.u32)(num_pairs_buffer)
+    num_pairs_buffer_ctypes = (_ctypedefs.u32 * len(num_pairs_buffer))(*num_pairs_buffer)
     size_of_num_pairs_buffer_ctypes = _ctypedefs.u32(len(num_pairs_buffer) * _ctypedefs.u32.BYTES)
     result = _cfuncs.lib.nx_write_signal_xy(
         session_ref_ctypes,
