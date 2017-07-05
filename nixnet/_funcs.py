@@ -91,15 +91,35 @@ def nx_get_sub_property_size(
     return property_size_ctypes.value
 
 
+def nx_read_frame(
+    session_ref,
+    bytes_to_read,
+    timeout
+):
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
+    buffer_ctypes = (_ctypedefs.u8 * bytes_to_read)()
+    size_of_buffer_ctypes = _ctypedefs.u32(_ctypedefs.u8.BYTES * bytes_to_read)
+    number_of_bytes_returned_ctypes = ctypes.POINTER(_ctypedefs.u32)()
+    timeout_ctypes = _ctypedefs.f64(timeout)
+    result = _cfuncs.lib.nx_read_frame(
+        session_ref_ctypes,
+        buffer_ctypes,
+        size_of_buffer_ctypes,
+        timeout_ctypes,
+        number_of_bytes_returned_ctypes)
+    _errors.check_for_error(result.value)
+    return buffer_ctypes.value, number_of_bytes_returned_ctypes.values
+
+
 def nx_read_signal_single_point(
     session_ref,
     num_signals,
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     value_buffer_ctypes = (_ctypedefs.f64 * num_signals)()
-    size_of_value_buffer_ctypes = _ctypedefs.f64.BYTES * num_signals
+    size_of_value_buffer_ctypes = _ctypedefs.u32(_ctypedefs.f64.BYTES * num_signals)
     timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * num_signals)()
-    size_of_timestamp_buffer_ctypes = _ctypedefs.nxTimestamp_t.BYTES * num_signals
+    size_of_timestamp_buffer_ctypes = _ctypedefs.u32(_ctypedefs.nxTimestamp_t.BYTES * num_signals)
     result = _cfuncs.lib.nx_read_signal_single_point(
         session_ref_ctypes,
         value_buffer_ctypes,
@@ -109,6 +129,23 @@ def nx_read_signal_single_point(
     )
     _errors.check_for_error(result.value)
     return timestamp_buffer_ctypes, value_buffer_ctypes
+
+
+def nx_write_frame(
+    session_ref,
+    buffer,
+    timeout
+):
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
+    buffer_ctypes = (_ctypedefs.u8 * len(buffer))(buffer)
+    size_of_buffer_ctypes = _ctypedefs.u32(_ctypedefs.u8.BYTES * len(buffer))
+    timeout_ctypes = _ctypedefs.f64(timeout)
+    result = _cfuncs.nx_write_frame(
+        session_ref_ctypes,
+        buffer_ctypes,
+        size_of_buffer_ctypes,
+        timeout_ctypes)
+    _errors.check_for_error(result.value)
 
 
 def nx_write_signal_single_point(
