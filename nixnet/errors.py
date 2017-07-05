@@ -98,9 +98,9 @@ class _ResourceWarning(Warning):
 
 # If ResourceWarning is in exceptions, it is also in the built-in namespace.
 try:
-    XnetResourceWarning = ResourceWarning
+    XnetResourceWarning = ResourceWarning  # type: ignore
 except NameError:
-    XnetResourceWarning = _ResourceWarning
+    XnetResourceWarning = _ResourceWarning  # type: ignore
 
 warnings.filterwarnings("always", category=XnetWarning)
 warnings.filterwarnings("always", category=XnetResourceWarning)

@@ -11,7 +11,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import ctypes
+import ctypes  # type: ignore
 
 
 class char(ctypes.c_char):  # NOQA: N801
@@ -121,7 +121,7 @@ class nxFlexRayStats_t(ctypes.Structure):  # NOQA: N801
         ("NumContextErrorChB", u32),
         ("NumContextErrorChB", u32),
         ("NumSlotBoundaryViolationChB", u32),
-        ("NumSlotBoundaryViolationChB", u32)]
+        ("NumSlotBoundaryViolationChB", u32)]  # type: List[Tuple[Text, Any]]
 
 
 class nxJ1939CommState_t(ctypes.Structure):  # NOQA: N801
@@ -132,7 +132,7 @@ class nxJ1939CommState_t(ctypes.Structure):  # NOQA: N801
         ("TransmitError", u8),
         ("ReceiveError", u8),
         ("Reserved1", u32),
-        ("Reserved2", u32)]
+        ("Reserved2", u32)]  # type: List[Tuple[Text, Any]]
 
 
 class nxFrameFixed_t(ctypes.Structure):  # NOQA: N801
@@ -141,22 +141,22 @@ class nxFrameFixed_t(ctypes.Structure):  # NOQA: N801
         ("Identifier", u32),
         ("Type", u8),
         ("Flags", u8),
-        ("Info", u8)]
+        ("Info", u8)]  # type: List[Tuple[Text, Any]]
 
 
 class nxFrameCAN_t(nxFrameFixed_t):  # NOQA: N801
     _fields_ = [
         ("PayloadLength", u8),
-        ("Payload", u8 * 8)]
+        ("Payload", u8 * 8)]  # type: List[Tuple[Text, Any]]
 
 
 class nxFrameLIN_t(nxFrameFixed_t):  # NOQA: N801
     _fields_ = [
         ("PayloadLength", u8),
-        ("Payload", u8 * 8)]
+        ("Payload", u8 * 8)]  # type: List[Tuple[Text, Any]]
 
 
 class nxFrameVar_t(nxFrameFixed_t):  # NOQA: N801
     _fields_ = [
         ("PayloadLength", u8),
-        ("Payload", u8 * 8)]
+        ("Payload", u8 * 8)]  # type: List[Tuple[Text, Any]]
