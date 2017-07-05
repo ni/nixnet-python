@@ -105,11 +105,11 @@ class nxDatabaseRef_t(u32):  # NOQA: N801
     pass
 
 
-class nxStatus_t(i32):  # NOQA: N801
+class nxStatus_t(u32):  # NOQA: N801
     pass
 
 
-class nxTimeStamp_t(u64):  # NOQA: N801
+class nxTimestamp_t(u64):  # NOQA: N801
     """"Absolute time, given in 100 ns increments since Jan 1, 1601, 12:00 AM UTC."""
     pass
 
@@ -137,7 +137,7 @@ class nxJ1939CommState_t(ctypes.Structure):  # NOQA: N801
 
 class nxFrameFixed_t(ctypes.Structure):  # NOQA: N801
     _fields_ = [
-        ("Timestamp", nxTimeStamp_t),
+        ("Timestamp", nxTimestamp_t),
         ("Identifier", u32),
         ("Type", u8),
         ("Flags", u8),

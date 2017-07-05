@@ -74,7 +74,7 @@ def set_session_u32(ref, prop_id, value):
         prop_id_ctypes,
         prop_size_ctypes,
         value_ctypes_ptr)
-    _errors.check_for_error(status)
+    _errors.check_for_error(status.value)
 
 
 def get_session_u32_array(ref, prop_id):
