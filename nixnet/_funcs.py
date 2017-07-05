@@ -17,10 +17,10 @@ def nx_create_session(
     interface,
     mode,
 ):
-    database_name_ctypes = _ctypedefs.char_p(database_name)
-    cluster_name_ctypes = _ctypedefs.char_p(cluster_name)
-    list_ctypes = _ctypedefs.char_p(list)
-    interface_ctypes = _ctypedefs.char_p(interface)
+    database_name_ctypes = _ctypedefs.char_p(database_name.encode('ascii'))
+    cluster_name_ctypes = _ctypedefs.char_p(cluster_name.encode('ascii'))
+    list_ctypes = _ctypedefs.char_p(list.encode('ascii'))
+    interface_ctypes = _ctypedefs.char_p(interface.encode('ascii'))
     mode_ctypes = _ctypedefs.u32(mode.value)
     session_ref_ctypes = ctypes.POINTER(_ctypedefs.nxSessionRef_t)()
     result = _cfuncs.lib.nx_create_session(
@@ -42,7 +42,7 @@ def nx_create_session_by_ref(
 ):
     size_of_database_refs_ctypes = _ctypedefs.u32(len(database_refs) * _ctypedefs.nxDatabaseRef_t.BYTES)
     database_refs_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)(database_refs)
-    interface_ctypes = _ctypedefs.char_p(interface)
+    interface_ctypes = _ctypedefs.char_p(interface.encode('ascii'))
     mode_ctypes = _ctypedefs.u32(mode.value)
     session_ref_ctypes = ctypes.POINTER(_ctypedefs.nxSessionRef_t)()
     result = _cfuncs.lib.nx_create_session_by_ref(
@@ -201,8 +201,8 @@ def nx_connect_terminals(
     destination,
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    source_ctypes = _ctypedefs.char_p(source)
-    destination_ctypes = _ctypedefs.char_p(destination)
+    source_ctypes = _ctypedefs.char_p(source.encode('ascii'))
+    destination_ctypes = _ctypedefs.char_p(destination.encode('ascii'))
     result = _cfuncs.lib.nx_connect_terminals(
         session_ref_ctypes,
         source_ctypes,
@@ -217,8 +217,8 @@ def nx_disconnect_terminals(
     destination,
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    source_ctypes = _ctypedefs.char_p(source)
-    destination_ctypes = _ctypedefs.char_p(destination)
+    source_ctypes = _ctypedefs.char_p(source.encode('ascii'))
+    destination_ctypes = _ctypedefs.char_p(destination.encode('ascii'))
     result = _cfuncs.lib.nx_disconnect_terminals(
         session_ref_ctypes,
         source_ctypes,
@@ -308,7 +308,7 @@ def nx_wait(
 def nxdb_open_database(
     database_name,
 ):
-    database_name_ctypes = _ctypedefs.char_p(database_name)
+    database_name_ctypes = _ctypedefs.char_p(database_name.encode('ascii'))
     database_ref_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)()
     result = _cfuncs.lib.nxdb_open_database(
         database_name_ctypes,
@@ -338,7 +338,7 @@ def nxdb_create_object(
 ):
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
     object_class_ctypes = _ctypedefs.u32(object_class.value)
-    object_name_ctypes = _ctypedefs.char_p(object_name)
+    object_name_ctypes = _ctypedefs.char_p(object_name.encode('ascii'))
     db_object_ref_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)()
     result = _cfuncs.lib.nxdb_create_object(
         parent_object_ref_ctypes,
@@ -357,7 +357,7 @@ def nxdb_find_object(
 ):
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
     object_class_ctypes = _ctypedefs.u32(object_class.value)
-    object_name_ctypes = _ctypedefs.char_p(object_name)
+    object_name_ctypes = _ctypedefs.char_p(object_name.encode('ascii'))
     db_object_ref_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)()
     result = _cfuncs.lib.nxdb_find_object(
         parent_object_ref_ctypes,
@@ -384,7 +384,7 @@ def nxdb_save_database(
     db_filepath,
 ):
     database_ref_ctypes = _ctypedefs.nxDatabaseRef_t(database_ref)
-    db_filepath_ctypes = _ctypedefs.char_p(db_filepath)
+    db_filepath_ctypes = _ctypedefs.char_p(db_filepath.encode('ascii'))
     result = _cfuncs.lib.nxdb_save_database(
         database_ref_ctypes,
         db_filepath_ctypes,
@@ -415,7 +415,7 @@ def nxdb_get_dbc_attribute_size(
 ):
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
     mode_ctypes = _ctypedefs.u32(mode)
-    attribute_name_ctypes = _ctypedefs.char_p(attribute_name)
+    attribute_name_ctypes = _ctypedefs.char_p(attribute_name.encode('ascii'))
     attribute_text_size_ctypes = ctypes.POINTER(_ctypedefs.u32)()
     result = _cfuncs.lib.nxdb_get_dbc_attribute_size(
         db_object_ref_ctypes,
@@ -436,9 +436,9 @@ def nxdb_get_dbc_attribute(
 ):
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
     mode_ctypes = _ctypedefs.u32(mode)
-    attribute_name_ctypes = _ctypedefs.char_p(attribute_name)
+    attribute_name_ctypes = _ctypedefs.char_p(attribute_name.encode('ascii'))
     attribute_text_size_ctypes = _ctypedefs.u32(attribute_text_size)
-    attribute_text_ctypes = _ctypedefs.char_p(attribute_text)
+    attribute_text_ctypes = _ctypedefs.char_p(attribute_text.encode('ascii'))
     is_default_ctypes = ctypes.POINTER(_ctypedefs.u32)()
     result = _cfuncs.lib.nxdb_get_dbc_attribute(
         db_object_ref_ctypes,
@@ -462,7 +462,7 @@ def nxdb_merge(
     target_cluster_ref_ctypes = _ctypedefs.nxDatabaseRef_t(target_cluster_ref)
     source_obj_ref_ctypes = _ctypedefs.nxDatabaseRef_t(source_obj_ref)
     copy_mode_ctypes = _ctypedefs.u32(copy_mode)
-    prefix_ctypes = _ctypedefs.char_p(prefix)
+    prefix_ctypes = _ctypedefs.char_p(prefix.encode('ascii'))
     wait_for_complete_ctypes = _ctypedefs.bool32(wait_for_complete)
     percent_complete_ctypes = ctypes.POINTER(_ctypedefs.u32)()
     result = _cfuncs.lib.nxdb_merge(
@@ -482,8 +482,8 @@ def nxdb_add_alias(
     database_filepath,
     default_baud_rate,
 ):
-    database_alias_ctypes = _ctypedefs.char_p(database_alias)
-    database_filepath_ctypes = _ctypedefs.char_p(database_filepath)
+    database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
+    database_filepath_ctypes = _ctypedefs.char_p(database_filepath.encode('ascii'))
     default_baud_rate_ctypes = _ctypedefs.u32(default_baud_rate)
     result = _cfuncs.lib.nxdb_add_alias(
         database_alias_ctypes,
@@ -498,8 +498,8 @@ def nxdb_add_alias64(
     database_filepath,
     default_baud_rate,
 ):
-    database_alias_ctypes = _ctypedefs.char_p(database_alias)
-    database_filepath_ctypes = _ctypedefs.char_p(database_filepath)
+    database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
+    database_filepath_ctypes = _ctypedefs.char_p(database_filepath.encode('ascii'))
     default_baud_rate_ctypes = _ctypedefs.u64(default_baud_rate)
     result = _cfuncs.lib.nxdb_add_alias64(
         database_alias_ctypes,
@@ -512,7 +512,7 @@ def nxdb_add_alias64(
 def nxdb_remove_alias(
     database_alias,
 ):
-    database_alias_ctypes = _ctypedefs.char_p(database_alias)
+    database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
     result = _cfuncs.lib.nxdb_remove_alias(
         database_alias_ctypes,
     )
@@ -524,8 +524,8 @@ def nxdb_deploy(
     database_alias,
     wait_for_complete,
 ):
-    ip_address_ctypes = _ctypedefs.char_p(ip_address)
-    database_alias_ctypes = _ctypedefs.char_p(database_alias)
+    ip_address_ctypes = _ctypedefs.char_p(ip_address.encode('ascii'))
+    database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
     wait_for_complete_ctypes = _ctypedefs.bool32(wait_for_complete)
     percent_complete_ctypes = ctypes.POINTER(_ctypedefs.u32)()
     result = _cfuncs.lib.nxdb_deploy(
@@ -542,8 +542,8 @@ def nxdb_undeploy(
     ip_address,
     database_alias,
 ):
-    ip_address_ctypes = _ctypedefs.char_p(ip_address)
-    database_alias_ctypes = _ctypedefs.char_p(database_alias)
+    ip_address_ctypes = _ctypedefs.char_p(ip_address.encode('ascii'))
+    database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
     result = _cfuncs.lib.nxdb_undeploy(
         ip_address_ctypes,
         database_alias_ctypes,
