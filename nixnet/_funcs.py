@@ -22,14 +22,14 @@ def nx_create_session(
     list_ctypes = _ctypedefs.char_p(list.encode('ascii'))
     interface_ctypes = _ctypedefs.char_p(interface.encode('ascii'))
     mode_ctypes = _ctypedefs.u32(mode.value)
-    session_ref_ctypes = ctypes.POINTER(_ctypedefs.nxSessionRef_t)()
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t()
     result = _cfuncs.lib.nx_create_session(
         database_name_ctypes,
         cluster_name_ctypes,
         list_ctypes,
         interface_ctypes,
         mode_ctypes,
-        session_ref_ctypes,
+        ctypes.pointer(session_ref_ctypes),
     )
     _errors.check_for_error(result)
     return session_ref_ctypes.value
@@ -44,13 +44,13 @@ def nx_create_session_by_ref(
     database_refs_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)(database_refs)
     interface_ctypes = _ctypedefs.char_p(interface.encode('ascii'))
     mode_ctypes = _ctypedefs.u32(mode.value)
-    session_ref_ctypes = ctypes.POINTER(_ctypedefs.nxSessionRef_t)()
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t()
     result = _cfuncs.lib.nx_create_session_by_ref(
         size_of_database_refs_ctypes,
         database_refs_ctypes,
         interface_ctypes,
         mode_ctypes,
-        session_ref_ctypes,
+        ctypes.pointer(session_ref_ctypes),
     )
     _errors.check_for_error(result)
     return session_ref_ctypes.value
@@ -62,11 +62,11 @@ def nx_get_property_size(
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     property_id_ctypes = _ctypedefs.u32(property_id)
-    property_size_ctypes = ctypes.POINTER(_ctypedefs.u32)()
+    property_size_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nx_get_property_size(
         session_ref_ctypes,
         property_id_ctypes,
-        property_size_ctypes,
+        ctypes.pointer(property_size_ctypes),
     )
     _errors.check_for_error(result)
     return property_size_ctypes.value
@@ -80,12 +80,12 @@ def nx_get_sub_property_size(
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     active_index_ctypes = _ctypedefs.u32(active_index)
     property_id_ctypes = _ctypedefs.u32(property_id)
-    property_size_ctypes = ctypes.POINTER(_ctypedefs.u32)()
+    property_size_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nx_get_sub_property_size(
         session_ref_ctypes,
         active_index_ctypes,
         property_id_ctypes,
-        property_size_ctypes,
+        ctypes.pointer(property_size_ctypes),
     )
     _errors.check_for_error(result)
     return property_size_ctypes.value
@@ -265,9 +265,9 @@ def nx_stop(
 
 def nx_system_open(
 ):
-    system_ref_ctypes = ctypes.POINTER(_ctypedefs.nxSessionRef_t)()
+    system_ref_ctypes = _ctypedefs.nxSessionRef_t()
     result = _cfuncs.lib.nx_system_open(
-        system_ref_ctypes,
+        ctypes.pointer(system_ref_ctypes),
     )
     _errors.check_for_error(result)
     return system_ref_ctypes.value
@@ -293,13 +293,13 @@ def nx_wait(
     condition_ctypes = _ctypedefs.u32(condition)
     param_in_ctypes = _ctypedefs.u32(param_in)
     timeout_ctypes = _ctypedefs.f64(timeout)
-    param_out_ctypes = ctypes.POINTER(_ctypedefs.u32)()
+    param_out_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nx_wait(
         session_ref_ctypes,
         condition_ctypes,
         param_in_ctypes,
         timeout_ctypes,
-        param_out_ctypes,
+        ctypes.pointer(param_out_ctypes),
     )
     _errors.check_for_error(result)
     return param_out_ctypes.value
@@ -309,10 +309,10 @@ def nxdb_open_database(
     database_name,
 ):
     database_name_ctypes = _ctypedefs.char_p(database_name.encode('ascii'))
-    database_ref_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)()
+    database_ref_ctypes = _ctypedefs.nxDatabaseRef_t()
     result = _cfuncs.lib.nxdb_open_database(
         database_name_ctypes,
-        database_ref_ctypes,
+        ctypes.pointer(database_ref_ctypes),
     )
     _errors.check_for_error(result)
     return database_ref_ctypes.value
@@ -339,12 +339,12 @@ def nxdb_create_object(
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
     object_class_ctypes = _ctypedefs.u32(object_class.value)
     object_name_ctypes = _ctypedefs.char_p(object_name.encode('ascii'))
-    db_object_ref_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)()
+    db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t()
     result = _cfuncs.lib.nxdb_create_object(
         parent_object_ref_ctypes,
         object_class_ctypes,
         object_name_ctypes,
-        db_object_ref_ctypes,
+        ctypes.pointer(db_object_ref_ctypes),
     )
     _errors.check_for_error(result)
     return db_object_ref_ctypes.value
@@ -358,12 +358,12 @@ def nxdb_find_object(
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
     object_class_ctypes = _ctypedefs.u32(object_class.value)
     object_name_ctypes = _ctypedefs.char_p(object_name.encode('ascii'))
-    db_object_ref_ctypes = ctypes.POINTER(_ctypedefs.nxDatabaseRef_t)()
+    db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t()
     result = _cfuncs.lib.nxdb_find_object(
         parent_object_ref_ctypes,
         object_class_ctypes,
         object_name_ctypes,
-        db_object_ref_ctypes,
+        ctypes.pointer(db_object_ref_ctypes),
     )
     _errors.check_for_error(result)
     return db_object_ref_ctypes.value
@@ -398,11 +398,11 @@ def nxdb_get_property_size(
 ):
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
     property_id_ctypes = _ctypedefs.u32(property_id)
-    property_size_ctypes = ctypes.POINTER(_ctypedefs.u32)()
+    property_size_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nxdb_get_property_size(
         db_object_ref_ctypes,
         property_id_ctypes,
-        property_size_ctypes,
+        ctypes.pointer(property_size_ctypes),
     )
     _errors.check_for_error(result)
     return property_size_ctypes.value
@@ -416,12 +416,12 @@ def nxdb_get_dbc_attribute_size(
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
     mode_ctypes = _ctypedefs.u32(mode)
     attribute_name_ctypes = _ctypedefs.char_p(attribute_name.encode('ascii'))
-    attribute_text_size_ctypes = ctypes.POINTER(_ctypedefs.u32)()
+    attribute_text_size_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nxdb_get_dbc_attribute_size(
         db_object_ref_ctypes,
         mode_ctypes,
         attribute_name_ctypes,
-        attribute_text_size_ctypes,
+        ctypes.pointer(attribute_text_size_ctypes),
     )
     _errors.check_for_error(result)
     return attribute_text_size_ctypes.value
@@ -439,14 +439,14 @@ def nxdb_get_dbc_attribute(
     attribute_name_ctypes = _ctypedefs.char_p(attribute_name.encode('ascii'))
     attribute_text_size_ctypes = _ctypedefs.u32(attribute_text_size)
     attribute_text_ctypes = _ctypedefs.char_p(attribute_text.encode('ascii'))
-    is_default_ctypes = ctypes.POINTER(_ctypedefs.u32)()
+    is_default_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nxdb_get_dbc_attribute(
         db_object_ref_ctypes,
         mode_ctypes,
         attribute_name_ctypes,
         attribute_text_size_ctypes,
         attribute_text_ctypes,
-        is_default_ctypes,
+        ctypes.pointer(is_default_ctypes),
     )
     _errors.check_for_error(result)
     return is_default_ctypes.value
@@ -464,14 +464,14 @@ def nxdb_merge(
     copy_mode_ctypes = _ctypedefs.u32(copy_mode)
     prefix_ctypes = _ctypedefs.char_p(prefix.encode('ascii'))
     wait_for_complete_ctypes = _ctypedefs.bool32(wait_for_complete)
-    percent_complete_ctypes = ctypes.POINTER(_ctypedefs.u32)()
+    percent_complete_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nxdb_merge(
         target_cluster_ref_ctypes,
         source_obj_ref_ctypes,
         copy_mode_ctypes,
         prefix_ctypes,
         wait_for_complete_ctypes,
-        percent_complete_ctypes,
+        ctypes.pointer(percent_complete_ctypes),
     )
     _errors.check_for_error(result)
     return percent_complete_ctypes.value
@@ -527,12 +527,12 @@ def nxdb_deploy(
     ip_address_ctypes = _ctypedefs.char_p(ip_address.encode('ascii'))
     database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
     wait_for_complete_ctypes = _ctypedefs.bool32(wait_for_complete)
-    percent_complete_ctypes = ctypes.POINTER(_ctypedefs.u32)()
+    percent_complete_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nxdb_deploy(
         ip_address_ctypes,
         database_alias_ctypes,
         wait_for_complete_ctypes,
-        percent_complete_ctypes,
+        ctypes.pointer(percent_complete_ctypes),
     )
     _errors.check_for_error(result)
     return percent_complete_ctypes.value
