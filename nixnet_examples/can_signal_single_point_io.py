@@ -16,6 +16,15 @@ from nixnet import nx
 pp = pprint.PrettyPrinter(indent=4)
 
 
+def convert_timestamp(timestamp):
+    system_epoch = time.gmtime(0)
+    system_epock_datetime = datetime.datetime(system_epoch.tm_year, system_epoch.tm_mon, system_epoch.tm_mday)
+    xnet_epoch_datetime = datetime.datetime(1601, 1, 1)
+    delta = system_epock_datetime - xnet_epoch_datetime
+    date = datetime.datetime.fromtimestamp(timestamp * 100e-9) - delta
+    return date
+
+
 def main():
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
@@ -56,9 +65,6 @@ def main():
                 value_buffer = [24.5343, 77.0129]
                 print('Invalid number of signal values entered. Setting data buffer to {}', value_buffer)
 
-            epoch = time.gmtime(0)
-            delta = datetime.datetime(epoch.tm_year, epoch.tm_mon, epoch.tm_mday) - datetime.datetime(1601, 1, 1)
-
             print('The same values should be received. Press q to quit')
             i = 0
             while True:
@@ -74,7 +80,7 @@ def main():
                 num_signals = len(value_buffer)
                 signals = input_session.read_signal_single_point(num_signals)
                 for timestamp, value in signals:
-                    date = datetime.datetime.fromtimestamp(timestamp / 1e9) + delta
+                    date = convert_timestamp(timestamp)
                     print('Received signal with timepstamp %s and value %s' % (date, value))
 
                 i += 1
