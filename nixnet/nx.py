@@ -16,6 +16,7 @@ from nixnet import types
 from nixnet._session import frames
 from nixnet._session import intf
 from nixnet._session import j1939
+from nixnet._session import signals
 
 
 class Session(object):
@@ -31,6 +32,7 @@ class Session(object):
         self._handle = None  # To satisfy `__del__` in case nx_create_session throws
         self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface, mode)
         self._frames = frames.Frames(self._handle)
+        self._signals = signals.Signals(self._handle)
         self._intf = intf.Interface(self._handle)
         self._j1939 = j1939.J1939(self._handle)
 
@@ -182,6 +184,10 @@ class Session(object):
         return self._frames
 
     @property
+    def signals(self):
+        return self._signals
+
+    @property
     def intf(self):
         return self._intf
 
@@ -210,20 +216,8 @@ class Session(object):
         return _props.get_session_database_name(self._handle)
 
     @property
-    def list(self):
-        return _props.get_session_list(self._handle)
-
-    @property
     def mode(self):
         return constants.CreateSessionMode(_props.get_session_mode(self._handle))
-
-    @property
-    def num_frames(self):
-        return _props.get_session_num_frames(self._handle)
-
-    @property
-    def num_in_list(self):
-        return _props.get_session_num_in_list(self._handle)
 
     @property
     def num_pend(self):
