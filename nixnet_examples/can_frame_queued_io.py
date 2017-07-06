@@ -29,15 +29,15 @@ def main():
             print('Are you using a terminated cable? Enter Y or N')
             terminated_cable = six.moves.input()
             if terminated_cable.lower() == "y":
-                output_session.intf_can_term = constants.CanTerm.OFF
-                input_session.intf_can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.OFF
+                input_session.intf.can_term = constants.CanTerm.ON
             elif terminated_cable.lower() == "n":
-                input_session.intf_can_term = constants.CanTerm.ON
-                output_session.intf_can_term = constants.CanTerm.ON
+                input_session.intf.can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.ON
             else:
                 print("Unrecognised input ({}), assuming 'n'".format(terminated_cable))
-                input_session.intf_can_term = constants.CanTerm.ON
-                output_session.intf_can_term = constants.CanTerm.ON
+                input_session.intf.can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.ON
 
             # Start the input session manually to make sure that the first
             # frame value sent before the initial read will be received.
