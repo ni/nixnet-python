@@ -85,6 +85,15 @@ class Session(object):
     def flush(self):
         _funcs.nx_flush(self._handle)
 
+    def wait_for_transmit_complete(self, timeout):
+        _funcs.nx_wait(self._handle, constants.Condition.TRANSMIT_COMPLETE, 0, timeout)
+
+    def wait_for_intf_communicating(self, timeout):
+        _funcs.nx_wait(self._handle, constants.Condition.INTF_COMMUNICATING, 0, timeout)
+
+    def wait_for_intf_remote_wakeup(self, timeout):
+        _funcs.nx_wait(self._handle, constants.Condition.INTF_REMOTE_WAKEUP, 0, timeout)
+
     def read_frame_bytes(
             self,
             number_of_bytes_to_read,
@@ -354,11 +363,3 @@ def disconnect_terminals(
         source,
         destination):
     _funcs.nx_disconnect_terminals(session_ref, source, destination)
-
-
-def wait(
-        session_ref,
-        condition,
-        param_in,
-        timeout):
-    return _funcs.nx_wait(session_ref, condition, param_in, timeout)
