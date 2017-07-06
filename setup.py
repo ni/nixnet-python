@@ -34,6 +34,8 @@ setup(
     description='NI-XNET Python API',
     long_description=read_contents('README.rst'),
     author='National Instruments',
+    author_email='ed.page@ni.com',
+    url='https://github.com/ni/nixnet-python',
     maintainer="Ed Page, Ajay Jashnani",
     maintainer_email="ed.page@ni.com, ajay.jashnani@ni.com",
     keywords=['nixnet'],

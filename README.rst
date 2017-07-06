@@ -20,7 +20,7 @@ supported by NI.
 
 Some functions in the **nixnet** package may be unavailable with earlier
 versions of the NI-XNET driver. Visit
-`ni.com/downloads <http://www.ni.com/downloads/>`_ to upgrade your version of
+`ni.com/downloads`_ to upgrade your version of
 NI-XNET.
 
 **nixnet** supports only the Windows operating system.
@@ -68,6 +68,6 @@ License
 =======
 
 **nixnet** is licensed under an MIT-style license (see
-`LICENSE <https://github.com/ni/nixnet-python/blob/master/LICENSE>`_).
+`https://github.com/ni/nixnet-python/blob/master/LICENSE`_).
 Other incorporated projects may be licensed under different licenses. All
 licenses allow for non-commercial and commercial use.
