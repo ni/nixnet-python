@@ -94,6 +94,12 @@ class Session(object):
     def wait_for_intf_remote_wakeup(self, timeout):
         _funcs.nx_wait(self._handle, constants.Condition.INTF_REMOTE_WAKEUP, 0, timeout)
 
+    def connect_terminals(self, source, destination):
+        _funcs.nx_connect_terminals(self._handle, source, destination)
+
+    def disconnect_terminals(self, source, destination):
+        _funcs.nx_disconnect_terminals(self._handle, source, destination)
+
     def read_frame_bytes(
             self,
             number_of_bytes_to_read,
@@ -349,17 +355,3 @@ def convert_signals_to_frames_single_point(
         size_of_buffer,
         number_of_bytes_returned):
     raise NotImplementedError("Placeholder")
-
-
-def connect_terminals(
-        session_ref,
-        source,
-        destination):
-    _funcs.nx_connect_terminals(session_ref, source, destination)
-
-
-def disconnect_terminals(
-        session_ref,
-        source,
-        destination):
-    _funcs.nx_disconnect_terminals(session_ref, source, destination)
