@@ -9,6 +9,7 @@ from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
 from nixnet import errors
+from nixnet import types
 
 from nixnet.system import _device
 from nixnet.system import _interface
@@ -84,23 +85,32 @@ class System(object):
             yield _interface.Interface(ref)
 
     @property
-    def ver_build(self):
+    def ver(self):
+        return types.DriverVersion(
+            self._ver_major,
+            self._ver_minor,
+            self._ver_update,
+            self._ver_phase,
+            self._ver_build)
+
+    @property
+    def _ver_build(self):
         return _props.get_system_ver_build(self._handle)
 
     @property
-    def ver_major(self):
+    def _ver_major(self):
         return _props.get_system_ver_major(self._handle)
 
     @property
-    def ver_minor(self):
+    def _ver_minor(self):
         return _props.get_system_ver_minor(self._handle)
 
     @property
-    def ver_phase(self):
+    def _ver_phase(self):
         return constants.Phase(_props.get_system_ver_phase(self._handle))
 
     @property
-    def ver_update(self):
+    def _ver_update(self):
         return _props.get_system_ver_update(self._handle)
 
     @property
