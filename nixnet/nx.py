@@ -13,6 +13,7 @@ from nixnet import constants
 from nixnet import errors
 from nixnet import types
 
+from nixnet._session import frames
 from nixnet._session import intf
 from nixnet._session import j1939
 
@@ -29,6 +30,7 @@ class Session(object):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
         self._handle = None  # To satisfy `__del__` in case nx_create_session throws
         self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface, mode)
+        self._frames = frames.Frames(self._handle)
         self._intf = intf.Interface(self._handle)
         self._j1939 = j1939.J1939(self._handle)
 
@@ -174,6 +176,10 @@ class Session(object):
             value_buffer):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwritesignalsinglepoint/"
         _funcs.nx_write_signal_single_point(self._handle, value_buffer)
+
+    @property
+    def frames(self):
+        return self._frames
 
     @property
     def intf(self):
