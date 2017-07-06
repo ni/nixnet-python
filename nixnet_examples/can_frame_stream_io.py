@@ -67,7 +67,7 @@ def main():
 
                 frame.payload = payload
                 output_session.write_can_frame([frame], write_timeout)
-                print('Sent frame with ID %s payload: %s' % (id, list(payload)))
+                print('Sent frame with ID %s payload: %s' % (id, payload))
 
                 # Wait 1 s and then read the received values.
                 # They should be the same as the ones sent.
