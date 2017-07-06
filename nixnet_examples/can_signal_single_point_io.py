@@ -28,8 +28,8 @@ def convert_timestamp(timestamp):
 def main():
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
-    input_signal_list = 'CANEventSignal1,CANEventSignal2'
-    output_signal_list = 'CANEventSignal1,CANEventSignal2'
+    input_signal_list = ['CANEventSignal1', 'CANEventSignal2']
+    output_signal_list = ['CANEventSignal1', 'CANEventSignal2']
     interface1 = 'CAN1'
     interface2 = 'CAN2'
     input_mode = constants.CreateSessionMode.SIGNAL_IN_SINGLE_POINT
