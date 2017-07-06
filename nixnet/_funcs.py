@@ -108,7 +108,7 @@ def nx_read_frame(
         timeout_ctypes,
         ctypes.pointer(number_of_bytes_returned_ctypes))
     _errors.check_for_error(result.value)
-    return buffer_ctypes.value, number_of_bytes_returned_ctypes.value
+    return buffer_ctypes.raw, number_of_bytes_returned_ctypes.value
 
 
 def nx_read_signal_single_point(
