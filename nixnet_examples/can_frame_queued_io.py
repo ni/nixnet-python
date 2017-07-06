@@ -18,7 +18,7 @@ pp = pprint.PrettyPrinter(indent=4)
 def main():
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
-    list = 'CanEventFrame1'
+    list = 'CANEventFrame1'
     interface1 = 'CAN1'
     interface2 = 'CAN2'
     input_mode = constants.CreateSessionMode.FRAME_IN_QUEUED
