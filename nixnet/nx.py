@@ -140,28 +140,28 @@ class Session(object):
 
     def write_frame_bytes(
             self,
-            bytes,
+            frame_bytes,
             timeout=10):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
-        _funcs.nx_write_frame(self._handle, bytes, timeout)
+        _funcs.nx_write_frame(self._handle, bytes(frame_bytes), timeout)
 
     def write_raw_frame(
             self,
-            frames,
+            raw_frames,
             timeout=10):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
         units = itertools.chain.from_iterable(
             _frames.serialize_frame(frame)
-            for frame in frames)
+            for frame in raw_frames)
         bytes = b"".join(units)
         self.write_frame_bytes(bytes, timeout)
 
     def write_can_frame(
             self,
-            frames,
+            can_frames,
             timeout=10):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
-        raw_frames = (frame.to_raw() for frame in frames)
+        raw_frames = (frame.to_raw() for frame in can_frames)
         self.write_raw_frame(raw_frames, timeout)
 
     def write_signal_single_point(
