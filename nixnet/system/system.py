@@ -10,6 +10,9 @@ from nixnet import _props
 from nixnet import constants
 from nixnet import errors
 
+from nixnet.system import _device
+from nixnet.system import _interface
+
 
 class System(object):
 
@@ -57,23 +60,28 @@ class System(object):
 
     @property
     def dev_refs(self):
-        return _props.get_system_dev_refs(self._handle)
+        for ref in _props.get_system_dev_refs(self._handle):
+            yield _device.Device(ref)
 
     @property
     def intf_refs(self):
-        return _props.get_system_intf_refs(self._handle)
+        for ref in _props.get_system_intf_refs(self._handle):
+            yield _interface.Interface(ref)
 
     @property
     def intf_refs_can(self):
-        return _props.get_system_intf_refs_can(self._handle)
+        for ref in _props.get_system_intf_refs_can(self._handle):
+            yield _interface.Interface(ref)
 
     @property
     def intf_refs_flex_ray(self):
-        return _props.get_system_intf_refs_flex_ray(self._handle)
+        for ref in _props.get_system_intf_refs_flex_ray(self._handle):
+            yield _interface.Interface(ref)
 
     @property
     def intf_refs_lin(self):
-        return _props.get_system_intf_refs_lin(self._handle)
+        for ref in _props.get_system_intf_refs_lin(self._handle):
+            yield _interface.Interface(ref)
 
     @property
     def ver_build(self):
@@ -105,4 +113,5 @@ class System(object):
 
     @property
     def intf_refs_all(self):
-        return _props.get_system_intf_refs_all(self._handle)
+        for ref in _props.get_system_intf_refs_all(self._handle):
+            yield _interface.Interface(ref)
