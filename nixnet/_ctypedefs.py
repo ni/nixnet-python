@@ -118,9 +118,9 @@ class nxFlexRayStats_t(ctypes.Structure):  # NOQA: N801
     _fields_ = [
         ("NumSyntaxErrorChA", u32),
         ("NumSyntaxErrorChB", u32),
+        ("NumContextErrorChA", u32),
         ("NumContextErrorChB", u32),
-        ("NumContextErrorChB", u32),
-        ("NumSlotBoundaryViolationChB", u32),
+        ("NumSlotBoundaryViolationChA", u32),
         ("NumSlotBoundaryViolationChB", u32)]
 
 
