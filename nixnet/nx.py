@@ -79,6 +79,12 @@ class Session(object):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxstart/"
         _funcs.nx_start(self._handle, scope)
 
+    def stop(self, scope):
+        _funcs.nx_stop(self._handle, scope)
+
+    def flush(self):
+        _funcs.nx_flush(self._handle)
+
     def read_frame_bytes(
             self,
             number_of_bytes_to_read,
@@ -336,11 +342,6 @@ def convert_signals_to_frames_single_point(
     raise NotImplementedError("Placeholder")
 
 
-def clear(
-        session_ref):
-    _funcs.nx_clear(session_ref)
-
-
 def connect_terminals(
         session_ref,
         source,
@@ -353,17 +354,6 @@ def disconnect_terminals(
         source,
         destination):
     _funcs.nx_disconnect_terminals(session_ref, source, destination)
-
-
-def flush(
-        session_ref):
-    _funcs.nx_flush(session_ref)
-
-
-def stop(
-        session_ref,
-        scope):
-    _funcs.nx_stop(session_ref, scope)
 
 
 def wait(
