@@ -4,9 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 
-from nixnet.system.device import Device
-from nixnet.system.interface import Interface
 from nixnet.system.system import System
 
 
-__all__ = ["System", "Device", "Interface"]
+__all__ = ["System"]
