@@ -6,6 +6,8 @@ from __future__ import unicode_literals
 from nixnet import _props
 from nixnet import constants
 
+from nixnet.system import _interface
+
 
 class Device(object):
 
@@ -23,6 +25,9 @@ class Device(object):
     def __hash__(self):
         return hash(self._handle)
 
+    def __str__(self):
+        return self.name
+
     def __repr__(self):
         return 'Device(handle={0})'.format(self._handle)
 
@@ -32,7 +37,8 @@ class Device(object):
 
     @property
     def intf_refs(self):
-        return _props.get_device_intf_refs(self._handle)
+        for ref in _props.get_device_intf_refs(self._handle):
+            yield _interface.Interface(ref)
 
     @property
     def name(self):
@@ -60,4 +66,5 @@ class Device(object):
 
     @property
     def intf_refs_all(self):
-        return _props.get_device_intf_refs_all(self._handle)
+        for ref in _props.get_device_intf_refs_all(self._handle):
+            yield _interface.Interface(ref)

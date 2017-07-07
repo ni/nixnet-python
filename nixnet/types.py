@@ -3,9 +3,16 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import collections
+
 from nixnet import _cconsts
 from nixnet import _errors
 from nixnet import constants
+
+
+DriverVersion = collections.namedtuple(
+    'DriverVersion',
+    ['major', 'minor', 'update', 'phase', 'build'])
 
 
 class RawFrame(object):

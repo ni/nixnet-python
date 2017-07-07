@@ -24,12 +24,13 @@ class Interface(object):
     def __hash__(self):
         return hash(self._handle)
 
+    def __str__(self):
+        return self.name
+
     def __repr__(self):
         return 'Interface(handle={0})'.format(self._handle)
 
-    @property
-    def dev_ref(self):
-        return _props.get_interface_dev_ref(self._handle)
+    # `dev_ref`: Intentionally not exposed to avoid circular imports
 
     @property
     def name(self):
