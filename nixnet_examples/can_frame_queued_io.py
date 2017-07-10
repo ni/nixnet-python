@@ -7,8 +7,8 @@ import pprint
 import six
 import time
 
+import nixnet
 from nixnet import constants
-from nixnet import nx
 from nixnet import types
 
 
@@ -24,8 +24,8 @@ def main():
     input_mode = constants.CreateSessionMode.FRAME_IN_QUEUED
     output_mode = constants.CreateSessionMode.FRAME_OUT_QUEUED
 
-    with nx.Session(database_name, cluster_name, list, interface1, input_mode) as input_session:
-        with nx.Session(database_name, cluster_name, list, interface2, output_mode) as output_session:
+    with nixnet.Session(database_name, cluster_name, list, interface1, input_mode) as input_session:
+        with nixnet.Session(database_name, cluster_name, list, interface2, output_mode) as output_session:
             terminated_cable = six.moves.input('Are you using a terminated cable (Y or N)? ')
             if terminated_cable.lower() == "y":
                 input_session.intf.can_term = constants.CanTerm.ON

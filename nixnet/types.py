@@ -9,6 +9,8 @@ from nixnet import _cconsts
 from nixnet import _errors
 from nixnet import constants
 
+__all__ = ['DriverVersion', 'RawFrame', 'CanFrame']
+
 
 DriverVersion = collections.namedtuple(
     'DriverVersion',
