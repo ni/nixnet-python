@@ -26,25 +26,24 @@ def main():
 
     with nx.Session(database_name, cluster_name, list, interface1, input_mode) as input_session:
         with nx.Session(database_name, cluster_name, list, interface2, output_mode) as output_session:
-            print('Are you using a terminated cable? Enter Y or N')
-            terminated_cable = six.moves.input()
+            terminated_cable = six.moves.input('Are you using a terminated cable (Y or N)? ')
             if terminated_cable.lower() == "y":
-                output_session.intf_can_term = constants.CanTerm.OFF
-                input_session.intf_can_term = constants.CanTerm.ON
+                input_session.intf.can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.OFF
             elif terminated_cable.lower() == "n":
-                input_session.intf_can_term = constants.CanTerm.ON
-                output_session.intf_can_term = constants.CanTerm.ON
+                input_session.intf.can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.ON
             else:
                 print("Unrecognised input ({}), assuming 'n'".format(terminated_cable))
-                input_session.intf_can_term = constants.CanTerm.ON
-                output_session.intf_can_term = constants.CanTerm.ON
+                input_session.intf.can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.ON
 
             input_session.intf_baud_rate = 125000
             output_session.intf_baud_rate = 125000
 
             # Start the input session manually to make sure that the first
             # frame value sent before the initial read will be received.
-            input_session.start(constants.StartStopScope.NORMAL)
+            input_session.start()
 
             user_value = six.moves.input('Enter payload [int, int]: ')
             try:
@@ -57,7 +56,6 @@ def main():
             extended = False
             payload = bytearray(payload_list)
             frame = types.CanFrame(id, extended, constants.FrameType.CAN_DATA, payload)
-            write_timeout = 10
 
             print('The same values should be received. Press q to quit')
             i = 0
@@ -66,7 +64,7 @@ def main():
                     payload[index] = byte + i
 
                 frame.payload = payload
-                output_session.write_can_frame([frame], write_timeout)
+                output_session.write_can_frame([frame])
                 print('Sent frame with ID %s payload: %s' % (id, payload))
 
                 # Wait 1 s and then read the received values.
@@ -74,8 +72,7 @@ def main():
                 time.sleep(1)
 
                 count = 1
-                read_timeout = constants.TIMEOUT_NONE
-                frames = input_session.read_can_frame(count, read_timeout)
+                frames = input_session.read_can_frame(count)
                 for frame in frames:
                     print('Received frame: ')
                     pp.pprint(frame)
@@ -84,8 +81,8 @@ def main():
                 if max(payload) + i > 0xFF:
                     i = 0
 
-                inp = six.moves.input()
-                if inp == 'q':
+                inp = six.moves.input('Hit enter to continue (q to quit): ')
+                if inp.lower() == 'q':
                     break
 
             print('Data acquisition stopped.')

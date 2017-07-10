@@ -94,23 +94,23 @@ class Session(object):
 
         self._handle = None
 
-    def start(self, scope):
+    def start(self, scope=constants.StartStopScope.NORMAL):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxstart/"
         _funcs.nx_start(self._handle, scope)
 
-    def stop(self, scope):
+    def stop(self, scope=constants.StartStopScope.NORMAL):
         _funcs.nx_stop(self._handle, scope)
 
     def flush(self):
         _funcs.nx_flush(self._handle)
 
-    def wait_for_transmit_complete(self, timeout):
+    def wait_for_transmit_complete(self, timeout=10):
         _funcs.nx_wait(self._handle, constants.Condition.TRANSMIT_COMPLETE, 0, timeout)
 
-    def wait_for_intf_communicating(self, timeout):
+    def wait_for_intf_communicating(self, timeout=10):
         _funcs.nx_wait(self._handle, constants.Condition.INTF_COMMUNICATING, 0, timeout)
 
-    def wait_for_intf_remote_wakeup(self, timeout):
+    def wait_for_intf_remote_wakeup(self, timeout=10):
         _funcs.nx_wait(self._handle, constants.Condition.INTF_REMOTE_WAKEUP, 0, timeout)
 
     def connect_terminals(self, source, destination):

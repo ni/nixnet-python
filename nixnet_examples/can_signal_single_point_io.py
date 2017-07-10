@@ -37,31 +37,30 @@ def main():
 
     with nx.Session(database_name, cluster_name, input_signal_list, interface1, input_mode) as input_session:
         with nx.Session(database_name, cluster_name, output_signal_list, interface2, output_mode) as output_session:
-            print('Are you using a terminated cable? Enter Y or N')
-            terminated_cable = six.moves.input()
+            terminated_cable = six.moves.input('Are you using a terminated cable (Y or N)? ')
             if terminated_cable.lower() == "y":
-                output_session.intf_can_term = constants.CanTerm.OFF
-                input_session.intf_can_term = constants.CanTerm.ON
+                input_session.intf.can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.OFF
             elif terminated_cable.lower() == "n":
-                input_session.intf_can_term = constants.CanTerm.ON
-                output_session.intf_can_term = constants.CanTerm.ON
+                input_session.intf.can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.ON
             else:
                 print("Unrecognised input ({}), assuming 'n'".format(terminated_cable))
-                input_session.intf_can_term = constants.CanTerm.ON
-                output_session.intf_can_term = constants.CanTerm.ON
+                input_session.intf.can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.ON
 
             # Start the input session manually to make sure that the first
             # signal value sent before the initial read will be received.
-            input_session.start(constants.StartStopScope.NORMAL)
+            input_session.start()
 
-            user_value = six.moves.input('Enter two signal values [float, float]: ')
+            user_value = six.moves.input('Enter {} signal values [float, float]: '.format(len(input_signal_list)))
             try:
                 value_buffer = [float(x.strip()) for x in user_value.split(",")]
             except ValueError:
                 value_buffer = [24.5343, 77.0129]
                 print('Unrecognized input ({}). Setting data buffer to {}', user_value, value_buffer)
 
-            if len(value_buffer) != 2:
+            if len(value_buffer) != len(input_signal_list):
                 value_buffer = [24.5343, 77.0129]
                 print('Invalid number of signal values entered. Setting data buffer to {}', value_buffer)
 
@@ -87,8 +86,8 @@ def main():
                 if max(value_buffer) + i > sys.float_info.max:
                     i = 0
 
-                inp = six.moves.input()
-                if inp == 'q':
+                inp = six.moves.input('Hit enter to continue (q to quit): ')
+                if inp.lower() == 'q':
                     break
 
             print('Data acquisition stopped.')
