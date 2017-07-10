@@ -37,8 +37,7 @@ def main():
 
     with nx.Session(database_name, cluster_name, input_signal_list, interface1, input_mode) as input_session:
         with nx.Session(database_name, cluster_name, output_signal_list, interface2, output_mode) as output_session:
-            print('Are you using a terminated cable? Enter Y or N')
-            terminated_cable = six.moves.input()
+            terminated_cable = six.moves.input('Are you using a terminated cable (Y or N)? ')
             if terminated_cable.lower() == "y":
                 input_session.intf.can_term = constants.CanTerm.ON
                 output_session.intf.can_term = constants.CanTerm.OFF
@@ -87,8 +86,8 @@ def main():
                 if max(value_buffer) + i > sys.float_info.max:
                     i = 0
 
-                inp = six.moves.input()
-                if inp == 'q':
+                inp = six.moves.input('Hit enter to continue (q to quit): ')
+                if inp.lower() == 'q':
                     break
 
             print('Data acquisition stopped.')
