@@ -9,8 +9,8 @@ import six
 import sys
 import time
 
+import nixnet
 from nixnet import constants
-from nixnet import nx
 
 
 pp = pprint.PrettyPrinter(indent=4)
@@ -35,8 +35,8 @@ def main():
     input_mode = constants.CreateSessionMode.SIGNAL_IN_SINGLE_POINT
     output_mode = constants.CreateSessionMode.SIGNAL_OUT_SINGLE_POINT
 
-    with nx.Session(database_name, cluster_name, input_signal_list, interface1, input_mode) as input_session:
-        with nx.Session(database_name, cluster_name, output_signal_list, interface2, output_mode) as output_session:
+    with nixnet.Session(database_name, cluster_name, input_signal_list, interface1, input_mode) as input_session:
+        with nixnet.Session(database_name, cluster_name, output_signal_list, interface2, output_mode) as output_session:
             terminated_cable = six.moves.input('Are you using a terminated cable (Y or N)? ')
             if terminated_cable.lower() == "y":
                 input_session.intf.can_term = constants.CanTerm.ON
