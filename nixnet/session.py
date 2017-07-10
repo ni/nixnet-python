@@ -3,17 +3,13 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import collections
 import itertools
 import warnings
 
-import six
-
-from nixnet import _cconsts
-from nixnet import _errors
 from nixnet import _frames
 from nixnet import _funcs
 from nixnet import _props
+from nixnet import _utils
 from nixnet import constants
 from nixnet import errors
 from nixnet import types
@@ -34,20 +30,7 @@ class Session(object):
             interface,
             mode):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
-        if isinstance(list, six.string_types):
-            # For FRAME_IN_QUEUED / FRAME_OUT_QUEUED
-            # Convenience for everything else
-            if "," in list:
-                # A bit of an abuse of an error code
-                _errors.check_for_error(_cconsts.NX_ERR_INVALID_PROPERTY_VALUE)
-        elif isinstance(list, collections.Iterable):
-            list = ",".join(list)
-        elif list is None:
-            # For FRAME_IN_STREAM / FRAME_OUT_STREAM
-            list = ''
-        else:
-            # A bit of an abuse of an error code
-            _errors.check_for_error(_cconsts.NX_ERR_INVALID_PROPERTY_VALUE)
+        list = _utils.flatten_items(list)
         self._handle = None  # To satisfy `__del__` in case nx_create_session throws
         self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface, mode)
         self._frames = frames.Frames(self._handle)
