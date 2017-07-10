@@ -29,8 +29,8 @@ def main():
             print('Are you using a terminated cable? Enter Y or N')
             terminated_cable = six.moves.input()
             if terminated_cable.lower() == "y":
-                output_session.intf.can_term = constants.CanTerm.OFF
                 input_session.intf.can_term = constants.CanTerm.ON
+                output_session.intf.can_term = constants.CanTerm.OFF
             elif terminated_cable.lower() == "n":
                 input_session.intf.can_term = constants.CanTerm.ON
                 output_session.intf.can_term = constants.CanTerm.ON
