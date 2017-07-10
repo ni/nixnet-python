@@ -51,7 +51,7 @@ def main():
 
             # Start the input session manually to make sure that the first
             # signal value sent before the initial read will be received.
-            input_session.start(constants.StartStopScope.NORMAL)
+            input_session.start()
 
             user_value = six.moves.input('Enter {} signal values [float, float]: '.format(len(input_signal_list)))
             try:
