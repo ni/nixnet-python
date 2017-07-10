@@ -3,24 +3,30 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import itertools
 import warnings
 
-from nixnet import _frames
 from nixnet import _funcs
 from nixnet import _props
 from nixnet import _utils
 from nixnet import constants
 from nixnet import errors
-from nixnet import types
 
-from nixnet._session import frames
+from nixnet._session import frames as session_frames
 from nixnet._session import intf
 from nixnet._session import j1939
-from nixnet._session import signals
+from nixnet._session import signals as session_signals
 
 
-class Session(object):
+__all__ = [
+    "FrameInStreamSession",
+    "FrameOutStreamSession",
+    "FrameInQueuedSession",
+    "FrameOutQueuedSession",
+    "SignalInSinglePointSession",
+    "SignalOutSinglePointSession"]
+
+
+class SessionBase(object):
 
     def __init__(
             self,
@@ -30,11 +36,8 @@ class Session(object):
             interface,
             mode):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
-        list = _utils.flatten_items(list)
         self._handle = None  # To satisfy `__del__` in case nx_create_session throws
         self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface, mode)
-        self._frames = frames.Frames(self._handle)
-        self._signals = signals.Signals(self._handle)
         self._intf = intf.Interface(self._handle)
         self._j1939 = j1939.J1939(self._handle)
 
@@ -102,114 +105,6 @@ class Session(object):
     def disconnect_terminals(self, source, destination):
         _funcs.nx_disconnect_terminals(self._handle, source, destination)
 
-    def read_frame_bytes(
-            self,
-            number_of_bytes_to_read,
-            timeout=constants.TIMEOUT_NONE):
-        """Read frames.
-
-        Valid modes
-        - Frame Input Stream Mode
-        - Frame Input Queued Mode
-        - Frame Input Single-Point Mode
-        Frame: one or more
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
-        """
-        buffer, number_of_bytes_returned = _funcs.nx_read_frame(self._handle, number_of_bytes_to_read, timeout)
-        return buffer[0:number_of_bytes_returned]
-
-    def read_raw_frame(
-            self,
-            number_to_read,
-            timeout=constants.TIMEOUT_NONE):
-        """Read frames.
-
-        Valid modes
-        - Frame Input Stream Mode
-        - Frame Input Queued Mode
-        - Frame Input Single-Point Mode
-        Frame: one or more
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
-        """
-        # NOTE: If the frame payload excedes the base unit, this will return
-        # less than number_to_read
-        number_of_bytes_to_read = number_to_read * _frames.nxFrameFixed_t.size
-        buffer = self.read_frame_bytes(number_of_bytes_to_read, timeout)
-        for frame in _frames.iterate_frames(buffer):
-            yield frame
-
-    def read_can_frame(
-            self,
-            number_to_read,
-            timeout=constants.TIMEOUT_NONE):
-        """Read frames.
-
-        Valid modes
-        - Frame Input Stream Mode
-        - Frame Input Queued Mode
-        - Frame Input Single-Point Mode
-        Frame: one or more
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
-        """
-        for frame in self.read_raw_frame(number_to_read, timeout):
-            yield types.CanFrame.from_raw(frame)
-
-    def read_signal_single_point(
-            self,
-            num_signals):
-        """Read signal single point.
-
-        Valid modes
-        - Single Input Single-Point
-        Timestamps
-        - Optional in C API
-        - Timestamp per data point
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadsignalsinglepoint/
-        """
-        timestamps, values = _funcs.nx_read_signal_single_point(self._handle, num_signals)
-        for timestamp, value in zip(timestamps, values):
-            yield timestamp.value, value.value
-
-    def write_frame_bytes(
-            self,
-            frame_bytes,
-            timeout=10):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
-        _funcs.nx_write_frame(self._handle, bytes(frame_bytes), timeout)
-
-    def write_raw_frame(
-            self,
-            raw_frames,
-            timeout=10):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
-        units = itertools.chain.from_iterable(
-            _frames.serialize_frame(frame)
-            for frame in raw_frames)
-        bytes = b"".join(units)
-        self.write_frame_bytes(bytes, timeout)
-
-    def write_can_frame(
-            self,
-            can_frames,
-            timeout=10):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
-        raw_frames = (frame.to_raw() for frame in can_frames)
-        self.write_raw_frame(raw_frames, timeout)
-
-    def write_signal_single_point(
-            self,
-            value_buffer):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwritesignalsinglepoint/"
-        _funcs.nx_write_signal_single_point(self._handle, value_buffer)
-
-    @property
-    def frames(self):
-        return self._frames
-
-    @property
-    def signals(self):
-        return self._signals
-
     @property
     def intf(self):
         return self._intf
@@ -273,6 +168,196 @@ class Session(object):
     @resamp_rate.setter
     def resamp_rate(self, value):
         _props.set_session_resamp_rate(self._handle, value)
+
+
+class FrameInStreamSession(SessionBase):
+
+    def __init__(
+            self,
+            interface,
+            database_name=':memory:',
+            cluster_name=''):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        flattened_list = _utils.flatten_items(None)
+        SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface,
+            constants.CreateSessionMode.FRAME_IN_STREAM)
+        self._frames = session_frames.InFrames(self._handle)
+
+    @property
+    def frames(self):
+        return self._frames
+
+
+class FrameOutStreamSession(SessionBase):
+
+    def __init__(
+            self,
+            interface,
+            database_name=':memory:',
+            cluster_name=''):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        flattened_list = _utils.flatten_items(None)
+        SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface,
+            constants.CreateSessionMode.FRAME_OUT_STREAM)
+        self._frames = session_frames.OutFrames(self._handle)
+
+    @property
+    def frames(self):
+        return self._frames
+
+
+class FrameInQueuedSession(SessionBase):
+
+    def __init__(
+            self,
+            interface,
+            database_name,
+            cluster_name,
+            frame):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        flattened_list = _utils.flatten_items(frame)
+        SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface,
+            constants.CreateSessionMode.FRAME_IN_QUEUED)
+        self._frames = session_frames.InFrames(self._handle)
+
+    @property
+    def frames(self):
+        return self._frames
+
+
+class FrameOutQueuedSession(SessionBase):
+
+    def __init__(
+            self,
+            interface,
+            database_name,
+            cluster_name,
+            frame):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        flattened_list = _utils.flatten_items(frame)
+        SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface,
+            constants.CreateSessionMode.FRAME_OUT_QUEUED)
+        self._frames = session_frames.OutFrames(self._handle)
+
+    @property
+    def frames(self):
+        return self._frames
+
+
+class FrameInSinglePointSession(SessionBase):
+
+    def __init__(
+            self,
+            interface,
+            database_name,
+            cluster_name,
+            frames):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        flattened_list = _utils.flatten_items(frames)
+        SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface,
+            constants.CreateSessionMode.FRAME_IN_SINGLE_POINT)
+        self._frames = session_frames.InFrames(self._handle)
+
+    @property
+    def frames(self):
+        return self._frames
+
+
+class FrameOutSinglePointSession(SessionBase):
+
+    def __init__(
+            self,
+            interface,
+            database_name,
+            cluster_name,
+            frames):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        flattened_list = _utils.flatten_items(frames)
+        SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface,
+            constants.CreateSessionMode.FRAME_OUT_SINGLE_POINT)
+        self._frames = session_frames.OutFrames(self._handle)
+
+    @property
+    def frames(self):
+        return self._frames
+
+
+class SignalInSinglePointSession(SessionBase):
+
+    def __init__(
+            self,
+            interface,
+            database_name,
+            cluster_name,
+            signals):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        flattened_list = _utils.flatten_items(signals)
+        SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface,
+            constants.CreateSessionMode.SIGNAL_IN_SINGLE_POINT)
+        self._signals = session_signals.SinglePointInSignals(self._handle)
+
+    @property
+    def signals(self):
+        return self._signals
+
+
+class SignalOutSinglePointSession(SessionBase):
+
+    def __init__(
+            self,
+            interface,
+            database_name,
+            cluster_name,
+            signals):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        flattened_list = _utils.flatten_items(signals)
+        SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface,
+            constants.CreateSessionMode.SIGNAL_OUT_SINGLE_POINT)
+        self._signals = session_signals.SinglePointOutSignals(self._handle)
+
+    @property
+    def signals(self):
+        return self._signals
 
 
 def create_session_by_ref(

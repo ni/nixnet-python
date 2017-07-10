@@ -14,17 +14,17 @@ from nixnet import _errors
 def flatten_items(list):
     """Flatten an item list to a string
 
-    >>> flatten_items('Item')
+    >>> str(flatten_items('Item'))
     'Item'
-    >>> flatten_items(['A', 'B'])
+    >>> str(flatten_items(['A', 'B']))
     'A,B'
-    >>> flatten_items(None)
+    >>> str(flatten_items(None))
     ''
     """
     if isinstance(list, six.string_types):
         # For FRAME_IN_QUEUED / FRAME_OUT_QUEUED
         # Convenience for everything else
-        if "," in list:
+        if ',' in list:
             # A bit of an abuse of an error code
             _errors.check_for_error(_cconsts.NX_ERR_INVALID_PROPERTY_VALUE)
         flattened = list
