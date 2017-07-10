@@ -53,14 +53,14 @@ def main():
             # signal value sent before the initial read will be received.
             input_session.start(constants.StartStopScope.NORMAL)
 
-            user_value = six.moves.input('Enter two signal values [float, float]: ')
+            user_value = six.moves.input('Enter {} signal values [float, float]: '.format(len(input_signal_list)))
             try:
                 value_buffer = [float(x.strip()) for x in user_value.split(",")]
             except ValueError:
                 value_buffer = [24.5343, 77.0129]
                 print('Unrecognized input ({}). Setting data buffer to {}', user_value, value_buffer)
 
-            if len(value_buffer) != 2:
+            if len(value_buffer) != len(input_signal_list):
                 value_buffer = [24.5343, 77.0129]
                 print('Invalid number of signal values entered. Setting data buffer to {}', value_buffer)
 
