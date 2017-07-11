@@ -16,16 +16,11 @@ pp = pprint.PrettyPrinter(indent=4)
 
 
 def main():
-    database_name = ':memory:'
-    cluster_name = ''
-    list = ''
     interface1 = 'CAN1'
     interface2 = 'CAN2'
-    input_mode = constants.CreateSessionMode.FRAME_IN_STREAM
-    output_mode = constants.CreateSessionMode.FRAME_OUT_STREAM
 
-    with nixnet.Session(database_name, cluster_name, list, interface1, input_mode) as input_session:
-        with nixnet.Session(database_name, cluster_name, list, interface2, output_mode) as output_session:
+    with nixnet.FrameInStreamSession(interface1) as input_session:
+        with nixnet.FrameOutStreamSession(interface2) as output_session:
             terminated_cable = six.moves.input('Are you using a terminated cable (Y or N)? ')
             if terminated_cable.lower() == "y":
                 input_session.intf.can_term = constants.CanTerm.ON
@@ -64,7 +59,7 @@ def main():
                     payload[index] = byte + i
 
                 frame.payload = payload
-                output_session.write_can_frame([frame])
+                output_session.frames.write_can([frame])
                 print('Sent frame with ID %s payload: %s' % (id, payload))
 
                 # Wait 1 s and then read the received values.
@@ -72,7 +67,7 @@ def main():
                 time.sleep(1)
 
                 count = 1
-                frames = input_session.read_can_frame(count)
+                frames = input_session.frames.read_can(count)
                 for frame in frames:
                     print('Received frame: ')
                     pp.pprint(frame)

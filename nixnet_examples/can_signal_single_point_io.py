@@ -28,15 +28,21 @@ def convert_timestamp(timestamp):
 def main():
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
-    input_signal_list = ['CANEventSignal1', 'CANEventSignal2']
-    output_signal_list = ['CANEventSignal1', 'CANEventSignal2']
+    input_signals = ['CANEventSignal1', 'CANEventSignal2']
+    output_signals = ['CANEventSignal1', 'CANEventSignal2']
     interface1 = 'CAN1'
     interface2 = 'CAN2'
-    input_mode = constants.CreateSessionMode.SIGNAL_IN_SINGLE_POINT
-    output_mode = constants.CreateSessionMode.SIGNAL_OUT_SINGLE_POINT
 
-    with nixnet.Session(database_name, cluster_name, input_signal_list, interface1, input_mode) as input_session:
-        with nixnet.Session(database_name, cluster_name, output_signal_list, interface2, output_mode) as output_session:
+    with nixnet.SignalInSinglePointSession(
+            interface1,
+            database_name,
+            cluster_name,
+            input_signals) as input_session:
+        with nixnet.SignalOutSinglePointSession(
+                interface2,
+                database_name,
+                cluster_name,
+                output_signals) as output_session:
             terminated_cable = six.moves.input('Are you using a terminated cable (Y or N)? ')
             if terminated_cable.lower() == "y":
                 input_session.intf.can_term = constants.CanTerm.ON
@@ -53,14 +59,14 @@ def main():
             # signal value sent before the initial read will be received.
             input_session.start()
 
-            user_value = six.moves.input('Enter {} signal values [float, float]: '.format(len(input_signal_list)))
+            user_value = six.moves.input('Enter {} signal values [float, float]: '.format(len(input_signals)))
             try:
                 value_buffer = [float(x.strip()) for x in user_value.split(",")]
             except ValueError:
                 value_buffer = [24.5343, 77.0129]
                 print('Unrecognized input ({}). Setting data buffer to {}', user_value, value_buffer)
 
-            if len(value_buffer) != len(input_signal_list):
+            if len(value_buffer) != len(input_signals):
                 value_buffer = [24.5343, 77.0129]
                 print('Invalid number of signal values entered. Setting data buffer to {}', value_buffer)
 
@@ -69,15 +75,14 @@ def main():
             while True:
                 for index, value in enumerate(value_buffer):
                     value_buffer[index] = value + i
-                output_session.write_signal_single_point(value_buffer)
+                output_session.signals.write(value_buffer)
                 print('Sent signal values: %s' % value_buffer)
 
                 # Wait 1 s and then read the received values.
                 # They should be the same as the ones sent.
                 time.sleep(1)
 
-                num_signals = len(value_buffer)
-                signals = input_session.read_signal_single_point(num_signals)
+                signals = input_session.signals.read()
                 for timestamp, value in signals:
                     date = convert_timestamp(timestamp)
                     print('Received signal with timepstamp %s and value %s' % (date, value))

@@ -6,6 +6,6 @@ from __future__ import unicode_literals
 from nixnet.errors import XnetError  # NOQA: F401
 from nixnet.errors import XnetResourceWarning  # NOQA: F401
 from nixnet.errors import XnetWarning  # NOQA: F401
-from nixnet.session import Session  # NOQA: F401
+from nixnet.session import *  # NOQA: F401, F403
 
 __all__ = []
