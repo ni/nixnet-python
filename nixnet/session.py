@@ -281,7 +281,7 @@ class FrameInSinglePointSession(SessionBase):
             flattened_list,
             interface,
             constants.CreateSessionMode.FRAME_IN_SINGLE_POINT)
-        self._frames = session_frames.InFrames(self._handle)
+        self._frames = session_frames.SinglePointInFrames(self._handle)
 
     @property
     def frames(self):

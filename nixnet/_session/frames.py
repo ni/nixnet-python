@@ -79,6 +79,65 @@ class InFrames(Frames):
             yield types.CanFrame.from_raw(frame)
 
 
+class SinglePointInFrames(Frames):
+    """Frames in a session."""
+
+    def __repr__(self):
+        return 'Session.SinglePointInFrames(handle={0})'.format(self._handle)
+
+    def read_bytes(
+            self,
+            number_of_bytes_to_read,
+            timeout=constants.TIMEOUT_NONE):
+        """Read frames.
+
+        Valid modes
+        - Frame Input Stream Mode
+        - Frame Input Queued Mode
+        - Frame Input Single-Point Mode
+        Frame: one or more
+        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        """
+        buffer, number_of_bytes_returned = _funcs.nx_read_frame(self._handle, number_of_bytes_to_read, timeout)
+        return buffer[0:number_of_bytes_returned]
+
+    def read_raw(
+            self,
+            timeout=constants.TIMEOUT_NONE):
+        """Read frames.
+
+        Valid modes
+        - Frame Input Stream Mode
+        - Frame Input Queued Mode
+        - Frame Input Single-Point Mode
+        Frame: one or more
+        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        """
+        # NOTE: If the frame payload excedes the base unit, this will return
+        # less than number_to_read
+        number_to_read = len(self)
+        number_of_bytes_to_read = number_to_read * _frames.nxFrameFixed_t.size
+        buffer = self.read_bytes(number_of_bytes_to_read, timeout)
+        for frame in _frames.iterate_frames(buffer):
+            yield frame
+
+    def read_can(
+            self,
+            number_to_read,
+            timeout=constants.TIMEOUT_NONE):
+        """Read frames.
+
+        Valid modes
+        - Frame Input Stream Mode
+        - Frame Input Queued Mode
+        - Frame Input Single-Point Mode
+        Frame: one or more
+        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        """
+        for frame in self.read_raw(number_to_read, timeout):
+            yield types.CanFrame.from_raw(frame)
+
+
 class OutFrames(Frames):
     """Frames in a session."""
 

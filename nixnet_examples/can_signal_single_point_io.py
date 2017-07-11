@@ -82,8 +82,7 @@ def main():
                 # They should be the same as the ones sent.
                 time.sleep(1)
 
-                num_signals = len(value_buffer)
-                signals = input_session.signals.read(num_signals)
+                signals = input_session.signals.read()
                 for timestamp, value in signals:
                     date = convert_timestamp(timestamp)
                     print('Received signal with timepstamp %s and value %s' % (date, value))

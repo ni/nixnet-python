@@ -21,7 +21,7 @@ class SinglePointInSignals(Signals):
     def __repr__(self):
         return 'Session.SinglePointInSignals(handle={0})'.format(self._handle)
 
-    def read(self, num_signals):
+    def read(self):
         """Read signal single point.
 
         Valid modes
@@ -31,6 +31,7 @@ class SinglePointInSignals(Signals):
         - Timestamp per data point
         http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadsignalsinglepoint/
         """
+        num_signals = len(self)
         timestamps, values = _funcs.nx_read_signal_single_point(self._handle, num_signals)
         for timestamp, value in zip(timestamps, values):
             yield timestamp.value, value.value

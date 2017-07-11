@@ -16,6 +16,7 @@ from nixnet_examples import can_signal_single_point_io
 MockXnetLibrary = mock.create_autospec(_cfuncs.XnetLibrary, spec_set=True, instance=True)
 MockXnetLibrary.nx_create_session.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_set_property.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nx_get_property.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_start.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_write_frame.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_read_frame.return_value = _ctypedefs.u32(0)
@@ -50,7 +51,7 @@ def test_can_frame_stream_empty_session():
 
 
 @mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
-@mock.patch('six.moves.input', six_input(['y', '1, 2, 3', 'q']))
+@mock.patch('six.moves.input', six_input(['y', '1, 2', 'q']))
 @mock.patch('time.sleep', lambda time: None)
 def test_can_signal_single_point_empty_session():
     can_signal_single_point_io.main()
