@@ -38,8 +38,8 @@ def main():
                 input_session.intf.can_term = constants.CanTerm.ON
                 output_session.intf.can_term = constants.CanTerm.ON
 
-            input_session.intf_baud_rate = 125000
-            output_session.intf_baud_rate = 125000
+            input_session.intf.baud_rate = 125000
+            output_session.intf.baud_rate = 125000
 
             # Start the input session manually to make sure that the first
             # frame value sent before the initial read will be received.
