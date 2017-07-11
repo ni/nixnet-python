@@ -15,4 +15,6 @@ install:
   - pip install -U tox-travis
 
 script:
-   - tox
+  - tox
+  # Verify the file is at least valid even if it isn't run.
+  - tox -c tox-integration.ini -l

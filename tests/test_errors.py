@@ -68,3 +68,15 @@ def test_unknown_warning():
     assert record[0].message.error_code == error_code
     assert record[0].message.error_type == _enums.Err.INTERNAL_ERROR
     assert record[0].message.args == ('Warning 201232 occurred.\n\n', )
+
+
+@pytest.mark.integration
+def test_driver_call():
+    with pytest.raises(errors.XnetError) as excinfo:
+        _errors.check_for_error(_enums.Err.SELF_TEST_ERROR1.value)
+    assert excinfo.value.error_code == _enums.Err.SELF_TEST_ERROR1.value
+    assert excinfo.value.error_type == _enums.Err.SELF_TEST_ERROR1
+    assert excinfo.value.args == (
+        'NI-XNET:  (Hex 0xBFF63002) Board self test failed(code 2). '
+        'Solution: try reinstalling the driver or switching the slot(s) of the board(s). '
+        'If the error persists,contact National Instruments.', )
