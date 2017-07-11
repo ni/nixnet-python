@@ -87,8 +87,7 @@ class SinglePointInFrames(Frames):
 
     def read_bytes(
             self,
-            number_of_bytes_to_read,
-            timeout=constants.TIMEOUT_NONE):
+            number_of_bytes_to_read):
         """Read frames.
 
         Valid modes
@@ -98,12 +97,13 @@ class SinglePointInFrames(Frames):
         Frame: one or more
         http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
         """
-        buffer, number_of_bytes_returned = _funcs.nx_read_frame(self._handle, number_of_bytes_to_read, timeout)
+        buffer, number_of_bytes_returned = _funcs.nx_read_frame(
+            self._handle,
+            number_of_bytes_to_read,
+            constants.TIMEOUT_NONE)
         return buffer[0:number_of_bytes_returned]
 
-    def read_raw(
-            self,
-            timeout=constants.TIMEOUT_NONE):
+    def read_raw(self):
         """Read frames.
 
         Valid modes
@@ -113,18 +113,15 @@ class SinglePointInFrames(Frames):
         Frame: one or more
         http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
         """
-        # NOTE: If the frame payload excedes the base unit, this will return
+        # NOTE: If the frame payload exceeds the base unit, this will return
         # less than number_to_read
         number_to_read = len(self)
         number_of_bytes_to_read = number_to_read * _frames.nxFrameFixed_t.size
-        buffer = self.read_bytes(number_of_bytes_to_read, timeout)
+        buffer = self.read_bytes(number_of_bytes_to_read)
         for frame in _frames.iterate_frames(buffer):
             yield frame
 
-    def read_can(
-            self,
-            number_to_read,
-            timeout=constants.TIMEOUT_NONE):
+    def read_can(self):
         """Read frames.
 
         Valid modes
@@ -134,7 +131,7 @@ class SinglePointInFrames(Frames):
         Frame: one or more
         http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
         """
-        for frame in self.read_raw(number_to_read, timeout):
+        for frame in self.read_raw():
             yield types.CanFrame.from_raw(frame)
 
 
@@ -169,6 +166,36 @@ class OutFrames(Frames):
         "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
         raw_frames = (frame.to_raw() for frame in can_frames)
         self.write_raw(raw_frames, timeout)
+
+
+class SinglePointOutFrames(Frames):
+    """Frames in a session."""
+
+    def __repr__(self):
+        return 'Session.SinglePointOutFrames(handle={0})'.format(self._handle)
+
+    def write_bytes(
+            self,
+            frame_bytes):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        _funcs.nx_write_frame(self._handle, bytes(frame_bytes), constants.TIMEOUT_NONE)
+
+    def write_raw(
+            self,
+            raw_frames):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        units = itertools.chain.from_iterable(
+            _frames.serialize_frame(frame)
+            for frame in raw_frames)
+        bytes = b"".join(units)
+        self.write_bytes(bytes)
+
+    def write_can(
+            self,
+            can_frames):
+        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        raw_frames = (frame.to_raw() for frame in can_frames)
+        self.write_raw(raw_frames)
 
 
 class Frame(collection.Item):

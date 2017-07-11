@@ -305,7 +305,7 @@ class FrameOutSinglePointSession(SessionBase):
             flattened_list,
             interface,
             constants.CreateSessionMode.FRAME_OUT_SINGLE_POINT)
-        self._frames = session_frames.OutFrames(self._handle)
+        self._frames = session_frames.SinglePointOutFrames(self._handle)
 
     @property
     def frames(self):
