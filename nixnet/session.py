@@ -58,7 +58,7 @@ class SessionBase(object):
             database_name,
             cluster_name,
             list,
-            interface,
+            interface_name,
             mode):
         """Create an XNET session at run time using named references to database objects.
 
@@ -78,7 +78,7 @@ class SessionBase(object):
             list: A list of strings describing signals or frames for the session.
                 The list syntax depends on the mode. Refer to mode spefic
                 session classes defined below for 'list' syntax.
-            interface: The XNET Interface to use for this session. If Mode is
+            interface_name: The XNET Interface to use for this session. If Mode is
                 :class:`nixnet.constants.CreateSessionMode.SIGNAL_CONVERSION_SINGLE_POINT`,
                 this input is ignored. You can set it to an empty string.
             mode: The session mode. See :class:`nixnet._enums.CreateSessionMode`.
@@ -87,7 +87,7 @@ class SessionBase(object):
             A Session object.
         """
         self._handle = None  # To satisfy `__del__` in case nx_create_session throws
-        self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface, mode)
+        self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface_name, mode)
         self._intf = intf.Interface(self._handle)
         self._j1939 = j1939.J1939(self._handle)
 
@@ -440,7 +440,7 @@ class FrameInStreamSession(SessionBase):
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name=':memory:',
             cluster_name=''):
         """Create a Frame Input Stream session.
@@ -449,7 +449,7 @@ class FrameInStreamSession(SessionBase):
         references to database objects.
 
         Args:
-            interface: The XNET Interface to use for this session.
+            interface_name: The XNET Interface to use for this session.
             database_name: The XNET database to use for interface configuration.
                 The database name must use the <alias> or <filepath> syntax
                 (refer to Databases).
@@ -466,7 +466,7 @@ class FrameInStreamSession(SessionBase):
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_IN_STREAM)
         self._frames = session_frames.InFrames(self._handle)
 
@@ -479,7 +479,7 @@ class FrameOutStreamSession(SessionBase):
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name=':memory:',
             cluster_name=''):
         """Create a Frame Input Stream session.
@@ -488,7 +488,7 @@ class FrameOutStreamSession(SessionBase):
         references to database objects.
 
         Args:
-            interface: The XNET Interface to use for this session.
+            interface_name: The XNET Interface to use for this session.
             database_name: The XNET database to use for interface configuration.
                 The database name must use the <alias> or <filepath> syntax
                 (refer to Databases).
@@ -505,7 +505,7 @@ class FrameOutStreamSession(SessionBase):
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_OUT_STREAM)
         self._frames = session_frames.OutFrames(self._handle)
 
@@ -518,7 +518,7 @@ class FrameInQueuedSession(SessionBase):
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             frame):
@@ -528,7 +528,7 @@ class FrameInQueuedSession(SessionBase):
         references to database objects.
 
         Args:
-            interface: The XNET Interface to use for this session.
+            interface_name: The XNET Interface to use for this session.
             database_name: The XNET database to use for interface configuration.
                 The database name must use the <alias> or <filepath> syntax
                 (refer to Databases).
@@ -553,7 +553,7 @@ class FrameInQueuedSession(SessionBase):
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_IN_QUEUED)
         self._frames = session_frames.InFrames(self._handle)
 
@@ -566,7 +566,7 @@ class FrameOutQueuedSession(SessionBase):
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             frame):
@@ -576,7 +576,7 @@ class FrameOutQueuedSession(SessionBase):
         references to database objects.
 
         Args:
-            interface: The XNET Interface to use for this session.
+            interface_name: The XNET Interface to use for this session.
             database_name: The XNET database to use for interface configuration.
                 The database name must use the <alias> or <filepath> syntax
                 (refer to Databases).
@@ -601,7 +601,7 @@ class FrameOutQueuedSession(SessionBase):
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_OUT_QUEUED)
         self._frames = session_frames.OutFrames(self._handle)
 
@@ -614,7 +614,7 @@ class FrameInSinglePointSession(SessionBase):
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             frames):
@@ -624,7 +624,7 @@ class FrameInSinglePointSession(SessionBase):
         references to database objects.
 
         Args:
-            interface: The XNET Interface to use for this session.
+            interface_name: The XNET Interface to use for this session.
             database_name: The XNET database to use for interface configuration.
                 The database name must use the <alias> or <filepath> syntax
                 (refer to Databases).
@@ -651,7 +651,7 @@ class FrameInSinglePointSession(SessionBase):
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_IN_SINGLE_POINT)
         self._frames = session_frames.SinglePointInFrames(self._handle)
 
@@ -664,7 +664,7 @@ class FrameOutSinglePointSession(SessionBase):
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             frames):
@@ -674,7 +674,7 @@ class FrameOutSinglePointSession(SessionBase):
         references to database objects.
 
         Args:
-            interface: The XNET Interface to use for this session.
+            interface_name: The XNET Interface to use for this session.
             database_name: The XNET database to use for interface configuration.
                 The database name must use the <alias> or <filepath> syntax
                 (refer to Databases).
@@ -701,7 +701,7 @@ class FrameOutSinglePointSession(SessionBase):
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_OUT_SINGLE_POINT)
         self._frames = session_frames.SinglePointOutFrames(self._handle)
 
@@ -714,7 +714,7 @@ class SignalInSinglePointSession(SessionBase):
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             signals):
@@ -724,7 +724,7 @@ class SignalInSinglePointSession(SessionBase):
         references to database objects.
 
         Args:
-            interface: The XNET Interface to use for this session.
+            interface_name: The XNET Interface to use for this session.
             database_name: The XNET database to use for interface configuration.
                 The database name must use the <alias> or <filepath> syntax
                 (refer to Databases).
@@ -755,7 +755,7 @@ class SignalInSinglePointSession(SessionBase):
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.SIGNAL_IN_SINGLE_POINT)
         self._signals = session_signals.SinglePointInSignals(self._handle)
 
@@ -768,7 +768,7 @@ class SignalOutSinglePointSession(SessionBase):
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             signals):
@@ -778,7 +778,7 @@ class SignalOutSinglePointSession(SessionBase):
         references to database objects.
 
         Args:
-            interface: The XNET Interface to use for this session.
+            interface_name: The XNET Interface to use for this session.
             database_name: The XNET database to use for interface configuration.
                 The database name must use the <alias> or <filepath> syntax
                 (refer to Databases).
@@ -809,7 +809,7 @@ class SignalOutSinglePointSession(SessionBase):
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.SIGNAL_OUT_SINGLE_POINT)
         self._signals = session_signals.SinglePointOutSignals(self._handle)
 
@@ -820,9 +820,9 @@ class SignalOutSinglePointSession(SessionBase):
 
 def create_session_by_ref(
         database_refs,
-        interface,
+        interface_name,
         mode):
-    return _funcs.nx_create_session_by_ref(database_refs, interface, mode)
+    return _funcs.nx_create_session_by_ref(database_refs, interface_name, mode)
 
 
 def read_signal_waveform(
