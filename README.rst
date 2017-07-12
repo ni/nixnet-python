@@ -68,6 +68,6 @@ License
 =======
 
 **nixnet** is licensed under an MIT-style license (see
-`https://github.com/ni/nixnet-python/blob/master/LICENSE`_).
+`LICENSE <https://github.com/ni/nixnet-python/blob/master/LICENSE>`__).
 Other incorporated projects may be licensed under different licenses. All
 licenses allow for non-commercial and commercial use.
