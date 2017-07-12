@@ -22,6 +22,8 @@ __all__ = [
     "FrameOutStreamSession",
     "FrameInQueuedSession",
     "FrameOutQueuedSession",
+    "FrameInSinglePointSession",
+    "FrameOutSinglePointSession",
     "SignalInSinglePointSession",
     "SignalOutSinglePointSession"]
 
