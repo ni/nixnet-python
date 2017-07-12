@@ -2,14 +2,17 @@
 Info         Contains a Python API for interacting with NI-XNET. See `GitHub <https://github.com/ni/nixnet-python/>`_ for the latest source.
 Author       National Instruments
 ===========  =================================================================================================================================
-
 .. image:: https://travis-ci.org/ni/nixnet-python.svg?branch=master
     :target: https://travis-ci.org/ni/nixnet-python
     :alt: Build
 
+.. image:: https://img.shields.io/pypi/v/nixnet.svg
+    :target: https://pypi.python.org/pypi/nixnet
+    :alt: PyPI
+
 .. image:: https://pyup.io/repos/github/ni/nixnet-python/shield.svg
-     :target: https://pyup.io/repos/github/ni/nixnet-python/
-     :alt: Updates
+    :target: https://pyup.io/repos/github/ni/nixnet-python/
+    :alt: Updates
 
 About
 =====
