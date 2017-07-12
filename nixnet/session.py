@@ -68,19 +68,21 @@ class SessionBase(object):
         specified in 'list' from the database named in 'database_name'.
 
         Args:
-            database_name: The XNET database to use for interface configuration.
-                The database name must use the <alias> or <filepath> syntax
-                (refer to Databases).
-            cluster_name: The XNET cluster to use for interface configuration.
-                The name must specify a cluster from the database given in the
-                database_name parameter. If it is left blank, the cluster is
-                extracted from the list parameter; this is not allowed for modes
-                of :class:`nixnet.constants.CreateSessionMode.FRAME_IN_STREAM`
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the list parameter; this is
+                not allowed for modes of
+                :class:`nixnet.constants.CreateSessionMode.FRAME_IN_STREAM`
                 or :class:`nixnet.constants.CreateSessionMode.FRAME_OUT_STREAM`.
             list: A list of strings describing signals or frames for the session.
                 The list syntax depends on the mode. Refer to mode spefic
                 session classes defined below for 'list' syntax.
-            interface_name: The XNET Interface to use for this session. If Mode is
+            interface_name: A string representing the XNET Interface to use for
+                this session. If Mode is
                 :class:`nixnet.constants.CreateSessionMode.SIGNAL_CONVERSION_SINGLE_POINT`,
                 this input is ignored. You can set it to an empty string.
             mode: The session mode. See :class:`nixnet._enums.CreateSessionMode`.
@@ -335,8 +337,8 @@ class SessionBase(object):
         pair is an internal and the other an external.
 
         Args:
-            source: A string repesenting the connection source name.
-            destination: A string repesenting the connection destination name.
+            source: A string representing the connection source name.
+            destination: A string representing the connection destination name.
 
         Returns:
             None
@@ -365,8 +367,8 @@ class SessionBase(object):
         Attempting to disconnect a nonconnected terminal results in an error.
 
         Args:
-            source: A string repesenting the connection source name.
-            destination: A string repesenting the connection destination name.
+            source: A string representing the connection source name.
+            destination: A string representing the connection destination name.
 
         Returns:
             None
@@ -451,13 +453,14 @@ class FrameInStreamSession(SessionBase):
         references to database objects.
 
         Args:
-            interface_name: The XNET Interface to use for this session.
-            database_name: The XNET database to use for interface configuration.
-                The database name must use the <alias> or <filepath> syntax
-                (refer to Databases).
-            cluster_name: The XNET cluster to use for interface configuration.
-                The name must specify a cluster from the database given in the
-                database_name parameter.
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter.
 
         Returns:
             A Frame Input Stream session object.
@@ -490,13 +493,14 @@ class FrameOutStreamSession(SessionBase):
         references to database objects.
 
         Args:
-            interface_name: The XNET Interface to use for this session.
-            database_name: The XNET database to use for interface configuration.
-                The database name must use the <alias> or <filepath> syntax
-                (refer to Databases).
-            cluster_name: The XNET cluster to use for interface configuration.
-                The name must specify a cluster from the database given in the
-                database_name parameter.
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter.
 
         Returns:
             A Frame Output Stream session object.
@@ -530,14 +534,15 @@ class FrameInQueuedSession(SessionBase):
         references to database objects.
 
         Args:
-            interface_name: The XNET Interface to use for this session.
-            database_name: The XNET database to use for interface configuration.
-                The database name must use the <alias> or <filepath> syntax
-                (refer to Databases).
-            cluster_name: The XNET cluster to use for interface configuration.
-                The name must specify a cluster from the database given in the
-                database_name parameter. If it is left blank, the cluster is
-                extracted from the 'frame' parameter.
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax(refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the 'frame' parameter.
             frame: A string describing one XNET Frame or PDU name. This name
                 must be one of the following options, whichever uniquely
                 identifies a frame within the database given:
@@ -578,14 +583,15 @@ class FrameOutQueuedSession(SessionBase):
         references to database objects.
 
         Args:
-            interface_name: The XNET Interface to use for this session.
-            database_name: The XNET database to use for interface configuration.
-                The database name must use the <alias> or <filepath> syntax
-                (refer to Databases).
-            cluster_name: The XNET cluster to use for interface configuration.
-                The name must specify a cluster from the database given in the
-                database_name parameter. If it is left blank, the cluster is
-                extracted from the 'frame' parameter.
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the 'frame' parameter.
             frame: A string describing one XNET Frame or PDU name. This name
                 must be one of the following options, whichever uniquely
                 identifies a frame within the database given:
@@ -626,14 +632,15 @@ class FrameInSinglePointSession(SessionBase):
         references to database objects.
 
         Args:
-            interface_name: The XNET Interface to use for this session.
-            database_name: The XNET database to use for interface configuration.
-                The database name must use the <alias> or <filepath> syntax
-                (refer to Databases).
-            cluster_name: The XNET cluster to use for interface configuration.
-                The name must specify a cluster from the database given in the
-                database_name parameter. If it is left blank, the cluster is
-                extracted from the 'frames' parameter.
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the 'frames' parameter.
             frames: A list of strings describing frames for the session. The
                 list syntax is as follows:
                     List contains one or more XNET Frame or PDU names. Each name
@@ -676,14 +683,15 @@ class FrameOutSinglePointSession(SessionBase):
         references to database objects.
 
         Args:
-            interface_name: The XNET Interface to use for this session.
-            database_name: The XNET database to use for interface configuration.
-                The database name must use the <alias> or <filepath> syntax
-                (refer to Databases).
-            cluster_name: The XNET cluster to use for interface configuration.
-                The name must specify a cluster from the database given in the
-                database_name parameter. If it is left blank, the cluster is
-                extracted from the 'frames' parameter.
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the 'frames' parameter.
             frames: A list of strings describing frames for the session. The
                 list syntax is as follows:
                     List contains one or more XNET Frame or PDU names. Each name
@@ -726,14 +734,15 @@ class SignalInSinglePointSession(SessionBase):
         references to database objects.
 
         Args:
-            interface_name: The XNET Interface to use for this session.
-            database_name: The XNET database to use for interface configuration.
-                The database name must use the <alias> or <filepath> syntax
-                (refer to Databases).
-            cluster_name: The XNET cluster to use for interface configuration.
-                The name must specify a cluster from the database given in the
-                database_name parameter. If it is left blank, the cluster is
-                extracted from the signals parameter.
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the signals parameter.
             signals: A list of strings describing signals for the session. The
                 list syntax is as follows:
                     List contains one or more XNET Signal names. Each name must
@@ -780,14 +789,15 @@ class SignalOutSinglePointSession(SessionBase):
         references to database objects.
 
         Args:
-            interface_name: The XNET Interface to use for this session.
-            database_name: The XNET database to use for interface configuration.
-                The database name must use the <alias> or <filepath> syntax
-                (refer to Databases).
-            cluster_name: The XNET cluster to use for interface configuration.
-                The name must specify a cluster from the database given in the
-                database_name parameter. If it is left blank, the cluster is
-                extracted from the signals parameter.
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the signals parameter.
             signals: A list of strings describing signals for the session. The
                 list syntax is as follows:
                     List contains one or more XNET Signal names. Each name must
