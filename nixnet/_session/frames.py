@@ -30,14 +30,43 @@ class InFrames(Frames):
             self,
             number_of_bytes_to_read,
             timeout=constants.TIMEOUT_NONE):
-        """Read frames.
+        """Read data as a list of raw bytes (frame data).
 
-        Valid modes
-        - Frame Input Stream Mode
-        - Frame Input Queued Mode
-        - Frame Input Single-Point Mode
-        Frame: one or more
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        The raw bytes encode one or more frames using the Raw Frame Format.
+
+        Args:
+            number_of_bytes_to_read: An integer repesenting the number of bytes to read.
+            timeout: The time to wait for number to read frame bytes to become
+                available; the 'timeout' is represented as 64-bit floating-point
+                in units of seconds.
+
+                To avoid returning a partial frame, even when
+                'number_of_bytes_to_read' are available from the hardware, this
+                read may return fewer bytes in buffer. For example, assume you
+                pass 'number_of_bytes_to_read' 70 bytes and 'timeout' of 10
+                seconds. During the read, two frames are received, the first 24
+                bytes in size, and the second 56 bytes in size, for a total of
+                80 bytes. The read returns after the two frames are received,
+                but only the first frame is copied to data. If the read copied
+                46 bytes of the second frame (up to the limit of 70), that frame
+                would be incomplete and therefore difficult to interpret. To
+                avoid this problem, the read always returns complete frames in
+                buffer.
+
+                If 'timeout' is positive, this function waits for
+                'number_of_bytes_to_read' frame bytes to be received, then
+                returns complete frames up to that number. If the bytes do not
+                arrive prior to the 'timeout', an error is returned.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                function waits indefinitely for 'number_of_bytes_to_read' frame bytes.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns all available
+                frame bytes up to the limit 'number_of_bytes_to_read' specifies.
+
+        Returns:
+            A list of raw bytes representing the data.
         """
         buffer, number_of_bytes_returned = _funcs.nx_read_frame(self._handle, number_of_bytes_to_read, timeout)
         return buffer[0:number_of_bytes_returned]
@@ -46,14 +75,29 @@ class InFrames(Frames):
             self,
             number_to_read,
             timeout=constants.TIMEOUT_NONE):
-        """Read frames.
+        """Read raw CAN frames.
 
-        Valid modes
-        - Frame Input Stream Mode
-        - Frame Input Queued Mode
-        - Frame Input Single-Point Mode
-        Frame: one or more
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        Args:
+            number_to_read: An integer repesenting the number of raw CAN frames
+                to read.
+            timeout: The time to wait for number to read frames to become
+                available; the 'timeout' is represented as 64-bit floating-point
+                in units of seconds.
+
+                If 'timeout' is positive, this function waits for
+                'number_to_read' frames to be received, then
+                returns complete frames up to that number. If the frames do not
+                arrive prior to the 'timeout', an error is returned.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                function waits indefinitely for 'number_to_read' frames.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns all available
+                frames up to the limit 'number_to_read' specifies.
+
+        Yields:
+            :class:`nixnet.types.RawFrame`
         """
         # NOTE: If the frame payload excedes the base unit, this will return
         # less than number_to_read
@@ -66,14 +110,27 @@ class InFrames(Frames):
             self,
             number_to_read,
             timeout=constants.TIMEOUT_NONE):
-        """Read frames.
+        """Read :class:`nixnet.types.CanFrame` data.
 
-        Valid modes
-        - Frame Input Stream Mode
-        - Frame Input Queued Mode
-        - Frame Input Single-Point Mode
-        Frame: one or more
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        Args:
+            number_to_read: An integer repesenting the number of CAN frames to read.
+            timeout: The time to wait for number to read frames to become
+                available; the 'timeout' is represented as 64-bit floating-point
+                in units of seconds.
+
+                If 'timeout' is positive, this function waits for
+                'number_to_read' frames to be received, then
+                returns complete frames up to that number. If the frames do not
+                arrive prior to the 'timeout', an error is returned.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                function waits indefinitely for 'number_to_read' frames.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns all available
+                frames up to the limit 'number_to_read' specifies.
+        Yields:
+            :class:`nixnet.types.CanFrame`
         """
         for frame in self.read_raw(number_to_read, timeout):
             yield types.CanFrame.from_raw(frame)
@@ -88,14 +145,13 @@ class SinglePointInFrames(Frames):
     def read_bytes(
             self,
             number_of_bytes_to_read):
-        """Read frames.
+        """Read data as a list of raw bytes (frame data).
 
-        Valid modes
-        - Frame Input Stream Mode
-        - Frame Input Queued Mode
-        - Frame Input Single-Point Mode
-        Frame: one or more
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        Args:
+            number_of_bytes_to_read: An integer repesenting the number of bytes to read.
+
+        Returns:
+            A list of raw bytes representing the data.
         """
         buffer, number_of_bytes_returned = _funcs.nx_read_frame(
             self._handle,
@@ -104,14 +160,13 @@ class SinglePointInFrames(Frames):
         return buffer[0:number_of_bytes_returned]
 
     def read_raw(self):
-        """Read frames.
+        """Read raw CAN frames.
 
-        Valid modes
-        - Frame Input Stream Mode
-        - Frame Input Queued Mode
-        - Frame Input Single-Point Mode
-        Frame: one or more
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        Args:
+            None
+
+        Yields:
+            :class:`nixnet.types.RawFrame`
         """
         # NOTE: If the frame payload exceeds the base unit, this will return
         # less than number_to_read
@@ -122,14 +177,13 @@ class SinglePointInFrames(Frames):
             yield frame
 
     def read_can(self):
-        """Read frames.
+        """Read :class:`nixnet.types.CanFrame` data.
 
-        Valid modes
-        - Frame Input Stream Mode
-        - Frame Input Queued Mode
-        - Frame Input Single-Point Mode
-        Frame: one or more
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadframe/
+        Args:
+            None
+
+        Yields:
+            :class:`nixnet.types.CanFrame`
         """
         for frame in self.read_raw():
             yield types.CanFrame.from_raw(frame)
@@ -145,14 +199,63 @@ class OutFrames(Frames):
             self,
             frame_bytes,
             timeout=10):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        """Write a list of raw bytes (frame data).
+
+        The raw bytes encode one or more frames using the Raw Frame Format.
+
+        Args:
+            frame_bytes: List of bytes, representing frames to transmit.
+            timeout: The time to wait for the data to be queued up for transmit.
+                The 'timeout' is represented as 64-bit floating-point in units of seconds.
+
+                If 'timeout' is positive, this function waits up to that 'timeout'
+                for space to become available in queues. If the space is not
+                available prior to the 'timeout', a 'timeout' error is returned.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                functions waits indefinitely for space to become available in queues.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns with a 'timeout'
+                error if all data cannot be queued. Regardless of the 'timeout'
+                used, if a 'timeout' error occurs, none of the data is queued,
+                so you can attempt to call this function again at a later time
+                with the same data.
+
+        Returns:
+            None
+        """
         _funcs.nx_write_frame(self._handle, bytes(frame_bytes), timeout)
 
     def write_raw(
             self,
             raw_frames,
             timeout=10):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        """Write raw CAN frame data.
+
+        Args:
+            raw_frames: One or more :class:`nixnet.types.RawFrame` objects to be
+                written to the session.
+            timeout: The time to wait for the data to be queued up for transmit.
+                The 'timeout' is represented as 64-bit floating-point in units of seconds.
+
+                If 'timeout' is positive, this function waits up to that 'timeout'
+                for space to become available in queues. If the space is not
+                available prior to the 'timeout', a 'timeout' error is returned.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                functions waits indefinitely for space to become available in queues.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns with a 'timeout'
+                error if all data cannot be queued. Regardless of the 'timeout'
+                used, if a 'timeout' error occurs, none of the data is queued,
+                so you can attempt to call this function again at a later time
+                with the same data.
+
+        Returns:
+            None
+        """
         units = itertools.chain.from_iterable(
             _frames.serialize_frame(frame)
             for frame in raw_frames)
@@ -163,7 +266,31 @@ class OutFrames(Frames):
             self,
             can_frames,
             timeout=10):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        """Write CAN frame data.
+
+        Args:
+            can_frames: One or more :class:`nixnet.types.CanFrame` objects to be
+                written to the session.
+            timeout: The time to wait for the data to be queued up for transmit.
+                The 'timeout' is represented as 64-bit floating-point in units of seconds.
+
+                If 'timeout' is positive, this function waits up to that 'timeout'
+                for space to become available in queues. If the space is not
+                available prior to the 'timeout', a 'timeout' error is returned.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                functions waits indefinitely for space to become available in queues.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns with a 'timeout'
+                error if all data cannot be queued. Regardless of the 'timeout'
+                used, if a 'timeout' error occurs, none of the data is queued,
+                so you can attempt to call this function again at a later time
+                with the same data.
+
+        Returns:
+            None
+        """
         raw_frames = (frame.to_raw() for frame in can_frames)
         self.write_raw(raw_frames, timeout)
 
@@ -177,13 +304,30 @@ class SinglePointOutFrames(Frames):
     def write_bytes(
             self,
             frame_bytes):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        """Write a list of raw bytes (frame data).
+
+        The raw bytes encode one or more frames using the Raw Frame Format.
+
+        Args:
+            frame_bytes: List of bytes, representing frames to transmit.
+
+        Returns:
+            None
+        """
         _funcs.nx_write_frame(self._handle, bytes(frame_bytes), constants.TIMEOUT_NONE)
 
     def write_raw(
             self,
             raw_frames):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        """Write raw CAN frame data.
+
+        Args:
+            raw_frames: A list of :class:`nixnet.types.RawFrame` objects to be
+                written to the session.
+
+        Returns:
+            None
+        """
         units = itertools.chain.from_iterable(
             _frames.serialize_frame(frame)
             for frame in raw_frames)
@@ -193,7 +337,15 @@ class SinglePointOutFrames(Frames):
     def write_can(
             self,
             can_frames):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwriteframe/"
+        """Write CAN frame data.
+
+        Args:
+            can_frames: A list of :class:`nixnet.types.CanFrame` objects to be
+                written to the session.
+
+        Returns:
+            None
+        """
         raw_frames = (frame.to_raw() for frame in can_frames)
         self.write_raw(raw_frames)
 

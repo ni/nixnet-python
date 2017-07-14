@@ -3,17 +3,12 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import warnings
-
 from nixnet import _funcs
-from nixnet import _props
 from nixnet import _utils
 from nixnet import constants
-from nixnet import errors
 
+from nixnet._session import base
 from nixnet._session import frames as session_frames
-from nixnet._session import intf
-from nixnet._session import j1939
 from nixnet._session import signals as session_signals
 
 
@@ -22,169 +17,72 @@ __all__ = [
     "FrameOutStreamSession",
     "FrameInQueuedSession",
     "FrameOutQueuedSession",
+    "FrameInSinglePointSession",
+    "FrameOutSinglePointSession",
     "SignalInSinglePointSession",
     "SignalOutSinglePointSession"]
 
 
-class SessionBase(object):
+class FrameInStreamSession(base.SessionBase):
+    """Frame Input Stream session.
+
+    This session reads all frames received from the network using a single
+    stream. It typically is used for analyzing and/or logging all frame traffic
+    in the network.
+
+    The input data is returned as a list of frames. Because all frames are
+    returned, your application must evaluate identification in each frame (such
+    as a CAN identifier or FlexRay slot/cycle/channel) to interpret the frame
+    payload data.
+
+    Previously, you could use only one Frame Input Stream session for a given
+    interface. Now, multiple Frame Input Stream sessions can be open at the same
+    time on CAN and LIN interfaces.
+
+    While using one or more Frame Input Stream sessions, you can use other
+    sessions with different input modes. Received frames are copied to Frame
+    Input Stream sessions in addition to any other applicable input session. For
+    example, if you create a Frame Input Single-Point session for frame_a, then
+    create a Frame Input Stream session, when frame_a is received, its data is
+    returned from the call to read function of both sessions. This duplication
+    of incoming frames enables you to analyze overall traffic while running a
+    higher level application that uses specific frame or signal data.
+
+    When used with a FlexRay interface, frames from both channels are returned.
+    For example, if a frame is received in a static slot on both channel A and
+    channel B, two frames are returned from the read function.
+    """
 
     def __init__(
             self,
-            database_name,
-            cluster_name,
-            list,
-            interface,
-            mode):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
-        self._handle = None  # To satisfy `__del__` in case nx_create_session throws
-        self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface, mode)
-        self._intf = intf.Interface(self._handle)
-        self._j1939 = j1939.J1939(self._handle)
-
-    def __del__(self):
-        if self._handle is not None:
-            warnings.warn(
-                'Session was not explicitly closed before it was destructed. '
-                'Resources on the device may still be reserved.',
-                errors.XnetResourceWarning)
-
-    def __enter__(self):
-        return self
-
-    def __exit__(self, type, value, traceback):
-        self.close()
-
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self._handle == other._handle
-        return False
-
-    def __ne__(self, other):
-        return not self.__eq__(other)
-
-    def __hash__(self):
-        return hash(self._handle)
-
-    def __repr__(self):
-        return 'Session(handle={0})'.format(self._handle)
-
-    def close(self):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxclear/"
-        if self._handle is None:
-            warnings.warn(
-                'Attempting to close NI-XNET session but session was already '
-                'closed', errors.XnetResourceWarning)
-            return
-
-        _funcs.nx_clear(self._handle)
-
-        self._handle = None
-
-    def start(self, scope=constants.StartStopScope.NORMAL):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxstart/"
-        _funcs.nx_start(self._handle, scope)
-
-    def stop(self, scope=constants.StartStopScope.NORMAL):
-        _funcs.nx_stop(self._handle, scope)
-
-    def flush(self):
-        _funcs.nx_flush(self._handle)
-
-    def wait_for_transmit_complete(self, timeout=10):
-        _funcs.nx_wait(self._handle, constants.Condition.TRANSMIT_COMPLETE, 0, timeout)
-
-    def wait_for_intf_communicating(self, timeout=10):
-        _funcs.nx_wait(self._handle, constants.Condition.INTF_COMMUNICATING, 0, timeout)
-
-    def wait_for_intf_remote_wakeup(self, timeout=10):
-        _funcs.nx_wait(self._handle, constants.Condition.INTF_REMOTE_WAKEUP, 0, timeout)
-
-    def connect_terminals(self, source, destination):
-        _funcs.nx_connect_terminals(self._handle, source, destination)
-
-    def disconnect_terminals(self, source, destination):
-        _funcs.nx_disconnect_terminals(self._handle, source, destination)
-
-    @property
-    def intf(self):
-        return self._intf
-
-    @property
-    def j1939(self):
-        return self._j1939
-
-    @property
-    def application_protocol(self):
-        return constants.AppProtocol(_props.get_session_application_protocol(self._handle))
-
-    @property
-    def auto_start(self):
-        return _props.get_session_auto_start(self._handle)
-
-    @auto_start.setter
-    def auto_start(self, value):
-        _props.set_session_auto_start(self._handle, value)
-
-    @property
-    def cluster_name(self):
-        return _props.get_session_cluster_name(self._handle)
-
-    @property
-    def database_name(self):
-        return _props.get_session_database_name(self._handle)
-
-    @property
-    def mode(self):
-        return constants.CreateSessionMode(_props.get_session_mode(self._handle))
-
-    @property
-    def num_pend(self):
-        return _props.get_session_num_pend(self._handle)
-
-    @property
-    def num_unused(self):
-        return _props.get_session_num_unused(self._handle)
-
-    @property
-    def payld_len_max(self):
-        return _props.get_session_payld_len_max(self._handle)
-
-    @property
-    def protocol(self):
-        return constants.Protocol(_props.get_session_protocol(self._handle))
-
-    @property
-    def queue_size(self):
-        return _props.get_session_queue_size(self._handle)
-
-    @queue_size.setter
-    def queue_size(self, value):
-        _props.set_session_queue_size(self._handle, value)
-
-    @property
-    def resamp_rate(self):
-        return _props.get_session_resamp_rate(self._handle)
-
-    @resamp_rate.setter
-    def resamp_rate(self, value):
-        _props.set_session_resamp_rate(self._handle, value)
-
-
-class FrameInStreamSession(SessionBase):
-
-    def __init__(
-            self,
-            interface,
+            interface_name,
             database_name=':memory:',
             cluster_name=''):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        """Create a Frame Input Stream session.
+
+        This function creates a Frame Input Stream session using the named
+        references to database objects.
+
+        Args:
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter.
+
+        Returns:
+            A Frame Input Stream session object.
+        """
         flattened_list = _utils.flatten_items(None)
-        SessionBase.__init__(
+        base.SessionBase.__init__(
             self,
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_IN_STREAM)
         self._frames = session_frames.InFrames(self._handle)
 
@@ -193,21 +91,75 @@ class FrameInStreamSession(SessionBase):
         return self._frames
 
 
-class FrameOutStreamSession(SessionBase):
+class FrameOutStreamSession(base.SessionBase):
+    """Frame Output Stream session.
+
+    This session transmits an arbitrary sequence of frame values using a single
+    stream. The values are not limited to a single frame in the database, but
+    can transmit any frame.
+
+    The data passed to the write frame function is a list of frame values,
+    each of which transmits as soon as possible. Frames transmit sequentially
+    (one after another).
+
+    This session is not supported for FlexRay.
+
+    Like Frame Input Stream sessions, you can create more than one Frame Output
+    Stream session for a given interface.
+
+    For CAN, frame values transmit on the network based entirely on the time
+    when you call the write frame function. The timing of each frame as
+    specified in the database is ignored. For example, if you provide four frame
+    values to the the write frame function, the first frame value transmits
+    immediately, followed by the next three values transmitted back to back. For
+    this session, the CAN frame payload length in the database is ignored, and
+    the write frame function is always used.
+
+    Similarly for LIN, frame values transmit on the network based entirely on
+    the time when you call the write frame function. The timing of each frame as
+    specified in the database is ignored. The LIN frame payload length in the
+    database is ignored, and the write frame function is always used. For LIN,
+    this session/mode is allowed only on the interface as master. If the payload
+    for a frame is empty, only the header part of the frame is transmitted. For
+    a nonempty payload, the header + response for the frame is transmitted. If a
+    frame for transmit is defined in the database (in-memory or otherwise), it
+    is transmitted using its database checksum type. If the frame for transmit
+    is not defined in the database, it is transmitted using enhanced checksum.
+
+    The frame values for this session are stored in a queue, such that every value
+    provided is transmitted.
+    """
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name=':memory:',
             cluster_name=''):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        """Create a Frame Input Stream session.
+
+        This function creates a Frame Output Stream session using the named
+        references to database objects.
+
+        Args:
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter.
+
+        Returns:
+            A Frame Output Stream session object.
+        """
         flattened_list = _utils.flatten_items(None)
-        SessionBase.__init__(
+        base.SessionBase.__init__(
             self,
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_OUT_STREAM)
         self._frames = session_frames.OutFrames(self._handle)
 
@@ -216,22 +168,61 @@ class FrameOutStreamSession(SessionBase):
         return self._frames
 
 
-class FrameInQueuedSession(SessionBase):
+class FrameInQueuedSession(base.SessionBase):
+    """Frame Input Queued session.
+
+    This session reads data from a dedicated queue per frame. It enables your
+    application to read a sequence of data specific to a frame (for example, a
+    CAN identifier).
+
+    You specify only one frame for the session, and the read frame function
+    returns values for that frame only. If you need sequential data for multiple
+    frames, create multiple sessions, one per frame.
+
+    The input data is returned as a list of frame values. These values
+    represent all values received for the frame since the previous call to the
+    read frame function.
+    """
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             frame):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        """Create a Frame Input Queued session.
+
+        This function creates a Frame Input Queued session using the named
+        references to database objects.
+
+        Args:
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax(refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the 'frame' parameter.
+            frame: A string describing one XNET Frame or PDU name. This name
+                must be one of the following options, whichever uniquely
+                identifies a frame within the database given:
+                        -<Frame>
+                        -<Cluster>.<Frame>
+                        -<PDU>
+                        -<Cluster>.<PDU>
+
+        Returns:
+            A Frame Input Queued session object.
+        """
         flattened_list = _utils.flatten_items(frame)
-        SessionBase.__init__(
+        base.SessionBase.__init__(
             self,
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_IN_QUEUED)
         self._frames = session_frames.InFrames(self._handle)
 
@@ -240,22 +231,74 @@ class FrameInQueuedSession(SessionBase):
         return self._frames
 
 
-class FrameOutQueuedSession(SessionBase):
+class FrameOutQueuedSession(base.SessionBase):
+    """Frame Output Queued session.
+
+    This session provides a sequence of values for a single frame, for transmit
+    using that frame's timing as specified in the database.
+
+    The output data is provided as a list of frame values, to be transmitted
+    sequentially for the frame specified in the session.
+
+    You can only specify one frame for this session. To transmit sequential
+    values for multiple frames, use a different Frame Output Queued session for
+    each frame or use the Frame Output Stream session.
+
+    The frame values for this session are stored in a queue, such that every
+    value provided is transmitted.
+
+    For this session, NI-XNET transmits each frame according to its properties
+    in the database. Therefore, when you call the write frame function, the
+    number of payload bytes in each frame value must match that frame's Payload
+    Length property. The other frame value elements are ignored, so you can
+    leave them uninitialized. For CAN interfaces, if the number of payload bytes
+    you write is smaller than the Payload Length configured in the database, the
+    requested number of bytes transmits. If the number of payload bytes is
+    larger than the Payload Length configured in the database, the queue is
+    flushed and no frames transmit. For other interfaces, transmitting a number
+    of payload bytes different than the frame's payload may cause unexpected
+    results on the bus.
+    """
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             frame):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        """Create a Frame Output Queued session.
+
+        This function creates a Frame Output Stream session using the named
+        references to database objects.
+
+        Args:
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the 'frame' parameter.
+            frame: A string describing one XNET Frame or PDU name. This name
+                must be one of the following options, whichever uniquely
+                identifies a frame within the database given:
+                        -<Frame>
+                        -<Cluster>.<Frame>
+                        -<PDU>
+                        -<Cluster>.<PDU>
+
+        Returns:
+            A Frame Output Queued session object.
+        """
         flattened_list = _utils.flatten_items(frame)
-        SessionBase.__init__(
+        base.SessionBase.__init__(
             self,
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_OUT_QUEUED)
         self._frames = session_frames.OutFrames(self._handle)
 
@@ -264,22 +307,62 @@ class FrameOutQueuedSession(SessionBase):
         return self._frames
 
 
-class FrameInSinglePointSession(SessionBase):
+class FrameInSinglePointSession(base.SessionBase):
+    """Frame Input Single-Point session.
+
+    This session reads the most recent value received for each frame. It
+    typically is used for control or simulation applications that require lower
+    level access to frames (not signals).
+
+    This session does not use queues to store each received frame. If the
+    interface receives two frames prior to calling the read frame function, that
+    read returns signals for the second frame.
+
+    The input data is returned as a list of frames, one for each frame
+    specified for the session.
+    """
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             frames):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        """Create a Frame Input Single-Point session.
+
+        This function creates a Frame Input Single-Point session using the named
+        references to database objects.
+
+        Args:
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the 'frames' parameter.
+            frames: A list of strings describing frames for the session. The
+                list syntax is as follows:
+                    List contains one or more XNET Frame or PDU names. Each name
+                    must be one of the following options, whichever uniquely
+                    identifies a frame within the database given:
+                        -<Frame>
+                        -<Cluster>.<Frame>
+                        -<PDU>
+                        -<Cluster>.<PDU>
+
+        Returns:
+            A Frame Input Single-Point session object.
+        """
         flattened_list = _utils.flatten_items(frames)
-        SessionBase.__init__(
+        base.SessionBase.__init__(
             self,
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_IN_SINGLE_POINT)
         self._frames = session_frames.SinglePointInFrames(self._handle)
 
@@ -288,22 +371,72 @@ class FrameInSinglePointSession(SessionBase):
         return self._frames
 
 
-class FrameOutSinglePointSession(SessionBase):
+class FrameOutSinglePointSession(base.SessionBase):
+    """Frame Output Single-Point session.
 
+    This session writes frame values for the next transmit. It typically is used
+    for control or simulation applications that require lower level access to
+    frames (not signals).
+
+    This session does not use queues to store frame values. If the write frame
+    function is called twice before the next transmit, the transmitted frame
+    uses the value from the second call to the write frame function.
+
+    The output data is provided as a list of frames, one for each frame
+    specified for the session.
+
+    For this session, NI-XNET transmits each frame according to its properties
+    in the database. Therefore, when you call the write frame function, the
+    number of payload bytes in each frame value must match that frame's Payload
+    Length property. The other frame value elements are ignored, so you can
+    leave them uninitialized. For CAN interfaces, if the number of payload bytes
+    you write is smaller than the Payload Length configured in the database, the
+    requested number of bytes transmit. If the number of payload bytes is larger
+    than the Payload Length configured in the database, the queue is flushed and
+    no frames transmit. For other interfaces, transmitting a number of payload
+    bytes different than the frame payload may cause unexpected results on the bus.
+    """
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             frames):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        """Create a Frame Output Single-Point session.
+
+        This function creates a Frame Output Single-Point session using the named
+        references to database objects.
+
+        Args:
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the 'frames' parameter.
+            frames: A list of strings describing frames for the session. The
+                list syntax is as follows:
+                    List contains one or more XNET Frame or PDU names. Each name
+                    must be one of the following options, whichever uniquely
+                    identifies a frame within the database given:
+                        -<Frame>
+                        -<Cluster>.<Frame>
+                        -<PDU>
+                        -<Cluster>.<PDU>
+
+        Returns:
+            A Frame Output Single-Point session object.
+        """
         flattened_list = _utils.flatten_items(frames)
-        SessionBase.__init__(
+        base.SessionBase.__init__(
             self,
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.FRAME_OUT_SINGLE_POINT)
         self._frames = session_frames.SinglePointOutFrames(self._handle)
 
@@ -312,22 +445,78 @@ class FrameOutSinglePointSession(SessionBase):
         return self._frames
 
 
-class SignalInSinglePointSession(SessionBase):
+class SignalInSinglePointSession(base.SessionBase):
+    """Signal Input Single-Point session.
+
+    This session reads the most recent value received for each signal. It
+    typically is used for control or simulation applications, such as Hardware
+    In the Loop (HIL).
+
+    This session does not use queues to store each received frame. If the
+    interface receives two frames prior to calling
+    :class:`nixnet.signals.SinglePointInSignals.read`, that call to
+    :class:`nixnet.signals.SinglePointInSignals.read` returns signals for the
+    second frame.
+
+    Use :class:`nixnet.signals.SinglePointInSignals.read` for this session.
+
+    You also can specify a trigger signal for a frame. This signal name is
+    :trigger:.<frame name>, and once it is specified in the __init__ 'signals'
+    list, it returns a value of 0.0 if the frame did not arrive since the last
+    Read (or Start), and 1.0 if at least one frame of this ID arrived. You can
+    specify multiple trigger signals for different frames in the same session.
+    For multiplexed signals, a signal may or may not be contained in a received
+    frame. To define a trigger signal for a multiplexed signal, use the signal
+    name :trigger:.<frame name>.<signal name>. This signal returns 1.0 only if a
+    frame with appropriate set multiplexer bit has been received since the last
+    Read or Start.
+    """
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             signals):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        """Create a Signal Input Single-Point session.
+
+        This function creates a Signal Input Single-Point session using the named
+        references to database objects.
+
+        Args:
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the signals parameter.
+            signals: A list of strings describing signals for the session. The
+                list syntax is as follows:
+                    List contains one or more XNET Signal names. Each name must
+                    be one of the following options, whichever uniquely
+                    identifies a signal within the database given:
+                        -<Signal>
+                        -<Frame>.<Signal>
+                        -<Cluster>.<Frame>.<Signal>
+                        -<PDU>.<Signal>
+                        -<Cluster>.<PDU>.<Signal>
+                    List may also contain one or more trigger signals. For
+                    information about trigger signals, refer to Signal Output
+                    Single-Point Mode or Signal Input Single-Point Mode.
+
+        Returns:
+            A Signal Input Single-Point session object.
+        """
         flattened_list = _utils.flatten_items(signals)
-        SessionBase.__init__(
+        base.SessionBase.__init__(
             self,
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.SIGNAL_IN_SINGLE_POINT)
         self._signals = session_signals.SinglePointInSignals(self._handle)
 
@@ -336,22 +525,72 @@ class SignalInSinglePointSession(SessionBase):
         return self._signals
 
 
-class SignalOutSinglePointSession(SessionBase):
+class SignalOutSinglePointSession(base.SessionBase):
+    """Signal Out Single-Point session.
+
+    This session writes signal values for the next frame transmit. It typically
+    is used for control or simulation applications, such as Hardware In the Loop
+    (HIL).
+
+    This session does not use queues to store signal values. If
+    :class:`nixnet.signals.SinglePointOutSignals.write` is called twice before
+    the next transmit, the transmitted frame uses signal values from the second
+    call to :class:`nixnet.signals.SinglePointOutSignals.write`.
+
+    Use :class:`nixnet.signals.SinglePointOutSignals.write` for this session.
+
+    You also can specify a trigger signal for a frame. This signal name is
+    :trigger:.<frame name>, and once it is specified in the __init__ 'signals'
+    list, you can write a value of 0.0 to suppress writing of that frame, or any
+    value not equal to 0.0 to write the frame. You can specify multiple trigger
+    signals for different frames in the same session.
+    """
 
     def __init__(
             self,
-            interface,
+            interface_name,
             database_name,
             cluster_name,
             signals):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxcreatesession/"
+        """Create a Signal Output Single-Point session.
+
+        This function creates a Signal Output Single-Point session using the named
+        references to database objects.
+
+        Args:
+            interface_name: A string representing the XNET Interface to use for
+                this session.
+            database_name: A string representing the XNET database to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name: A string representing the XNET cluster to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the signals parameter.
+            signals: A list of strings describing signals for the session. The
+                list syntax is as follows:
+                    List contains one or more XNET Signal names. Each name must
+                    be one of the following options, whichever uniquely
+                    identifies a signal within the database given:
+                        -<Signal>
+                        -<Frame>.<Signal>
+                        -<Cluster>.<Frame>.<Signal>
+                        -<PDU>.<Signal>
+                        -<Cluster>.<PDU>.<Signal>
+                    List may also contain one or more trigger signals. For
+                    information about trigger signals, refer to Signal Output
+                    Single-Point Mode or Signal Output Single-Point Mode.
+
+        Returns:
+            A Signal Output Single-Point session object.
+        """
         flattened_list = _utils.flatten_items(signals)
-        SessionBase.__init__(
+        base.SessionBase.__init__(
             self,
             database_name,
             cluster_name,
             flattened_list,
-            interface,
+            interface_name,
             constants.CreateSessionMode.SIGNAL_OUT_SINGLE_POINT)
         self._signals = session_signals.SinglePointOutSignals(self._handle)
 
@@ -362,9 +601,9 @@ class SignalOutSinglePointSession(SessionBase):
 
 def create_session_by_ref(
         database_refs,
-        interface,
+        interface_name,
         mode):
-    return _funcs.nx_create_session_by_ref(database_refs, interface, mode)
+    return _funcs.nx_create_session_by_ref(database_refs, interface_name, mode)
 
 
 def read_signal_waveform(
