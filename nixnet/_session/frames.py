@@ -58,12 +58,12 @@ class InFrames(Frames):
                 returns complete frames up to that number. If the bytes do not
                 arrive prior to the 'timeout', an error is returned.
 
-                If 'timeout' is negative, this function waits indefinitely for
-                'number_of_bytes_to_read' frame bytes.
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                function waits indefinitely for 'number_of_bytes_to_read' frame bytes.
 
-                If 'timeout' is zero, this function does not wait and immediately
-                returns all available frame bytes up to the limit
-                'number_of_bytes_to_read' specifies.
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns all available
+                frame bytes up to the limit 'number_of_bytes_to_read' specifies.
 
         Returns:
             A list of raw bytes representing the data.
@@ -83,6 +83,18 @@ class InFrames(Frames):
             timeout: The time to wait for number to read frames to become
                 available; the 'timeout' is represented as 64-bit floating-point
                 in units of seconds.
+
+                If 'timeout' is positive, this function waits for
+                'number_to_read' frames to be received, then
+                returns complete frames up to that number. If the frames do not
+                arrive prior to the 'timeout', an error is returned.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                function waits indefinitely for 'number_to_read' frames.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns all available
+                frames up to the limit 'number_to_read' specifies.
 
         Yields:
             :class:`nixnet.types.RawFrame`
@@ -106,6 +118,17 @@ class InFrames(Frames):
                 available; the 'timeout' is represented as 64-bit floating-point
                 in units of seconds.
 
+                If 'timeout' is positive, this function waits for
+                'number_to_read' frames to be received, then
+                returns complete frames up to that number. If the frames do not
+                arrive prior to the 'timeout', an error is returned.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                function waits indefinitely for 'number_to_read' frames.
+
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns all available
+                frames up to the limit 'number_to_read' specifies.
         Yields:
             :class:`nixnet.types.CanFrame`
         """
@@ -189,14 +212,15 @@ class OutFrames(Frames):
                 for space to become available in queues. If the space is not
                 available prior to the 'timeout', a 'timeout' error is returned.
 
-                If 'timeout' is negative, this functions waits indefinitely for
-                space to become available in queues.
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                functions waits indefinitely for space to become available in queues.
 
-                If 'timeout' is 0, this function does not wait and immediately
-                returns with a 'timeout' error if all data cannot be queued.
-                Regardless of the 'timeout' used, if a 'timeout' error occurs,
-                none of the data is queued, so you can attempt to call this
-                function again at a later time with the same data.
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns with a 'timeout'
+                error if all data cannot be queued. Regardless of the 'timeout'
+                used, if a 'timeout' error occurs, none of the data is queued,
+                so you can attempt to call this function again at a later time
+                with the same data.
 
         Returns:
             None
@@ -219,14 +243,15 @@ class OutFrames(Frames):
                 for space to become available in queues. If the space is not
                 available prior to the 'timeout', a 'timeout' error is returned.
 
-                If 'timeout' is negative, this functions waits indefinitely for
-                space to become available in queues.
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                functions waits indefinitely for space to become available in queues.
 
-                If 'timeout' is 0, this function does not wait and immediately
-                returns with a 'timeout' error if all data cannot be queued.
-                Regardless of the 'timeout' used, if a 'timeout' error occurs,
-                none of the data is queued, so you can attempt to call this
-                function again at a later time with the same data.
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns with a 'timeout'
+                error if all data cannot be queued. Regardless of the 'timeout'
+                used, if a 'timeout' error occurs, none of the data is queued,
+                so you can attempt to call this function again at a later time
+                with the same data.
 
         Returns:
             None
@@ -253,14 +278,15 @@ class OutFrames(Frames):
                 for space to become available in queues. If the space is not
                 available prior to the 'timeout', a 'timeout' error is returned.
 
-                If 'timeout' is negative, this functions waits indefinitely for
-                space to become available in queues.
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_INFINITE`, this
+                functions waits indefinitely for space to become available in queues.
 
-                If 'timeout' is 0, this function does not wait and immediately
-                returns with a 'timeout' error if all data cannot be queued.
-                Regardless of the 'timeout' used, if a 'timeout' error occurs,
-                none of the data is queued, so you can attempt to call this
-                function again at a later time with the same data.
+                If 'timeout' is :class:`nixnet.constants.TIMEOUT_NONE`, this
+                function does not wait and immediately returns with a 'timeout'
+                error if all data cannot be queued. Regardless of the 'timeout'
+                used, if a 'timeout' error occurs, none of the data is queued,
+                so you can attempt to call this function again at a later time
+                with the same data.
 
         Returns:
             None
@@ -296,7 +322,7 @@ class SinglePointOutFrames(Frames):
         """Write raw CAN frame data.
 
         Args:
-            raw_frames: One or more :class:`nixnet.types.RawFrame` objects to be
+            raw_frames: A list of :class:`nixnet.types.RawFrame` objects to be
                 written to the session.
 
         Returns:
@@ -314,7 +340,7 @@ class SinglePointOutFrames(Frames):
         """Write CAN frame data.
 
         Args:
-            can_frames: One or more :class:`nixnet.types.CanFrame` objects to be
+            can_frames: A list of :class:`nixnet.types.CanFrame` objects to be
                 written to the session.
 
         Returns:
