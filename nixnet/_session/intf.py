@@ -3,6 +3,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import six
+
 from nixnet import _props
 from nixnet import constants
 
@@ -22,6 +24,8 @@ class Interface(object):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self._name == other._name
+        elif isinstance(other, six.string_types):
+            return self._name == other
         return False
 
     def __ne__(self, other):
