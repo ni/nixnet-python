@@ -69,6 +69,14 @@ class Collection(object):
 
         return self._create_item(self._handle, index, name)
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._handle == other._handle and self._list_cache == other._list_cache
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     @property
     def _list_cache(self):
         if self.__list_cache is None:
@@ -89,7 +97,7 @@ class Item(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self._handle == other._handle and self._index == self._index
+            return self._handle == other._handle and self._index == other._index
         return False
 
     def __ne__(self, other):

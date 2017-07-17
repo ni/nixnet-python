@@ -19,6 +19,14 @@ class Interface(object):
     def __str__(self):
         return self.name
 
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._name == other._name
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     @property
     def baud_rate(self):
         return _props.get_session_intf_baud_rate(self._handle)
