@@ -1109,6 +1109,43 @@ class CreateSessionMode(enum.Enum):
 
 
 class StartStopScope(enum.Enum):
+    """Start/Stop Scope enum.
+
+    Values:
+        NORMAL:
+            The session is started followed by starting the interface. This is
+            equivalent to calling :any:`nixnet._session.base.SessionBase.start`
+            with the Session Only Scope followed by calling
+            :any:`nixnet._session.base.SessionBase.start` with the Interface Only Scope.
+        SESSION_ONLY:
+            The session is placed into the Started state (refer to State Models).
+            If the interface is in the Stopped state before this function runs,
+            the interface remains in the Stopped state, and no communication
+            occurs with the bus. To have multiple sessions start at exactly the
+            same time, start each session with the Session Only Scope. When you
+            are ready for all sessions to start communicating on the associated
+            interface, call :any:`nixnet._session.base.SessionBase.start` with
+            the Interface Only scope. Starting a previously started session is
+            considered a no-op. This operation sends the command to start the
+            session, but does not wait for the session to be started. It is
+            ideal for a real-time application where performance is critical.
+        INTERFACE_ONLY:
+            If the underlying interface is not previously started, the interface
+            is placed into the Started state (refer to State Models). After the
+            interface starts communicating, all previously started sessions can
+            transfer data to and from the bus. Starting a previously started
+            interface is considered a no-op.
+        SESSION_ONLY_BLOCKING:
+            The session is placed in the Started state (refer to State Models).
+            If the interface is in the Stopped state before this function runs,
+            the interface remains in the Stopped state, and no communication
+            occurs with the bus. To have multiple sessions start at exactly the
+            same time, start each session with the Session Only Scope. When you
+            are ready for all sessions to start communicating on the associated
+            interface, call nxStart with the Interface Only Scope. Starting a
+            previously started session is considered a no-op. This operation
+            waits for the session to start before completing.
+    """
     NORMAL = _cconsts.NX_START_STOP_NORMAL
     SESSION_ONLY = _cconsts.NX_START_STOP_SESSION_ONLY
     INTERFACE_ONLY = _cconsts.NX_START_STOP_INTERFACE_ONLY
@@ -1157,6 +1194,47 @@ class SessionInfoState(enum.Enum):
 
 
 class CanCommState(enum.Enum):
+    """CAN Comm State.
+
+    Values:
+        ERROR_ACTIVE:
+            This state reflects normal communication, with few errors detected.
+            The CAN interface remains in this state as long as receive error
+            counter and transmit error counter are both below 128.
+        ERROR_PASSIVE:
+            If either the receive error counter or transmit error counter
+            increment above 127, the CAN interface transitions into this state.
+            Although communication proceeds, the CAN device generally is assumed
+            to have problems with receiving frames.
+
+            When a CAN interface is in error passive state, acknowledgement
+            errors do not increment the transmit error counter. Therefore, if
+            the CAN interface transmits a frame with no other device (ECU)
+            connected, it eventually enters error passive state due to
+            retransmissions, but does not enter bus off state.
+        BUS_OFF:
+            If the transmit error counter increments above 255, the CAN
+            interface transitions into this state. Communication immediately
+            stops under the assumption that the CAN interface must be isolated
+            from other devices.
+
+            When a CAN interface transitions to the bus off state, communication
+            stops for the interface. All NI-XNET sessions for the interface no
+            longer receive or transmit frame values. To restart the CAN
+            interface and all its sessions, call
+            :any:`nixnet._session.base.SessionBase.start`.
+        INIT:
+            This is the CAN interface initial state on power-up. The interface
+            is essentially off, in that it is not attempting to communicate with
+            other nodes (ECUs).
+
+            When the start trigger occurs for the CAN interface, it transitions
+            from the Init state to the Error Active state. When the interface
+            stops due to a call to :any:`nixnet._session.base.SessionBase.stop`.,
+            the CAN interface transitions from either Error Active or Error Passive
+            to the Init state. When the interface stops due to the Bus Off state,
+            it remains in that state until you restart.
+    """
     ERROR_ACTIVE = _cconsts.NX_CAN_COMM_STATE_ERROR_ACTIVE
     ERROR_PASSIVE = _cconsts.NX_CAN_COMM_STATE_ERROR_PASSIVE
     BUS_OFF = _cconsts.NX_CAN_COMM_STATE_BUS_OFF
