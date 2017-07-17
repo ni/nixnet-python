@@ -5,8 +5,6 @@ from __future__ import unicode_literals
 
 import six
 
-from nixnet import _cconsts
-from nixnet import _errors
 from nixnet import _props
 
 
@@ -28,6 +26,16 @@ class Collection(object):
         for index, name in enumerate(item_names):
             yield self._create_item(self._handle, index, name)
 
+    def __contains__(self, index):
+        if isinstance(index, six.integer_types):
+            return index in self._list_cache
+        elif isinstance(index, six.string_types):
+            name = index
+            item_names = list(self._list_cache.values())
+            return name in item_names
+        else:
+            raise TypeError(index)
+
     def __getitem__(self, index):
         if isinstance(index, six.integer_types):
             name = self._list_cache[index]
@@ -37,11 +45,37 @@ class Collection(object):
             try:
                 index = item_names.index(name)
             except ValueError:
-                _errors.check_error(_cconsts.NX_ERR_INVALID_ACTIVE_FRAME_NAME)
+                raise KeyError(name)
         else:
-            _errors.check_error(_cconsts.NX_ERR_INVALID_ACTIVE_FRAME_INDEX)
+            raise TypeError(index)
 
         return self._create_item(self._handle, index, name)
+
+    def get(self, index, default=None):
+        if isinstance(index, six.integer_types):
+            try:
+                name = self._list_cache[index]
+            except IndexError:
+                return default
+        elif isinstance(index, six.string_types):
+            name = index
+            item_names = self._list_cache
+            try:
+                index = item_names.index(name)
+            except ValueError:
+                return default
+        else:
+            raise TypeError(index)
+
+        return self._create_item(self._handle, index, name)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._handle == other._handle and self._list_cache == other._list_cache
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     @property
     def _list_cache(self):
@@ -63,7 +97,7 @@ class Item(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self._handle == other._handle and self._index == self._index
+            return self._handle == other._handle and self._index == other._index
         return False
 
     def __ne__(self, other):
