@@ -19,6 +19,9 @@ class Frames(collection.Collection):
     def __repr__(self):
         return 'Session.Frames(handle={0})'.format(self._handle)
 
+    def _create_item(self, handle, index, name):
+        return Frame(handle, index, name)
+
 
 class InFrames(Frames):
     """Frames in a session."""
