@@ -14,6 +14,9 @@ class Signals(collection.Collection):
     def __repr__(self):
         return 'Session.Signals(handle={0})'.format(self._handle)
 
+    def _create_item(self, handle, index, name):
+        return Signal(handle, index, name)
+
 
 class SinglePointInSignals(Signals):
     """Writeable signals in a session."""

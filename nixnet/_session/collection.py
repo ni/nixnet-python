@@ -28,11 +28,10 @@ class Collection(object):
 
     def __contains__(self, index):
         if isinstance(index, six.integer_types):
-            return index in self._list_cache
+            return 0 <= index and index < len(self._list_cache)
         elif isinstance(index, six.string_types):
             name = index
-            item_names = list(self._list_cache.values())
-            return name in item_names
+            return name in self._list_cache
         else:
             raise TypeError(index)
 
@@ -81,9 +80,9 @@ class Collection(object):
     def _list_cache(self):
         if self.__list_cache is None:
             self.__list_cache = _props.get_session_list(self._handle)
-        return self._list_cache
+        return self.__list_cache
 
-    def _create_item(self, index, name):
+    def _create_item(self, handle, index, name):
         raise NotImplementedError("Leaf classes must implement this")
 
 
