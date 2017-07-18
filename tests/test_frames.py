@@ -76,7 +76,7 @@ def test_serialize_frame_with_base_payload():
     assert bytes == b'\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x04\x05\x08\x01\x02\x03\x04\x05\x06\x07\x08'
 
 
-def assert_can_frame(sent, received):
+def assert_can_frame(index, sent, received):
     assert sent.identifier == received.identifier
     assert sent.extended == received.extended
     assert sent.echo == received.echo
@@ -108,5 +108,40 @@ def test_stream_loopback(nixnet_in_interface, nixnet_out_interface):
 
             actual_frames = list(input_session.frames.read_can(1))
             assert len(expected_frames) == len(actual_frames)
-            for expected, actual in zip(expected_frames, actual_frames):
-                assert_can_frame(expected, actual)
+            for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
+                assert_can_frame(i, expected, actual)
+
+
+@pytest.mark.integration
+def test_queued_loopback(nixnet_in_interface, nixnet_out_interface):
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        with nixnet.FrameOutQueuedSession(
+                nixnet_out_interface,
+                database_name,
+                cluster_name,
+                frame_name) as output_session:
+            # Start the input session manually to make sure that the first
+            # frame value sent before the initial read will be received.
+            input_session.start()
+
+            payload_list = [2, 4, 8, 16]
+            expected_frames = [
+                types.CanFrame(66, False, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
+            output_session.frames.write_can(expected_frames)
+
+            # Wait 1 s and then read the received values.
+            # They should be the same as the ones sent.
+            time.sleep(1)
+
+            actual_frames = list(input_session.frames.read_can(1))
+            assert len(expected_frames) == len(actual_frames)
+            for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
+                assert_can_frame(i, expected, actual)
