@@ -12,6 +12,18 @@ NI-XNET Python Documentation
    :maxdepth: 3
    :caption: API Reference:
 
+   session
+   frames
+   signals
+   intf
+   j1939
+   types
+   errors
+
+   base
+   enums
+   collection
+
 
 Indices and Tables
 ==================

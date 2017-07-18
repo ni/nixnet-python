@@ -41,19 +41,19 @@ class SessionBase(object):
                 the database given in the database_name parameter. If it is left
                 blank, the cluster is extracted from the list parameter; this is
                 not allowed for modes of
-                :class:`nixnet.constants.CreateSessionMode.FRAME_IN_STREAM`
-                or :class:`nixnet.constants.CreateSessionMode.FRAME_OUT_STREAM`.
+                :any:`nixnet.constants.CreateSessionMode.FRAME_IN_STREAM`
+                or :any:`nixnet.constants.CreateSessionMode.FRAME_OUT_STREAM`.
             list: A list of strings describing signals or frames for the session.
                 The list syntax depends on the mode. Refer to mode spefic
                 session classes defined below for 'list' syntax.
             interface_name: A string representing the XNET Interface to use for
                 this session. If Mode is
-                :class:`nixnet.constants.CreateSessionMode.SIGNAL_CONVERSION_SINGLE_POINT`,
+                :any:`nixnet.constants.CreateSessionMode.SIGNAL_CONVERSION_SINGLE_POINT`,
                 this input is ignored. You can set it to an empty string.
-            mode: The session mode. See :class:`nixnet._enums.CreateSessionMode`.
+            mode: The session mode. See :any:`nixnet._enums.CreateSessionMode`.
 
         Returns:
-            A Session object.
+            A session base object.
         """
         self._handle = None  # To satisfy `__del__` in case nx_create_session throws
         self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface_name, mode)
@@ -92,8 +92,8 @@ class SessionBase(object):
 
         This function stops communication for the session and releases all
         resources the session uses. It internally calls
-        :class:`nixnet.session.Session.stop` with normal scope, so if this is the
-        last session using the interface, communication stops.
+        :any:`nixnet._session.base.SessionBase.stop` with normal scope, so if
+        this is the last session using the interface, communication stops.
 
         You typically use 'close' when you need to close the existing session to
         create a new session that uses the same objects. For example, if you
@@ -103,12 +103,6 @@ class SessionBase(object):
         returns an error, because frame_a can be accessed using only one output
         mode. If you call 'close' before the second constructor call, you can
         close the previous use of frame_a to create the new session.
-
-        Args:
-            None
-
-        Returns:
-            None
         """
         if self._handle is None:
             warnings.warn(
@@ -127,12 +121,14 @@ class SessionBase(object):
         is optional. This function is for more advanced applications to start
         multiple sessions in a specific order. For more information about the
         automatic start feature, refer to the
-        :class:`nixnet.session.Session.auto_start` property.
+        :any:`nixnet._session.base.SessionBase.auto_start` property.
 
         For each physical interface, the NI-XNET hardware is divided into two logical units:
-            Sessions: You can create one or more sessions, each of which contains
+            Sessions:
+                You can create one or more sessions, each of which contains
                 frames or signals to be transmitted (or received) on the bus.
-            Interface: The interface physically connects to the bus and transmits
+            Interface:
+                The interface physically connects to the bus and transmits
                 (or receives) data for the sessions.
 
         You can start each logical unit separately. When a session is started,
@@ -150,10 +146,7 @@ class SessionBase(object):
         Args:
             scope: Describes the impact of this operation on the underlying
                 state models for the session and its interface.
-                See :class:`nixnet._enums.StartStopScope`.
-
-        Returns:
-            None
+                See :any:`nixnet._enums.StartStopScope`.
         """
         _funcs.nx_start(self._handle, scope)
 
@@ -164,9 +157,11 @@ class SessionBase(object):
         this function is optional.
 
         For each physical interface, the NI-XNET hardware is divided into two logical units:
-            Sessions: You can create one or more sessions, each of which contains
+            Sessions:
+                You can create one or more sessions, each of which contains
                 frames or signals to be transmitted (or received) on the bus.
-            Interface: The interface physically connects to the bus and transmits
+            Interface:
+                The interface physically connects to the bus and transmits
                 (or receives) data for the sessions.
 
         You can stop each logical unit separately. When a session is stopped,
@@ -179,10 +174,7 @@ class SessionBase(object):
         Args:
             scope: Describes the impact of this operation on the underlying
                 state models for the session and its interface.
-                See :class:`nixnet._enums.StartStopScope`.
-
-        Returns:
-            None
+                See :any:`nixnet._enums.StartStopScope`.
         """
         _funcs.nx_stop(self._handle, scope)
 
@@ -195,31 +187,27 @@ class SessionBase(object):
         by calling the read function. For output sessions, the queues store
         frame values provided to write function, but not transmitted successfully.
 
-        :class:`nixnet.session.Session.start` and :class:`nixnet.session.Session.stop`
-        have no effect on these queues. Use 'flush' to discard all values in the
-        session's queues.
+        :any:`nixnet._session.base.SessionBase.start` and
+        :any:`nixnet._session.base.SessionBase.stop` have no effect on these
+        queues. Use 'flush' to discard all values in the session's queues.
 
         For example, if you call a write function to write three frames, then
-        immediately call :class:`nixnet.session.Session.stop`, then call
-        :class:`nixnet.session.Session.start` a few seconds later, the three frames
-        transmit. If you call 'flush' between :class:`nixnet.session.Session.stop` and
-        :class:`nixnet.session.Session.start`, no frames transmit.
+        immediately call :any:`nixnet._session.base.SessionBase.stop`, then
+        call :any:`nixnet._session.base.SessionBase.start` a few seconds
+        later, the three frames transmit. If you call 'flush' between
+        :any:`nixnet._session.base.SessionBase.stop` and
+        :any:`nixnet._session.base.SessionBase.start`, no frames transmit.
 
         As another example, if you receive three frames, then call
-        :class:`nixnet.session.Session.stop`, the three frames remains in the queue.
-        If you call :class:`nixnet.session.Session.start` a few seconds later, then
-        call a read function, you obtain the three frames received earlier,
-        potentially followed by other frames received after calling
-        :class:`nixnet.session.Session.start`. If you call 'flush' between
-        :class:`nixnet.session.Session.stop` and :class:`nixnet.session.Session.start`,
-        read function returns only frames received after the calling
-        :class:`nixnet.session.Session.start`.
-
-        Args:
-            None
-
-        Returns:
-            None
+        :any:`nixnet._session.base.SessionBase.stop`, the three frames remains
+        in the queue. If you call :any:`nixnet._session.base.SessionBase.start`
+        a few seconds later, then call a read function, you obtain the three
+        frames received earlier, potentially followed by other frames received
+        after calling :any:`nixnet._session.base.SessionBase.start`. If you
+        call 'flush' between :any:`nixnet._session.base.SessionBase.stop` and
+        :any:`nixnet._session.base.SessionBase.start`, read function returns
+        only frames received after the calling
+        :any:`nixnet._session.base.SessionBase.start`.
         """
         _funcs.nx_flush(self._handle)
 
@@ -233,9 +221,6 @@ class SessionBase(object):
         Args:
             timeout: A float representing the maximum amount of time to wait in
                 seconds.
-
-        Returns:
-            None
         """
         _funcs.nx_wait(self._handle, constants.Condition.TRANSMIT_COMPLETE, 0, timeout)
 
@@ -248,19 +233,15 @@ class SessionBase(object):
         communication with remote nodes.
 
         After this wait succeeds, calls to 'read_state' will return:
-            :class:`nixnet.constants.ReadState.CAN_COMM`:
-                :class:`nixnet.constants.ReadState.CAN_COMM.ERROR_ACTIVE`
-            :class:`nixnet.constants.ReadState.CAN_COMM`:
-                :class:`nixnet.constants.ReadState.CAN_COMM.ERROR_PASSIVE`
-            :class:`nixnet.constants.ReadState.TIME_COMMUNICATING`: Valid time
-                for communication (invalid time of 0 prior)
+            :any:`nixnet._enums.CanCommState`: 'constants.CAN_COMM.ERROR_ACTIVE'
+
+            :any:`nixnet._enums.CanCommState`: 'constants.CAN_COMM.ERROR_PASSIVE'
+
+            'constants.ReadState.TIME_COMMUNICATING': Valid time for communication (invalid time of 0 prior)
 
         Args:
             timeout: A float representing the maximum amount of time to wait in
                 seconds.
-
-        Returns:
-            None
         """
         _funcs.nx_wait(self._handle, constants.Condition.INTF_COMMUNICATING, 0, timeout)
 
@@ -269,24 +250,20 @@ class SessionBase(object):
 
         Wait for the interface to wakeup due to activity by a remote node on the
         network. This wait is used for CAN, when you set the 'can_tcvr_state'
-        property to :class:`nixnet.constants.CanTcvrState.SLEEP`. Although the
-        interface itself is ready to communicate, this places the transceiver
-        into a sleep state. When a remote CAN node transmits a frame, the
-        transceiver wakes up, and communication is restored. This wait detects
-        that remote wakeup.
+        property to 'constants.CanTcvrState.SLEEP'. Although the interface
+        itself is ready to communicate, this places the transceiver into a sleep
+        state. When a remote CAN node transmits a frame, the transceiver wakes
+        up, and communication is restored. This wait detects that remote wakeup.
 
         This wait is used for LIN when you set 'lin_sleep' property to
-        :class:`nixnet.constants.LinSleep.REMOTE_SLEEP` or
-        :class:`nixnet.constants.LinSleep.LOCAL_SLEEP`. When asleep, if a remote
-        LIN ECU transmits the wakeup pattern (break), the XNET LIN interface
-        detects this transmission and wakes up. This wait detects that remote wakeup.
+        'constants.LinSleep.REMOTE_SLEEP' or 'constants.LinSleep.LOCAL_SLEEP'.
+        When asleep, if a remote LIN ECU transmits the wakeup pattern (break),
+        the XNET LIN interface detects this transmission and wakes up. This wait
+        detects that remote wakeup.
 
         Args:
             timeout: A float representing the maximum amount of time to wait in
                 seconds.
-
-        Returns:
-            None
         """
         _funcs.nx_wait(self._handle, constants.Condition.INTF_REMOTE_WAKEUP, 0, timeout)
 
@@ -307,9 +284,6 @@ class SessionBase(object):
         Args:
             source: A string representing the connection source name.
             destination: A string representing the connection destination name.
-
-        Returns:
-            None
         """
         _funcs.nx_connect_terminals(self._handle, source, destination)
 
@@ -317,7 +291,7 @@ class SessionBase(object):
         """Disconnect terminals on the XNET interface.
 
         This function disconnects a specific pair of source/destination terminals
-        previously connected with :class:`nixnet.session.Session.connect_terminals`.
+        previously connected with :any:`nixnet._session.base.SessionBase.connect_terminals`.
 
         When the final session for a given interface is cleared, NI-XNET
         automatically disconnects all terminal connections for that interface.
@@ -325,11 +299,13 @@ class SessionBase(object):
 
         This function typically is used to change terminal connections
         dynamically while an application is running. To disconnect a terminal,
-        you first must stop the interface using :class:`nixnet.session.Session.stop`
-        with the Interface Only scope. Then you can call 'disconnect_terminals'
-        and :class:`nixnet.session.Session.connect_terminals` to adjust terminal
-        connections. Finally, you can call :class:`nixnet.session.Session.start` with
-        the Interface Only scope to restart the interface.
+        you first must stop the interface using
+        :any:`nixnet._session.base.SessionBase.stop` with the Interface Only
+        scope. Then you can call 'disconnect_terminals' and
+        :any:`nixnet._session.base.SessionBase.connect_terminals` to adjust
+        terminal connections. Finally, you can call
+        :any:`nixnet._session.base.SessionBase.start` with the Interface Only
+        scope to restart the interface.
 
         You can disconnect only a terminal that has been previously connected.
         Attempting to disconnect a nonconnected terminal results in an error.
@@ -337,9 +313,6 @@ class SessionBase(object):
         Args:
             source: A string representing the connection source name.
             destination: A string representing the connection destination name.
-
-        Returns:
-            None
         """
         _funcs.nx_disconnect_terminals(self._handle, source, destination)
 
@@ -357,6 +330,26 @@ class SessionBase(object):
 
     @property
     def auto_start(self):
+        """bool: Automatically starts the output session on the first call to the appropriate write function.
+
+        For input sessions, start always is performed within the first call to
+        the appropriate read function (if not already started using
+        :any:`nixnet._session.base.SessionBase.start`). This is done
+        because there is no known use case for reading a stopped input session.
+
+        For output sessions, as long as the first call to the appropriate write
+        function contains valid data, you can leave this property at its default
+        value of true. If you need to call the appropriate write function
+        multiple times prior to starting the session, or if you are starting
+        multiple sessions simultaneously, you can set this property to false.
+        After calling the appropriate write function as desired, you can call
+        :any:`nixnet._session.base.SessionBase.start` to start the session(s).
+
+        When automatic start is performed, it is equivalent to
+        :any:`nixnet._session.base.SessionBase.start` with scope set to Normal.
+        This starts the session itself, and if the interface is not already
+        started, it starts the interface also.
+        """
         return _props.get_session_auto_start(self._handle)
 
     @auto_start.setter

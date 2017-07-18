@@ -63,7 +63,7 @@ Resources
 =========
 
 - `Examples <https://github.com/ni/nixnet-python/tree/master/nixnet_examples>`_.
-- `Documentation <http://nixnet-python.readthedocs.io>`_.
+- `Documentation <http://nixnet.readthedocs.io>`_.
 - `Source <https://github.com/ni/nixnet-python>`_.
 
 Product Support

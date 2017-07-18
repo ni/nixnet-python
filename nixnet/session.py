@@ -208,10 +208,11 @@ class FrameInQueuedSession(base.SessionBase):
             frame: A string describing one XNET Frame or PDU name. This name
                 must be one of the following options, whichever uniquely
                 identifies a frame within the database given:
-                        -<Frame>
-                        -<Cluster>.<Frame>
-                        -<PDU>
-                        -<Cluster>.<PDU>
+
+                    -<Frame>
+                    -<Cluster>.<Frame>
+                    -<PDU>
+                    -<Cluster>.<PDU>
 
         Returns:
             A Frame Input Queued session object.
@@ -284,10 +285,11 @@ class FrameOutQueuedSession(base.SessionBase):
             frame: A string describing one XNET Frame or PDU name. This name
                 must be one of the following options, whichever uniquely
                 identifies a frame within the database given:
-                        -<Frame>
-                        -<Cluster>.<Frame>
-                        -<PDU>
-                        -<Cluster>.<PDU>
+
+                    -<Frame>
+                    -<Cluster>.<Frame>
+                    -<PDU>
+                    -<Cluster>.<PDU>
 
         Returns:
             A Frame Output Queued session object.
@@ -345,9 +347,11 @@ class FrameInSinglePointSession(base.SessionBase):
                 blank, the cluster is extracted from the 'frames' parameter.
             frames: A list of strings describing frames for the session. The
                 list syntax is as follows:
+
                     List contains one or more XNET Frame or PDU names. Each name
                     must be one of the following options, whichever uniquely
                     identifies a frame within the database given:
+
                         -<Frame>
                         -<Cluster>.<Frame>
                         -<PDU>
@@ -419,9 +423,11 @@ class FrameOutSinglePointSession(base.SessionBase):
                 blank, the cluster is extracted from the 'frames' parameter.
             frames: A list of strings describing frames for the session. The
                 list syntax is as follows:
+
                     List contains one or more XNET Frame or PDU names. Each name
                     must be one of the following options, whichever uniquely
                     identifies a frame within the database given:
+
                         -<Frame>
                         -<Cluster>.<Frame>
                         -<PDU>
@@ -454,11 +460,11 @@ class SignalInSinglePointSession(base.SessionBase):
 
     This session does not use queues to store each received frame. If the
     interface receives two frames prior to calling
-    :class:`nixnet.signals.SinglePointInSignals.read`, that call to
-    :class:`nixnet.signals.SinglePointInSignals.read` returns signals for the
-    second frame.
+    :any:`nixnet._session.signals.SinglePointInSignals.read`, that call to
+    :any:`nixnet._session.signals.SinglePointInSignals.read` returns signals
+    for the second frame.
 
-    Use :class:`nixnet.signals.SinglePointInSignals.read` for this session.
+    Use :any:`nixnet._session.signals.SinglePointInSignals.read` for this session.
 
     You also can specify a trigger signal for a frame. This signal name is
     :trigger:.<frame name>, and once it is specified in the __init__ 'signals'
@@ -495,14 +501,17 @@ class SignalInSinglePointSession(base.SessionBase):
                 blank, the cluster is extracted from the signals parameter.
             signals: A list of strings describing signals for the session. The
                 list syntax is as follows:
+
                     List contains one or more XNET Signal names. Each name must
                     be one of the following options, whichever uniquely
                     identifies a signal within the database given:
+
                         -<Signal>
                         -<Frame>.<Signal>
                         -<Cluster>.<Frame>.<Signal>
                         -<PDU>.<Signal>
                         -<Cluster>.<PDU>.<Signal>
+
                     List may also contain one or more trigger signals. For
                     information about trigger signals, refer to Signal Output
                     Single-Point Mode or Signal Input Single-Point Mode.
@@ -533,11 +542,11 @@ class SignalOutSinglePointSession(base.SessionBase):
     (HIL).
 
     This session does not use queues to store signal values. If
-    :class:`nixnet.signals.SinglePointOutSignals.write` is called twice before
-    the next transmit, the transmitted frame uses signal values from the second
-    call to :class:`nixnet.signals.SinglePointOutSignals.write`.
+    :any:`nixnet._session.signals.SinglePointOutSignals.write` is called twice
+    before the next transmit, the transmitted frame uses signal values from the
+    second call to :any:`nixnet._session.signals.SinglePointOutSignals.write`.
 
-    Use :class:`nixnet.signals.SinglePointOutSignals.write` for this session.
+    Use :any:`nixnet._session.signals.SinglePointOutSignals.write` for this session.
 
     You also can specify a trigger signal for a frame. This signal name is
     :trigger:.<frame name>, and once it is specified in the __init__ 'signals'
@@ -569,14 +578,17 @@ class SignalOutSinglePointSession(base.SessionBase):
                 blank, the cluster is extracted from the signals parameter.
             signals: A list of strings describing signals for the session. The
                 list syntax is as follows:
+
                     List contains one or more XNET Signal names. Each name must
                     be one of the following options, whichever uniquely
                     identifies a signal within the database given:
+
                         -<Signal>
                         -<Frame>.<Signal>
                         -<Cluster>.<Frame>.<Signal>
                         -<PDU>.<Signal>
                         -<Cluster>.<PDU>.<Signal>
+
                     List may also contain one or more trigger signals. For
                     information about trigger signals, refer to Signal Output
                     Single-Point Mode or Signal Output Single-Point Mode.

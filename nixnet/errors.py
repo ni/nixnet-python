@@ -21,8 +21,8 @@ class XnetError(Error):
         """Initialize error.
 
         Args:
-            message (string): Specifies the error message.
-            error_code (int): Specifies the NI-XNET error code.
+            message: A string specifing the error message.
+            error_code: An integer specifing the NI-XNET error code.
         """
         super(XnetError, self).__init__(message)
 
@@ -37,7 +37,8 @@ class XnetError(Error):
     def error_code(self):
         """Error code reported by NI-XNET.
 
-        int: Specifies the NI-XNET error code.
+        Returns:
+            An integer specifing the NI-XNET error code.
         """
         return self._error_code
 
@@ -45,8 +46,8 @@ class XnetError(Error):
     def error_type(self):
         """Error enum reported by NI-XNET.
 
-        :class:`nixnet._enums.Err`: Specifies the NI-XNET
-            error type.
+        Returns:
+            A :any:`nixnet._enums.Err` specifing the NI-XNET error type.
         """
         return self._error_type
 
@@ -57,8 +58,8 @@ class XnetWarning(Warning):
         """Initialize warning.
 
         Args:
-            message (string): Specifies the warning message.
-            error_code (int): Specifies the NI-DAQmx error code.
+            message: A string specifing the warning message.
+            error_code: An integer specifing the NI-DAQmx error code.
         """
         super(XnetWarning, self).__init__(
             'Warning {0} occurred.\n\n{1}'.format(error_code, message))
@@ -74,7 +75,8 @@ class XnetWarning(Warning):
     def error_code(self):
         """Error code reported by NI-XNET.
 
-        int: Specifies the NI-XNET error code.
+        Returns:
+            An integer specifing the NI-XNET error code.
         """
         return self._error_code
 
@@ -82,8 +84,8 @@ class XnetWarning(Warning):
     def error_type(self):
         """Warning enum reported by NI-XNET.
 
-        :class:`nixnet._enums.Warn`: Specifies the NI-XNET
-            warning type.
+        Returns:
+            A :any:`nixnet._enums.Warn` specifiing the NI-XNET warning type.
         """
         return self._error_type
 
