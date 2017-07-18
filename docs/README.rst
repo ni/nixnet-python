@@ -54,7 +54,7 @@ To report a bug or submit a feature request, please use the
 Documentation
 =============
 
-Documentation is available `here <http://nixnet-python.readthedocs.io>`_.
+Documentation is available `here <http://nixnet.readthedocs.io>`_.
 
 License
 =======

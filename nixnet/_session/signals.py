@@ -14,6 +14,9 @@ class Signals(collection.Collection):
     def __repr__(self):
         return 'Session.Signals(handle={0})'.format(self._handle)
 
+    def _create_item(self, handle, index, name):
+        return Signal(handle, index, name)
+
 
 class SinglePointInSignals(Signals):
     """Writeable signals in a session."""
@@ -22,14 +25,11 @@ class SinglePointInSignals(Signals):
         return 'Session.SinglePointInSignals(handle={0})'.format(self._handle)
 
     def read(self):
-        """Read signal single point.
+        """Read data from a Signal Input Single-Point session.
 
-        Valid modes
-        - Single Input Single-Point
-        Timestamps
-        - Optional in C API
-        - Timestamp per data point
-        http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxreadsignalsinglepoint/
+        Yields:
+            A tuple of timestamp (internal NI-XNET ctype around u64) and signal
+            values (float).
         """
         num_signals = len(self)
         timestamps, values = _funcs.nx_read_signal_single_point(self._handle, num_signals)
@@ -46,7 +46,11 @@ class SinglePointOutSignals(Signals):
     def write(
             self,
             value_buffer):
-        "http://zone.ni.com/reference/en-XX/help/372841N-01/nixnet/nxwritesignalsinglepoint/"
+        """Write data to a Signal Output Single-Point session.
+
+        Args:
+            value_buffer: A list of singal values (float).
+        """
         _funcs.nx_write_signal_single_point(self._handle, value_buffer)
 
 

@@ -22,11 +22,11 @@ class RawFrame(object):
 
     Attributes:
         timestamp: Absolute time the XNET interface received the end-of-frame.
-        identifier (int): CAN frame arbitration identifier.
-        type (consants.FrameType): Frame Type.
-        flags (int): Flags that qualify the type.
-        info (int): Info that qualify the type.
-        payload (byte string): Data bytes.
+        identifier: An integer repersenting the CAN frame arbitration identifier.
+        type: Frame type as described in :any:`nixnet._enums.FrameType`.
+        flags: An integer repersenting flags that qualify the type.
+        info: An integer repersenting info that qualify the type.
+        payload: A byte string representing the payload.
     """
 
     __slots__ = [
@@ -77,12 +77,13 @@ class CanFrame(object):
     """CAN Frame.
 
     Attributes:
-        identifier (int): CAN frame arbitration identifier.
-        extended (bool): identifier uses extended format.
-        echo (bool): Frame is an echo of a successful transmit rather than being received from the network.
-        type (consants.FrameType): Frame Type.
-        timestamp (Optional[datetime]): Absolute time the XNET interface received the end-of-frame.
-        payload (byte string): Data bytes.
+        identifier: An integer representing the CAN frame arbitration identifier.
+        extended: A boolean indicating if the identifier uses an extended format.
+        echo: A boolean indicating if the frame is an echo of a successful
+            transmit rather than being received from the network.
+        type: Frame type as described in :any:`nixnet._enums.FrameType`.
+        timestamp: Absolute time the XNET interface received the end-of-frame.
+        payload: A byte string representing the payload.
     """
 
     __slots__ = [
@@ -106,7 +107,7 @@ class CanFrame(object):
 
     @classmethod
     def from_raw(cls, frame):
-        """Convert from RawFrame
+        """Convert from RawFrame.
 
         >>> raw = RawFrame(5, 0x20000001, constants.FrameType.CAN_DATA, _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO, 0, b'')
         >>> CanFrame.from_raw(raw)
@@ -123,7 +124,7 @@ class CanFrame(object):
         return can_frame
 
     def to_raw(self):
-        """Convert to RawFrame
+        """Convert to RawFrame.
 
         >>> CanFrame(1, True, constants.FrameType.CAN_DATA).to_raw()
         RawFrame(timestamp=0x0, identifier=0x20000001, type=FrameType.CAN_DATA, flags=0x0, info=0x0, payload=...)

@@ -3,6 +3,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import six
+
 from nixnet import _props
 from nixnet import constants
 
@@ -17,7 +19,17 @@ class Interface(object):
         return 'Session.Interface(handle={0})'.format(self._handle)
 
     def __str__(self):
-        return self.name
+        return self._name
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._name == other._name
+        elif isinstance(other, six.string_types):
+            return self._name == other
+        return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
 
     @property
     def baud_rate(self):
@@ -50,10 +62,6 @@ class Interface(object):
     @echo_tx.setter
     def echo_tx(self, value):
         _props.set_session_intf_echo_tx(self._handle, value)
-
-    @property
-    def name(self):
-        return _props.get_session_intf_name(self._handle)
 
     @property
     def out_strm_list(self):
@@ -527,3 +535,7 @@ class Interface(object):
     @src_term_start_trigger.setter
     def src_term_start_trigger(self, value):
         _props.set_session_intf_src_term_start_trigger(self._handle, value)
+
+    @property
+    def _name(self):
+        return _props.get_session_intf_name(self._handle)
