@@ -185,22 +185,43 @@ def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_session_properties(nixnet_in_interface):
+def test_session_properties(nixnet_out_interface):
+    """Verify Session properties.
+
+    Ideally, mutable properties would be set to multiple values and we'd test
+    for the intended side-effect.  That'll be a massive undertaking.  For now,
+    ensure they are settable and getttable.
+    """
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     frame_name = 'CANEventFrame1'
 
-    with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+    with nixnet.FrameOutQueuedSession(
+            nixnet_out_interface,
             database_name,
             cluster_name,
-            frame_name) as input_session:
-        assert input_session.database_name == database_name
-        assert input_session.cluster_name == cluster_name
-        assert input_session.mode == constants.CreateSessionMode.FRAME_IN_QUEUED
-        assert input_session.auto_start
-        assert input_session.application_protocol == constants.AppProtocol.NONE
-        assert input_session.protocol == constants.Protocol.CAN
+            frame_name) as output_session:
+        assert output_session.database_name == database_name
+        assert output_session.cluster_name == cluster_name
+        assert output_session.mode == constants.CreateSessionMode.FRAME_OUT_QUEUED
+        assert output_session.application_protocol == constants.AppProtocol.NONE
+        assert output_session.protocol == constants.Protocol.CAN
+
+        assert output_session.auto_start
+        output_session.auto_start = False
+        assert not output_session.auto_start
+
+        print(output_session.num_pend)
+        print(output_session.num_unused)
+        print(output_session.payld_len_max)
+
+        print(output_session.queue_size)
+        output_session.queue_size = 2040
+        assert output_session.queue_size == 2040
+
+        print(output_session.resamp_rate)
+        output_session.resamp_rate = 30
+        assert output_session.resamp_rate == 30
 
 
 @pytest.mark.integration

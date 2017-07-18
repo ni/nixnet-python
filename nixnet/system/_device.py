@@ -3,6 +3,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import six
+
 from nixnet import _props
 from nixnet import constants
 
@@ -17,6 +19,8 @@ class Device(object):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self._handle == other._handle
+        elif isinstance(other, six.string_types):
+            return self._name == other
         return False
 
     def __ne__(self, other):
@@ -26,7 +30,7 @@ class Device(object):
         return hash(self._handle)
 
     def __str__(self):
-        return self.name
+        return self._name
 
     def __repr__(self):
         return 'Device(handle={0})'.format(self._handle)
@@ -39,10 +43,6 @@ class Device(object):
     def intf_refs(self):
         for ref in _props.get_device_intf_refs(self._handle):
             yield _interface.Interface(ref)
-
-    @property
-    def name(self):
-        return _props.get_device_name(self._handle)
 
     @property
     def num_ports(self):
@@ -68,3 +68,7 @@ class Device(object):
     def intf_refs_all(self):
         for ref in _props.get_device_intf_refs_all(self._handle):
             yield _interface.Interface(ref)
+
+    @property
+    def _name(self):
+        return _props.get_device_name(self._handle)
