@@ -6,7 +6,8 @@ node('xnetPython01') {
 	try{
 		stage('Test'){
 			// test script to checkout the scm
-			checkout scm
+			echo "Cheking out SCM"
+			//checkout scm
 		}		
 	}
 	
