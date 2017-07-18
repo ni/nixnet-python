@@ -1,5 +1,5 @@
 #!groovy
-node('xnetPython01') {
+node('xnetPython') {
 
 	currentBuild.result = "SUCCESS"
 	
