@@ -7,12 +7,12 @@ node('xnetPython01') {
 		stage('Test'){
 			// test script to checkout the scm
 			echo "Cheking out SCM"
-			//checkout scm
+			checkout scm
 		}		
 	}
 	
 	catch (err) {
-		currentBuild.result = "FAILURE"
+		currentBuild.result = " SCM Checkout FAILURE"
 		throw err
 	}	
 	
