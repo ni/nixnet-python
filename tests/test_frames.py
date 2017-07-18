@@ -145,3 +145,40 @@ def test_queued_loopback(nixnet_in_interface, nixnet_out_interface):
             assert len(expected_frames) == len(actual_frames)
             for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
                 assert_can_frame(i, expected, actual)
+
+
+@pytest.mark.integration
+def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = ['CANEventFrame1', 'CANEventFrame2']
+
+    with nixnet.FrameInSinglePointSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        with nixnet.FrameOutSinglePointSession(
+                nixnet_out_interface,
+                database_name,
+                cluster_name,
+                frame_name) as output_session:
+            # Start the input session manually to make sure that the first
+            # frame value sent before the initial read will be received.
+            input_session.start()
+
+            first_payload_list = [2, 4, 8, 16]
+            second_payload_list = [1, 3]
+            expected_frames = [
+                types.CanFrame(66, False, constants.FrameType.CAN_DATA, bytes(bytearray(first_payload_list))),
+                types.CanFrame(67, False, constants.FrameType.CAN_DATA, bytes(bytearray(second_payload_list)))]
+            output_session.frames.write_can(expected_frames)
+
+            # Wait 1 s and then read the received values.
+            # They should be the same as the ones sent.
+            time.sleep(1)
+
+            actual_frames = list(input_session.frames.read_can())
+            assert len(expected_frames) == len(actual_frames)
+            for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
+                assert_can_frame(i, expected, actual)
