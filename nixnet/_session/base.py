@@ -40,15 +40,14 @@ class SessionBase(object):
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
                 blank, the cluster is extracted from the list parameter; this is
-                not allowed for modes of
-                :any:`nixnet.constants.CreateSessionMode.FRAME_IN_STREAM`
-                or :any:`nixnet.constants.CreateSessionMode.FRAME_OUT_STREAM`.
+                not allowed for modes of 'constants.CreateSessionMode.FRAME_IN_STREAM'
+                or 'constants.CreateSessionMode.FRAME_OUT_STREAM'.
             list: A list of strings describing signals or frames for the session.
                 The list syntax depends on the mode. Refer to mode spefic
                 session classes defined below for 'list' syntax.
             interface_name: A string representing the XNET Interface to use for
                 this session. If Mode is
-                :any:`nixnet.constants.CreateSessionMode.SIGNAL_CONVERSION_SINGLE_POINT`,
+                'constants.CreateSessionMode.SIGNAL_CONVERSION_SINGLE_POINT',
                 this input is ignored. You can set it to an empty string.
             mode: The session mode. See :any:`nixnet._enums.CreateSessionMode`.
 
@@ -124,12 +123,12 @@ class SessionBase(object):
         :any:`nixnet._session.base.SessionBase.auto_start` property.
 
         For each physical interface, the NI-XNET hardware is divided into two logical units:
-            Sessions:
-                You can create one or more sessions, each of which contains
-                frames or signals to be transmitted (or received) on the bus.
-            Interface:
-                The interface physically connects to the bus and transmits
-                (or receives) data for the sessions.
+
+            Sessions: You can create one or more sessions, each of which contains
+            frames or signals to be transmitted (or received) on the bus.
+
+            Interface: The interface physically connects to the bus and transmits
+            (or receives) data for the sessions.
 
         You can start each logical unit separately. When a session is started,
         all contained frames or signals are placed in a state where they are
@@ -157,12 +156,12 @@ class SessionBase(object):
         this function is optional.
 
         For each physical interface, the NI-XNET hardware is divided into two logical units:
-            Sessions:
-                You can create one or more sessions, each of which contains
-                frames or signals to be transmitted (or received) on the bus.
-            Interface:
-                The interface physically connects to the bus and transmits
-                (or receives) data for the sessions.
+
+            Sessions: You can create one or more sessions, each of which contains
+            frames or signals to be transmitted (or received) on the bus.
+
+            Interface: The interface physically connects to the bus and transmits
+            (or receives) data for the sessions.
 
         You can stop each logical unit separately. When a session is stopped,
         all contained frames or signals are placed in a state where they are no
@@ -233,11 +232,13 @@ class SessionBase(object):
         communication with remote nodes.
 
         After this wait succeeds, calls to 'read_state' will return:
+
             :any:`nixnet._enums.CanCommState`: 'constants.CAN_COMM.ERROR_ACTIVE'
 
             :any:`nixnet._enums.CanCommState`: 'constants.CAN_COMM.ERROR_PASSIVE'
 
-            'constants.ReadState.TIME_COMMUNICATING': Valid time for communication (invalid time of 0 prior)
+            'constants.ReadState.TIME_COMMUNICATING': Valid time for
+            communication (invalid time of 0 prior)
 
         Args:
             timeout: A float representing the maximum amount of time to wait in
@@ -318,14 +319,20 @@ class SessionBase(object):
 
     @property
     def intf(self):
+        """:any:`nixnet._session.intf.Interface`: Returns the Interface configuration object for the session."""
         return self._intf
 
     @property
     def j1939(self):
+        """:any:`nixnet._session.j1939.J1939`: Returns the J1939 configuration object for the session."""
         return self._j1939
 
     @property
     def application_protocol(self):
+        """:any:`nixnet._enums.AppProtocol`: This property returns the application protocol that the session uses.
+
+        The database used with the session determines the application protocol.
+        """
         return constants.AppProtocol(_props.get_session_application_protocol(self._handle))
 
     @property
@@ -358,34 +365,165 @@ class SessionBase(object):
 
     @property
     def cluster_name(self):
+        """str: This property returns the cluster (network) name used with the session."""
         return _props.get_session_cluster_name(self._handle)
 
     @property
     def database_name(self):
+        """str: This property returns the database name used with the session."""
         return _props.get_session_database_name(self._handle)
 
     @property
     def mode(self):
+        """:any:`nixnet._enums.CreateSessionMode`: This property returns the mode associated with the session.
+
+        For more information, refer to :any:`nixnet._enums.CreateSessionMode`.
+        """
         return constants.CreateSessionMode(_props.get_session_mode(self._handle))
 
     @property
     def num_pend(self):
+        """int: This property returns the number of values (frames or signals) pending for the session.
+
+        For input sessions, this is the number of frame/signal values available
+        to the appropriate read function. If you call the appropriate read
+        function with number to read of this number and timeout of 0.0, the
+        appropriate read function should return this number of values successfully.
+
+        For output sessions, this is the number of frames/signal values provided
+        to the appropriate write function but not yet transmitted onto the network.
+
+        Stream frame sessions using FlexRay or CAN FD protocol may use a
+        variable size of frames. In these cases, this property assumes the
+        largest possible frame size. If you use smaller frames, the real number
+        of pending values might be higher.
+
+        The largest possible frames sizes are:
+
+            CAN FD: 64 byte payload.
+
+            FlexRay: The higher value of the frame size in the static segment
+            and the maximum frame size in the dynamic segment. The XNET Cluster
+            FlexRay Payload Length Maximum property provides this value.
+        """
         return _props.get_session_num_pend(self._handle)
 
     @property
     def num_unused(self):
+        """int: This property returns the number of values (frames or signals) unused for the session.
+
+        If you get this property prior to starting the session, it provides the
+        size of the underlying queue(s). Contrary to the Queue Size property,
+        this value is in number of frames for Frame I/O, not number of bytes;
+        for Signal I/O, it is the number of signal values in both cases. After
+        start, this property returns the queue size minus the
+        :any:`Number of Values Pending <nixnet._session.base.SessionBase.num_pend>`
+        property.
+
+        For input sessions, this is the number of frame/signal values unused in
+        the underlying queue(s).
+
+        For output sessions, this is the number of frame/signal values you can
+        provide to a subsequent call to the appropriate write function. If you
+        call the appropriate write function with this number of values and
+        timeout of 0.0, it should return success.
+
+        Stream frame sessions using FlexRay or CAN FD protocol may use a
+        variable size of frames. In these cases, this property assumes the
+        largest possible frame size. If you use smaller frames, the real number
+        of pending values might be higher.
+
+        The largest possible frames sizes are:
+
+            CAN FD: 64 byte payload.
+
+            FlexRay: The higher value of the frame size in the static segment
+            and the maximum frame size in the dynamic segment. The XNET Cluster
+            FlexRay Payload Length Maximum property provides this value.
+        """
         return _props.get_session_num_unused(self._handle)
 
     @property
     def payld_len_max(self):
+        """int: Returns the maximum payload length of all frames in this session, expressed as bytes (0-254).
+
+        This property does not apply to Signal sessions (only Frame sessions).
+
+        For CAN Stream (Input and Output), this property depends on the XNET
+        Cluster CAN I/O Mode property. If the I/O mode is CAN, this property is
+        8 bytes. If the I/O mode is 'constants.CaNioMode.CANFD' or
+        'constants.CaNioMode.CANFD', this property is 64 bytes.
+
+        For LIN Stream (Input and Output), this property always is 8 bytes. For
+        FlexRay Stream (Input and Output), this property is the same as the XNET
+        Cluster FlexRay Payload Length Maximum property value. For Queued and
+        Single-Point (Input and Output), this is the maximum payload of all
+        frames specified in the List property.
+        """
         return _props.get_session_payld_len_max(self._handle)
 
     @property
     def protocol(self):
+        """:any:`nixnet._enums.Protocol`: This property returns the protocol that the interface in the session uses."""
         return constants.Protocol(_props.get_session_protocol(self._handle))
 
     @property
     def queue_size(self):
+        """int: Get or set queue size.
+
+        For output sessions, queues store data passed to the appropriate
+        write function and not yet transmitted onto the network. For input
+        sessions, queues store data received from the network and not yet
+        obtained using the appropriate read function.
+
+        For most applications, the default queue sizes are sufficient. You can
+        write to this property to override the default. When you write (set)
+        this property, you must do so prior to the first session start. You
+        cannot set this property again after calling
+        :any:`nixnet._session.base.SessionBase.stop`.
+
+        For signal I/O sessions, this property is the number of signal values
+        stored. This is analogous to the number of values you use with the
+        appropriate read or write function.
+
+        For frame I/O sessions, this property is the number of bytes of frame
+        data stored.
+
+        For standard CAN or LIN frame I/O sessions, each frame uses exactly 24
+        bytes. You can use this number to convert the Queue Size (in bytes)
+        to/from the number of frame values.
+
+        For CAN FD and FlexRay frame I/O sessions, each frame value size can
+        vary depending on the payload length. For more information, refer to
+        Raw Frame Format.
+
+        For Signal I/O XY sessions, you can use signals from more than one frame.
+        Within the implementation, each frame uses a dedicated queue. According
+        to the formulas below, the default queue sizes can be different for each
+        frame. If you read the default Queue Size property for a Signal Input XY
+        session, the largest queue size is returned, so that a call to the
+        appropriate read function of that size can empty all queues. If you
+        read the default Queue Size property for a Signal Output XY session, the
+        smallest queue size is returned, so that a call to the appropriate write
+        function of that size can succeed when all queues are empty. If you
+        write the Queue Size property for a Signal I/O XY session, that size is
+        used for all frames, so you must ensure that it is sufficient for the
+        frame with the fastest transmit time.
+
+        For Signal I/O Waveform sessions, you can use signals from more than one
+        frame. Within the implementation, each frame uses a dedicated queue. The
+        Queue Size property does not represent the memory in these queues, but
+        rather the amount of time stored. The default queue allocations store
+        Application Time worth of resampled signal values. If you read the
+        default Queue Size property for a Signal I/O Waveform session, it
+        returns Application Time multiplied by the time Resample Rate. If you
+        write the Queue Size property for a Signal I/O Waveform session, that
+        value is translated from a number of samples to a time, and that time is
+        used to allocate memory for each queue.
+
+        For Single-Point sessions (signal or frame), this property is ignored.
+        Single-Point sessions always use a value of 1 as the effective queue size.
+        """
         return _props.get_session_queue_size(self._handle)
 
     @queue_size.setter
@@ -394,6 +532,14 @@ class SessionBase(object):
 
     @property
     def resamp_rate(self):
+        """float: Rate used to resample frame data to/from signal data in waveforms.
+
+        This property applies only when the session mode is Signal Input
+        Waveform or Signal Output Waveform. This property is ignored for all
+        other modes.
+
+        The data type is 64-bit floating point. The units are in Hertz (samples per second).
+        """
         return _props.get_session_resamp_rate(self._handle)
 
     @resamp_rate.setter

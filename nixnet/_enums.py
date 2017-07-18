@@ -1093,6 +1093,66 @@ class ObjectClass(enum.Enum):
 
 
 class CreateSessionMode(enum.Enum):
+    """Create Session Mode.
+
+    The session mode specifies the data type (signals or frames), direction
+    (input or output), and how data is transferred between your application and
+    the network.
+
+    Values:
+        SIGNAL_IN_SINGLE_POINT:
+            Reads the most recent value received for each signal. This mode
+            typically is used for control or simulation applications, such as
+            Hardware In the Loop (HIL).
+        SIGNAL_IN_WAVEFORM:
+            Using the time when the signal frame is received, resamples the
+            signal data to a waveform with a fixed sample rate. This mode
+            typically is used for synchronizing XNET data with DAQmx
+            analog/digital input channels.
+        SIGNAL_IN_XY:
+            For each frame received, provides its signals as a value/timestamp
+            pair. This is the recommended mode for reading a sequence of all
+            signal values.
+        SIGNAL_OUT_SINGLE_POINT:
+            Writes signal values for the next frame transmit. This mode
+            typically is used for control or simulation applications, such as
+            Hardware In the Loop (HIL).
+        SIGNAL_OUT_WAVEFORM:
+            Using the time when the signal frame is transmitted according to the
+            database, resamples the signal data from a waveform with a fixed
+            sample rate. This mode typically is used for synchronizing XNET data
+            with DAQmx analog/digital output channels.
+        SIGNAL_OUT_XY:
+            Provides a sequence of signal values for transmit using each frame's
+            timing as the database specifies. This is the recommended mode for
+            writing a sequence of all signal values.
+        FRAME_IN_STREAM:
+            Reads all frames received from the network using a single stream.
+            This mode typically is used for analyzing and/or logging all frame
+            traffic in the network.
+        FRAME_IN_QUEUED:
+            Reads data from a dedicated queue per frame. This mode enables your
+            application to read a sequence of data specific to a frame (for
+            example, CAN identifier).
+        FRAME_IN_SINGLE_POINT:
+            Reads the most recent value received for each frame. This mode
+            typically is used for control or simulation applications that
+            require lower level access to frames (not signals).
+        FRAME_OUT_STREAM:
+            Transmits an arbitrary sequence of frame values using a single
+            stream. The values are not limited to a single frame in the
+            database, but can transmit any frame.
+        FRAME_OUT_QUEUED:
+            Provides a sequence of values for a single frame, for transmit using
+            that frame's timing as the database specifies.
+        FRAME_OUT_SINGLE_POINT:
+            Writes frame values for the next transmit. This mode typically is
+            used for control or simulation applications that require lower level
+            access to frames (not signals).
+        SIGNAL_CONVERSION_SINGLE_POINT:
+            This mode does not use any hardware. It is used to convert data
+            between the signal representation and frame representation.
+    """
     SIGNAL_IN_SINGLE_POINT = _cconsts.NX_MODE_SIGNAL_IN_SINGLE_POINT
     SIGNAL_IN_WAVEFORM = _cconsts.NX_MODE_SIGNAL_IN_WAVEFORM
     SIGNAL_IN_XY = _cconsts.NX_MODE_SIGNAL_IN_XY
