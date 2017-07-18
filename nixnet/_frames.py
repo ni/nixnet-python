@@ -3,7 +3,6 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import itertools
 import struct
 
 from nixnet import _cconsts
@@ -126,9 +125,9 @@ def iterate_frames(bytes):
         payload_pad_pos = payload_pos + payload_unit_length
         next_pos += _calculate_payload_unit_size(payload_length)
 
-        base_unit_payload = base_unit[FRAME_PAYLOAD_INDEX:FRAME_PAYLOAD_INDEX + base_unit_length]
+        base_unit_payload = base_unit[FRAME_PAYLOAD_INDEX][0:base_unit_length]
         payload_unit = bytes[payload_pos:payload_pad_pos]
-        payload = b''.join(itertools.chain(base_unit_payload, (payload_unit, )))
+        payload = base_unit_payload + payload_unit
         yield types.RawFrame(
             base_unit[FRAME_TIMESTAMP_INDEX],
             base_unit[FRAME_IDENTIFIER_INDEX],

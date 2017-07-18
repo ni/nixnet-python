@@ -41,6 +41,13 @@ def test_iterate_frames_with_base_payload():
     assert base_frame.payload == b'\x01\x02\x03\x04\x05\x06\x07\x08'
 
 
+def test_iterate_frames_with_partial_base_payload():
+    frame_bytes = b'\xd8\xb7@B\xeb\xff\xd2\x01\x00\x00\x00\x00\x00\x00\x00\x04\x02\x04\x08\x10\x00\x00\x00\x00'
+    (frame, ) = list(_frames.iterate_frames(frame_bytes))
+    assert repr(frame) == 'RawFrame(timestamp=0x1d2ffeb4240b7d8, identifier=0x0, type=FrameType.CAN_DATA, flags=0x0, info=0x0, payload=...)'  # NOQA: E501
+    assert frame.payload == b'\x02\x04\x08\x10'
+
+
 def test_iterate_frames_with_multiple_frames():
     payload = b'\x00\x00\x00\x00\x00\x00\x00\x00'
     empty_bytes = b'\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x04\x05\x00' + payload
