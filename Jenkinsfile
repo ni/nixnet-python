@@ -7,7 +7,6 @@ node('xnetPython') {
 		stage('Checkout'){
 			// Checkout the repository from scm
 			echo "Cheking out source"
-			echo "Testing environment variables: @{env."
 			checkout scm
 		}		
 		
