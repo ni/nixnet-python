@@ -3,6 +3,8 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import six
+
 from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
@@ -16,6 +18,8 @@ class Interface(object):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self._handle == other._handle
+        elif isinstance(other, six.string_types):
+            return self._name == other
         return False
 
     def __ne__(self, other):
@@ -25,16 +29,12 @@ class Interface(object):
         return hash(self._handle)
 
     def __str__(self):
-        return self.name
+        return self._name
 
     def __repr__(self):
         return 'Interface(handle={0})'.format(self._handle)
 
     # `dev_ref`: Intentionally not exposed to avoid circular imports
-
-    @property
-    def name(self):
-        return _props.get_interface_name(self._handle)
 
     @property
     def num(self):
@@ -82,3 +82,7 @@ class Interface(object):
 
     def blink(self, modifier):
         _funcs.nx_blink(self._handle, modifier)
+
+    @property
+    def _name(self):
+        return _props.get_interface_name(self._handle)
