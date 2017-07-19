@@ -18,7 +18,12 @@ class Error(Exception):
 
 class XnetError(Error):
     """Error raised by any NI-XNET method."""
-    def __init__(self, message, error_code):
+    def __init__(
+        self,
+        message,  # type: typing.Text
+        error_code,  # type: int
+    ):
+        # type: (...) -> None
         """Initialize error.
 
         Args:
@@ -36,6 +41,7 @@ class XnetError(Error):
 
     @property
     def error_code(self):
+        # type: (...) -> int
         """Error code reported by NI-XNET.
 
         Returns:
@@ -45,6 +51,7 @@ class XnetError(Error):
 
     @property
     def error_type(self):
+        # type: (...) -> _enums.Err
         """Error enum reported by NI-XNET.
 
         Returns:
@@ -55,7 +62,12 @@ class XnetError(Error):
 
 class XnetWarning(Warning):
     """Warning raised by any NI-XNET method."""
-    def __init__(self, message, error_code):
+    def __init__(
+        self,
+        message,  # type: typing.Text
+        error_code,  # type: int
+    ):
+        # type: (...) -> None
         """Initialize warning.
 
         Args:
@@ -70,10 +82,11 @@ class XnetWarning(Warning):
         try:
             self._error_type = _enums.Warn(self._error_code)
         except ValueError:
-            self._error_type = _enums.Err.INTERNAL_ERROR
+            self._error_type = None
 
     @property
     def error_code(self):
+        # type: (...) -> int
         """Error code reported by NI-XNET.
 
         Returns:
@@ -83,6 +96,7 @@ class XnetWarning(Warning):
 
     @property
     def error_type(self):
+        # type: (...) -> _enums.Warn
         """Warning enum reported by NI-XNET.
 
         Returns:

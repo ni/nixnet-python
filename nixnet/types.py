@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import collections
+import typing  # NOQA: F401
 
 from nixnet import _cconsts
 from nixnet import _errors
@@ -38,6 +39,7 @@ class RawFrame(object):
         "payload"]
 
     def __init__(self, timestamp, identifier, type, flags, info, payload=b""):
+        # type: (int, int, constants.FrameType, int, int, bytes) -> None
         self.timestamp = timestamp
         self.identifier = identifier
         self.type = type
@@ -47,19 +49,21 @@ class RawFrame(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
+            other_frame = typing.cast(RawFrame, other)
             return all((
-                self.timestamp == other.timestamp,
-                self.identifier == other.identifier,
-                self.type == other.type,
-                self.flags == other.flags,
-                self.info == other.info,
-                self.payload == other.payload))
+                self.timestamp == other_frame.timestamp,
+                self.identifier == other_frame.identifier,
+                self.type == other_frame.type,
+                self.flags == other_frame.flags,
+                self.info == other_frame.info,
+                self.payload == other_frame.payload))
         return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __repr__(self):
+        # type: () -> typing.Text
         """RawFrame debug representation.
 
         >>> RawFrame(1, 2, constants.FrameType.CAN_DATA, 3, 4)
@@ -98,6 +102,7 @@ class CanFrame(object):
     _EXTENDED_FRAME_ID_MASK = 0x1FFFFFFF
 
     def __init__(self, identifier, extended, type, payload=b""):
+        # type: (int, bool, constants.FrameType, bytes) -> None
         self.identifier = identifier
         self.extended = extended
         self.echo = False  # Used only for Read
@@ -107,6 +112,7 @@ class CanFrame(object):
 
     @classmethod
     def from_raw(cls, frame):
+        # type: (RawFrame) -> CanFrame
         """Convert from RawFrame.
 
         >>> raw = RawFrame(5, 0x20000001, constants.FrameType.CAN_DATA, _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO, 0, b'')
@@ -124,6 +130,7 @@ class CanFrame(object):
         return can_frame
 
     def to_raw(self):
+        # type: () -> RawFrame
         """Convert to RawFrame.
 
         >>> CanFrame(1, True, constants.FrameType.CAN_DATA).to_raw()
@@ -144,19 +151,21 @@ class CanFrame(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
+            other_frame = typing.cast(CanFrame, other)
             return all((
-                self.identifier == other.identifier,
-                self.extended == other.extended,
-                self.echo == other.echo,
-                self.type == other.type,
-                self.timestamp == other.timestamp,
-                self.payload == other.payload))
+                self.identifier == other_frame.identifier,
+                self.extended == other_frame.extended,
+                self.echo == other_frame.echo,
+                self.type == other_frame.type,
+                self.timestamp == other_frame.timestamp,
+                self.payload == other_frame.payload))
         return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __repr__(self):
+        # type: () -> typing.Text
         """CanFrame debug representation.
 
         >>> CanFrame(1, True, constants.FrameType.CAN_DATA)
