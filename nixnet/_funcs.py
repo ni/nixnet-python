@@ -210,6 +210,54 @@ def nx_write_signal_xy(
     _errors.check_for_error(result.value)
 
 
+def nx_convert_frames_to_signals_single_point(
+    session_ref,
+    frame_buffer,
+    value_buffer,
+    timestamp_buffer,
+):
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
+    frame_buffer_ctypes = (_ctypedefs.byte * len(frame_buffer))(*frame_buffer)
+    size_of_frame_buffer_ctypes = _ctypedefs.u32(len(frame_buffer) * _ctypedefs.byte.BYTES)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
+    size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
+    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * len(timestamp_buffer))(*timestamp_buffer)
+    size_of_timestamp_buffer_ctypes = _ctypedefs.u32(len(timestamp_buffer) * _ctypedefs.nxTimestamp_t.BYTES)
+    result = _cfuncs.lib.nx_convert_frames_to_signals_single_point(
+        session_ref_ctypes,
+        frame_buffer_ctypes,
+        size_of_frame_buffer_ctypes,
+        value_buffer_ctypes,
+        size_of_value_buffer_ctypes,
+        timestamp_buffer_ctypes,
+        size_of_timestamp_buffer_ctypes,
+    )
+    _errors.check_for_error(result.value)
+
+
+def nx_convert_signals_to_frames_single_point(
+    session_ref,
+    value_buffer,
+    buffer,
+):
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
+    size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
+    buffer_ctypes = (_ctypedefs.byte * len(buffer))(*buffer)
+    size_of_buffer_ctypes = _ctypedefs.u32(len(buffer) * _ctypedefs.byte.BYTES)
+    number_of_bytes_returned_ctypes = _ctypedefs.u32()
+    result = _cfuncs.lib.nx_convert_signals_to_frames_single_point(
+        session_ref_ctypes,
+        value_buffer_ctypes,
+        size_of_value_buffer_ctypes,
+        buffer_ctypes,
+        size_of_buffer_ctypes,
+        ctypes.pointer(number_of_bytes_returned_ctypes),
+    )
+    _errors.check_for_error(result.value)
+    return number_of_bytes_returned_ctypes.value
+
+
 def nx_blink(
     interface_ref,
     modifier,
