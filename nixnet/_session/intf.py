@@ -33,18 +33,10 @@ class Interface(object):
 
     @property
     def baud_rate(self):
-        return _props.get_session_intf_baud_rate(self._handle)
+        return _props.get_session_intf_baud_rate64(self._handle)
 
     @baud_rate.setter
     def baud_rate(self, value):
-        _props.set_session_intf_baud_rate(self._handle, value)
-
-    @property
-    def baud_rate64(self):
-        return _props.get_session_intf_baud_rate64(self._handle)
-
-    @baud_rate64.setter
-    def baud_rate64(self, value):
         _props.set_session_intf_baud_rate64(self._handle, value)
 
     @property
@@ -152,17 +144,9 @@ class Interface(object):
 
     @property
     def can_fd_baud_rate(self):
-        return _props.get_session_intf_can_fd_baud_rate(self._handle)
-
-    @can_fd_baud_rate.setter
-    def can_fd_baud_rate(self, value):
-        _props.set_session_intf_can_fd_baud_rate(self._handle, value)
-
-    @property
-    def can_fd_baud_rate64(self):
         return _props.get_session_intf_can_fd_baud_rate64(self._handle)
 
-    @can_fd_baud_rate64.setter
+    @can_fd_baud_rate.setter
     def can_fd_baud_rate64(self, value):
         _props.set_session_intf_can_fd_baud_rate64(self._handle, value)
 
