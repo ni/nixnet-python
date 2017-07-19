@@ -122,7 +122,7 @@ def nx_read_signal_single_point(
     session_ref,  # type: int
     num_signals,  # type: int
 ):
-    # type: (...) -> typing.Tuple[typing.List[int], typing.List[float]]
+    # type: (...) -> typing.Tuple[typing.List[_ctypedefs.nxTimestamp_t], typing.List[_ctypedefs.f64]]
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     value_buffer_ctypes = (_ctypedefs.f64 * num_signals)()  # type: ignore
     size_of_value_buffer_ctypes = _ctypedefs.u32(_ctypedefs.f64.BYTES * num_signals)
@@ -394,13 +394,13 @@ def nx_system_close(
 
 def nx_wait(
     session_ref,  # type: int
-    condition,  # type: int
+    condition,  # type: _enums.Condition
     param_in,  # type: int
     timeout,  # type: float
 ):
     # type: (...) -> int
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    condition_ctypes = _ctypedefs.u32(condition)
+    condition_ctypes = _ctypedefs.u32(condition.value)
     param_in_ctypes = _ctypedefs.u32(param_in)
     timeout_ctypes = _ctypedefs.f64(timeout)
     param_out_ctypes = _ctypedefs.u32()

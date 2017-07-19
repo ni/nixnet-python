@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import typing  # NOQA: F401
 import warnings
 
 from nixnet import _funcs
@@ -10,8 +11,8 @@ from nixnet import _props
 from nixnet import constants
 from nixnet import errors
 
-from nixnet._session import intf
-from nixnet._session import j1939
+from nixnet._session import intf as session_intf
+from nixnet._session import j1939 as session_j1939
 
 
 class SessionBase(object):
@@ -19,11 +20,13 @@ class SessionBase(object):
 
     def __init__(
             self,
-            database_name,
-            cluster_name,
-            list,
-            interface_name,
-            mode):
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            list,  # type: typing.Text
+            interface_name,  # type: typing.Text
+            mode,  # type: constants.CreateSessionMode
+    ):
+        # type: (...) -> None
         """Create an XNET session at run time using named references to database objects.
 
         This function creates a session using the named database objects
@@ -56,8 +59,8 @@ class SessionBase(object):
         """
         self._handle = None  # To satisfy `__del__` in case nx_create_session throws
         self._handle = _funcs.nx_create_session(database_name, cluster_name, list, interface_name, mode)
-        self._intf = intf.Interface(self._handle)
-        self._j1939 = j1939.J1939(self._handle)
+        self._intf = session_intf.Interface(self._handle)
+        self._j1939 = session_j1939.J1939(self._handle)
 
     def __del__(self):
         if self._handle is not None:
@@ -74,7 +77,7 @@ class SessionBase(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self._handle == other._handle
+            return self._handle == typing.cast(SessionBase, other._handle)
         return False
 
     def __ne__(self, other):
@@ -84,9 +87,11 @@ class SessionBase(object):
         return hash(self._handle)
 
     def __repr__(self):
+        # type: () -> typing.Text
         return 'Session(handle={0})'.format(self._handle)
 
     def close(self):
+        # type: () -> None
         """Close (clear) the XNET session.
 
         This function stops communication for the session and releases all
@@ -114,6 +119,7 @@ class SessionBase(object):
         self._handle = None
 
     def start(self, scope=constants.StartStopScope.NORMAL):
+        # type: (constants.StartStopScope) -> None
         """Start communication for the XNET session.
 
         Because the session is started automatically by default, this function
@@ -150,6 +156,7 @@ class SessionBase(object):
         _funcs.nx_start(self._handle, scope)
 
     def stop(self, scope=constants.StartStopScope.NORMAL):
+        # type: (constants.StartStopScope) -> None
         """Stop communication for the XNET session.
 
         Because the session is stopped automatically when closed (cleared),
@@ -178,6 +185,7 @@ class SessionBase(object):
         _funcs.nx_stop(self._handle, scope)
 
     def flush(self):
+        # type: () -> None
         """Flushes (empties) all XNET session queues.
 
         With the exception of single-point modes, all sessions use queues to
@@ -211,6 +219,7 @@ class SessionBase(object):
         _funcs.nx_flush(self._handle)
 
     def wait_for_transmit_complete(self, timeout=10):
+        # type: (float) -> None
         """Wait for transmition to complete.
 
         All frames written for the session have been transmitted on the bus.
@@ -224,6 +233,7 @@ class SessionBase(object):
         _funcs.nx_wait(self._handle, constants.Condition.TRANSMIT_COMPLETE, 0, timeout)
 
     def wait_for_intf_communicating(self, timeout=10):
+        # type: (float) -> None
         """Wait for the interface to begin communication on the network.
 
         If a start trigger is configured for the interface, this first waits for
@@ -247,6 +257,7 @@ class SessionBase(object):
         _funcs.nx_wait(self._handle, constants.Condition.INTF_COMMUNICATING, 0, timeout)
 
     def wait_for_intf_remote_wakeup(self, timeout=10):
+        # type: (float) -> None
         """Wait for interface remote wakeup.
 
         Wait for the interface to wakeup due to activity by a remote node on the
@@ -269,6 +280,7 @@ class SessionBase(object):
         _funcs.nx_wait(self._handle, constants.Condition.INTF_REMOTE_WAKEUP, 0, timeout)
 
     def connect_terminals(self, source, destination):
+        # type: (typing.Text, typing.Text) -> None
         """Connect terminals on the XNET interface.
 
         This function connects a source terminal to a destination terminal on
@@ -289,6 +301,7 @@ class SessionBase(object):
         _funcs.nx_connect_terminals(self._handle, source, destination)
 
     def disconnect_terminals(self, source, destination):
+        # type: (typing.Text, typing.Text) -> None
         """Disconnect terminals on the XNET interface.
 
         This function disconnects a specific pair of source/destination terminals
@@ -319,16 +332,19 @@ class SessionBase(object):
 
     @property
     def intf(self):
+        # type: () -> session_intf.Interface
         """:any:`nixnet._session.intf.Interface`: Returns the Interface configuration object for the session."""
         return self._intf
 
     @property
     def j1939(self):
+        # type: () -> session_j1939.J1939
         """:any:`nixnet._session.j1939.J1939`: Returns the J1939 configuration object for the session."""
         return self._j1939
 
     @property
     def application_protocol(self):
+        # type: () -> constants.AppProtocol
         """:any:`nixnet._enums.AppProtocol`: This property returns the application protocol that the session uses.
 
         The database used with the session determines the application protocol.
@@ -337,6 +353,7 @@ class SessionBase(object):
 
     @property
     def auto_start(self):
+        # type: () -> bool
         """bool: Automatically starts the output session on the first call to the appropriate write function.
 
         For input sessions, start always is performed within the first call to
@@ -361,20 +378,24 @@ class SessionBase(object):
 
     @auto_start.setter
     def auto_start(self, value):
+        # type: (bool) -> None
         _props.set_session_auto_start(self._handle, value)
 
     @property
     def cluster_name(self):
+        # type: () -> typing.Text
         """str: This property returns the cluster (network) name used with the session."""
         return _props.get_session_cluster_name(self._handle)
 
     @property
     def database_name(self):
+        # type: () -> typing.Text
         """str: This property returns the database name used with the session."""
         return _props.get_session_database_name(self._handle)
 
     @property
     def mode(self):
+        # type: () -> constants.CreateSessionMode
         """:any:`nixnet._enums.CreateSessionMode`: This property returns the mode associated with the session.
 
         For more information, refer to :any:`nixnet._enums.CreateSessionMode`.
@@ -383,6 +404,7 @@ class SessionBase(object):
 
     @property
     def num_pend(self):
+        # type: () -> int
         """int: This property returns the number of values (frames or signals) pending for the session.
 
         For input sessions, this is the number of frame/signal values available
@@ -410,6 +432,7 @@ class SessionBase(object):
 
     @property
     def num_unused(self):
+        # type: () -> int
         """int: This property returns the number of values (frames or signals) unused for the session.
 
         If you get this property prior to starting the session, it provides the
@@ -445,11 +468,13 @@ class SessionBase(object):
 
     @property
     def protocol(self):
+        # type: () -> constants.Protocol
         """:any:`nixnet._enums.Protocol`: This property returns the protocol that the interface in the session uses."""
         return constants.Protocol(_props.get_session_protocol(self._handle))
 
     @property
     def queue_size(self):
+        # type: () -> int
         """int: Get or set queue size.
 
         For output sessions, queues store data passed to the appropriate
@@ -509,4 +534,5 @@ class SessionBase(object):
 
     @queue_size.setter
     def queue_size(self, value):
+        # type: (int) -> None
         _props.set_session_queue_size(self._handle, value)

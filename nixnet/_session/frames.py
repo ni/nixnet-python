@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 import itertools
+import typing  # NOQA: F401
 
 from nixnet import _frames
 from nixnet import _funcs
@@ -24,6 +25,7 @@ class Frames(collection.Collection):
 
     @property
     def payld_len_max(self):
+        # type: () -> int
         """int: Returns the maximum payload length of all frames in this session, expressed as bytes (0-254).
 
         For CAN Stream (Input and Output), this property depends on the XNET
@@ -53,6 +55,7 @@ class InFrames(Frames):
             self,
             number_of_bytes_to_read,
             timeout=constants.TIMEOUT_NONE):
+        # type: (int, float) -> bytes
         """Read data as a list of raw bytes (frame data).
 
         The raw bytes encode one or more frames using the Raw Frame Format.
@@ -98,6 +101,7 @@ class InFrames(Frames):
             self,
             number_to_read,
             timeout=constants.TIMEOUT_NONE):
+        # type: (int, float) -> typing.Iterable[types.RawFrame]
         """Read raw CAN frames.
 
         Args:
@@ -122,7 +126,7 @@ class InFrames(Frames):
         Yields:
             :any:`nixnet.types.RawFrame`
         """
-        # NOTE: If the frame payload excedes the base unit, this will return
+        # NOTE: If the frame payload exceeds the base unit, this will return
         # less than number_to_read
         number_of_bytes_to_read = number_to_read * _frames.nxFrameFixed_t.size
         buffer = self.read_bytes(number_of_bytes_to_read, timeout)
@@ -133,6 +137,7 @@ class InFrames(Frames):
             self,
             number_to_read,
             timeout=constants.TIMEOUT_NONE):
+        # type: (int, float) -> typing.Iterable[types.CanFrame]
         """Read :any:`nixnet.types.CanFrame` data.
 
         Args:
@@ -168,6 +173,7 @@ class SinglePointInFrames(Frames):
     def read_bytes(
             self,
             number_of_bytes_to_read):
+        # type: (int) -> bytes
         """Read data as a list of raw bytes (frame data).
 
         Args:
@@ -183,6 +189,7 @@ class SinglePointInFrames(Frames):
         return buffer[0:number_of_bytes_returned]
 
     def read_raw(self):
+        # type: () -> typing.Iterable[types.RawFrame]
         """Read raw CAN frames.
 
         Yields:
@@ -197,6 +204,7 @@ class SinglePointInFrames(Frames):
             yield frame
 
     def read_can(self):
+        # type: () -> typing.Iterable[types.CanFrame]
         """Read :any:`nixnet.types.CanFrame` data.
 
         Yields:
@@ -216,6 +224,7 @@ class OutFrames(Frames):
             self,
             frame_bytes,
             timeout=10):
+        # type: (bytes, float) -> None
         """Write a list of raw bytes (frame data).
 
         The raw bytes encode one or more frames using the Raw Frame Format.
@@ -244,6 +253,7 @@ class OutFrames(Frames):
             self,
             raw_frames,
             timeout=10):
+        # type: (typing.Iterable[types.RawFrame], float) -> None
         """Write raw CAN frame data.
 
         Args:
@@ -275,6 +285,7 @@ class OutFrames(Frames):
             self,
             can_frames,
             timeout=10):
+        # type: (typing.Iterable[types.CanFrame], float) -> None
         """Write CAN frame data.
 
         Args:
@@ -309,6 +320,7 @@ class SinglePointOutFrames(Frames):
     def write_bytes(
             self,
             frame_bytes):
+        # type: (bytes) -> None
         """Write a list of raw bytes (frame data).
 
         The raw bytes encode one or more frames using the Raw Frame Format.
@@ -321,6 +333,7 @@ class SinglePointOutFrames(Frames):
     def write_raw(
             self,
             raw_frames):
+        # type: (typing.Iterable[types.RawFrame]) -> None
         """Write raw CAN frame data.
 
         Args:
@@ -336,6 +349,7 @@ class SinglePointOutFrames(Frames):
     def write_can(
             self,
             can_frames):
+        # type: (typing.Iterable[types.CanFrame]) -> None
         """Write CAN frame data.
 
         Args:
@@ -353,6 +367,7 @@ class Frame(collection.Item):
         return 'Session.Frame(handle={0}, index={0})'.format(self._handle, self._index)
 
     def set_can_start_time_off(self, value):
+        # type: (float) -> None
         """float: Set CAN Start Time Offset.
 
         Use this property to configure the amount of time that must elapse
@@ -374,6 +389,7 @@ class Frame(collection.Item):
         _props.set_session_can_start_time_off(self._handle, self._index, value)
 
     def set_can_tx_time(self, value):
+        # type: (float) -> None
         """float: Set CAN Transmit Time.
 
         Use this property to change the frame's transmit time while the session
@@ -398,6 +414,7 @@ class Frame(collection.Item):
         _props.set_session_can_tx_time(self._handle, self._index, value)
 
     def set_skip_n_cyclic_frames(self, value):
+        # type: (int) -> None
         """int: Set Skip N Cyclic Frames
 
         Note:
@@ -418,9 +435,11 @@ class Frame(collection.Item):
         _props.set_session_skip_n_cyclic_frames(self._handle, self._index, value)
 
     def set_output_queue_update_freq(self, value):
+        # type: (int) -> None
         _props.set_session_output_queue_update_freq(self._handle, self._index, value)
 
     def set_lin_tx_n_corrupted_chksums(self, value):
+        # type: (int) -> None
         """int: Set LIN Transmit N Corrupted Checksums.
 
         When set to a nonzero value, this property causes the next N number of
@@ -441,6 +460,7 @@ class Frame(collection.Item):
         _props.set_session_lin_tx_n_corrupted_chksums(self._handle, self._index, value)
 
     def set_j1939_addr_filter(self, value):
+        # type: (typing.Text) -> None
         """str: Set J1939 Address Filter.
 
         You can use this property in input sessions only. It defines a filter

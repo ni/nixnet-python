@@ -3,19 +3,24 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import collections
+import typing  # NOQA: F401
+
 import six
 
 from nixnet import _props
 
 
-class Collection(object):
+class Collection(collections.Mapping):
     """Collection of items in a session."""
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
-        self.__list_cache = None
+        self.__list_cache = None  # type: typing.List[typing.Text]
 
     def __len__(self):
+        # type: () -> int
         return _props.get_session_num_in_list(self._handle)
 
     def __iter__(self):
@@ -36,6 +41,7 @@ class Collection(object):
             raise TypeError(index)
 
     def __getitem__(self, index):
+        # type: (typing.Union[int, typing.Text]) -> Item
         if isinstance(index, six.integer_types):
             name = self._list_cache[index]
         elif isinstance(index, six.string_types):
@@ -51,6 +57,7 @@ class Collection(object):
         return self._create_item(self._handle, index, name)
 
     def get(self, index, default=None):
+        # type: (typing.Union[int, typing.Text], typing.Any) -> Item
         if isinstance(index, six.integer_types):
             try:
                 name = self._list_cache[index]
@@ -70,7 +77,10 @@ class Collection(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self._handle == other._handle and self._list_cache == other._list_cache
+            other_collection = typing.cast(Collection, other)
+            return (
+                self._handle == other_collection._handle and
+                self._list_cache == other_collection._list_cache)
         return False
 
     def __ne__(self, other):
@@ -78,11 +88,13 @@ class Collection(object):
 
     @property
     def _list_cache(self):
+        # type: () -> typing.List[typing.Text]
         if self.__list_cache is None:
-            self.__list_cache = _props.get_session_list(self._handle)
+            self.__list_cache = list(_props.get_session_list(self._handle))
         return self.__list_cache
 
     def _create_item(self, handle, index, name):
+        # type: (int, int, typing.Text) -> Item
         raise NotImplementedError("Leaf classes must implement this")
 
 
@@ -96,14 +108,19 @@ class Item(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self._handle == other._handle and self._index == other._index
+            other_item = typing.cast(Item, other)
+            return (
+                self._handle == other_item._handle and
+                self._index == other_item._index)
         return False
 
     def __ne__(self, other):
         return not self.__eq__(other)
 
     def __int__(self):
+        # type: () -> int
         return self._index
 
     def __str__(self):
+        # type: () -> typing.Text
         return self._name
