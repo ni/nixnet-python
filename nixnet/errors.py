@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import typing  # NOQA: F401
 import warnings
 
 from nixnet import _enums
@@ -100,9 +101,9 @@ class _ResourceWarning(Warning):
 
 # If ResourceWarning is in exceptions, it is also in the built-in namespace.
 try:
-    XnetResourceWarning = ResourceWarning
+    XnetResourceWarning = ResourceWarning  # type: typing.Type[Warning]
 except NameError:
-    XnetResourceWarning = _ResourceWarning
+    XnetResourceWarning = _ResourceWarning  # type: ignore
 
 warnings.filterwarnings("always", category=XnetWarning)
 warnings.filterwarnings("always", category=XnetResourceWarning)

@@ -44,6 +44,7 @@ setup(
     packages=['nixnet'],
     install_requires=[
         'enum34;python_version<"3.4"',
+        'typing;python_version<"3.5"',
         'six'
     ],
     tests_require=['pytest', 'mock'],
