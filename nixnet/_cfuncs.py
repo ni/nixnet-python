@@ -200,7 +200,7 @@ class XnetLibrary(object):
         cfunc = self.cdll.nxReadFrame
         cfunc.argtypes = [
             _ctypedefs.nxSessionRef_t,
-            _ctypedefs.nxVoidPtr,
+            ctypes.POINTER(_ctypedefs.byte),
             _ctypedefs.u32,
             _ctypedefs.f64,
             ctypes.POINTER(_ctypedefs.u32)]
@@ -319,19 +319,19 @@ class XnetLibrary(object):
             self,
             session_ref,
             buffer,
-            number_of_bytes_for_frames,
+            size_of_buffer,
             timeout):
         cfunc = self.cdll.nxWriteFrame
         cfunc.argtypes = [
             _ctypedefs.nxSessionRef_t,
-            _ctypedefs.nxVoidPtr,
+            ctypes.POINTER(_ctypedefs.byte),
             _ctypedefs.u32,
             _ctypedefs.f64]
         cfunc.restype = _ctypedefs.nxStatus_t
         return cfunc(
             session_ref,
             buffer,
-            number_of_bytes_for_frames,
+            size_of_buffer,
             timeout)
 
     def nx_write_signal_single_point(
@@ -423,7 +423,7 @@ class XnetLibrary(object):
             self,
             session_ref,
             frame_buffer,
-            number_of_bytes_for_frames,
+            size_of_frame_buffer,
             value_buffer,
             size_of_value_buffer,
             timestamp_buffer,
@@ -431,7 +431,7 @@ class XnetLibrary(object):
         cfunc = self.cdll.nxConvertFramesToSignalsSinglePoint
         cfunc.argtypes = [
             _ctypedefs.nxSessionRef_t,
-            _ctypedefs.nxVoidPtr,
+            ctypes.POINTER(_ctypedefs.byte),
             _ctypedefs.u32,
             ctypes.POINTER(_ctypedefs.f64),
             _ctypedefs.u32,
@@ -441,7 +441,7 @@ class XnetLibrary(object):
         return cfunc(
             session_ref,
             frame_buffer,
-            number_of_bytes_for_frames,
+            size_of_frame_buffer,
             value_buffer,
             size_of_value_buffer,
             timestamp_buffer,
@@ -460,7 +460,7 @@ class XnetLibrary(object):
             _ctypedefs.nxSessionRef_t,
             ctypes.POINTER(_ctypedefs.f64),
             _ctypedefs.u32,
-            _ctypedefs.nxVoidPtr,
+            ctypes.POINTER(_ctypedefs.byte),
             _ctypedefs.u32,
             ctypes.POINTER(_ctypedefs.u32)]
         cfunc.restype = _ctypedefs.nxStatus_t

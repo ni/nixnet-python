@@ -43,6 +43,11 @@ class bool32(ctypes.c_uint):  # NOQA: N801
         return ctypes.c_uint(1) if bool(param) else ctypes.c_uint(0)
 
 
+class byte(ctypes.c_char):  # NOQA: N801
+
+    BYTES = 1
+
+
 class i8(ctypes.c_byte):  # NOQA: N801
 
     BYTES = 1
