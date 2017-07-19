@@ -19,7 +19,7 @@ def nx_create_session(
     interface,  # type: typing.Text
     mode,  # type: _enums.CreateSessionMode
 ):
-    # type: (...) -> _ctypedefs.nxSessionRef_t
+    # type: (...) -> int
     database_name_ctypes = _ctypedefs.char_p(database_name.encode('ascii'))
     cluster_name_ctypes = _ctypedefs.char_p(cluster_name.encode('ascii'))
     list_ctypes = _ctypedefs.char_p(list.encode('ascii'))
@@ -43,7 +43,7 @@ def nx_create_session_by_ref(
     interface,  # type: typing.Text
     mode,  # type: _enums.CreateSessionMode
 ):
-    # type: (...) -> _ctypedefs.nxSessionRef_t
+    # type: (...) -> int
     size_of_database_refs_ctypes = _ctypedefs.u32(len(database_refs) * _ctypedefs.nxDatabaseRef_t.BYTES)
     database_refs_ctypes = (_ctypedefs.nxDatabaseRef_t * len(database_refs))(*database_refs)  # type: ignore
     interface_ctypes = _ctypedefs.char_p(interface.encode('ascii'))
@@ -61,7 +61,7 @@ def nx_create_session_by_ref(
 
 
 def nx_get_property_size(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     property_id,  # type: int
 ):
     # type: (...) -> int
@@ -78,7 +78,7 @@ def nx_get_property_size(
 
 
 def nx_get_sub_property_size(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     active_index,  # type: int
     property_id,  # type: int
 ):
@@ -98,7 +98,7 @@ def nx_get_sub_property_size(
 
 
 def nx_read_frame(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     bytes_to_read,  # type: int
     timeout,  # type: float
 ):
@@ -119,7 +119,7 @@ def nx_read_frame(
 
 
 def nx_read_signal_single_point(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     num_signals,  # type: int
 ):
     # type: (...) -> typing.Tuple[typing.List[int], typing.List[float]]
@@ -140,7 +140,7 @@ def nx_read_signal_single_point(
 
 
 def nx_write_frame(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     buffer,  # type: typing.Any
     timeout,  # type: float
 ):
@@ -159,7 +159,7 @@ def nx_write_frame(
 
 
 def nx_write_signal_single_point(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     value_buffer,  # type: typing.List[float]
 ):
     # type: (...) -> None
@@ -175,7 +175,7 @@ def nx_write_signal_single_point(
 
 
 def nx_write_signal_waveform(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     timeout,  # type: float
     value_buffer,  # type: typing.List[float]
 ):
@@ -194,7 +194,7 @@ def nx_write_signal_waveform(
 
 
 def nx_write_signal_xy(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     timeout,  # type: float
     value_buffer,  # type: typing.List[float]
     timestamp_buffer,  # type: typing.List[int]
@@ -223,7 +223,7 @@ def nx_write_signal_xy(
 
 
 def nx_convert_frames_to_signals_single_point(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     frame_buffer,  # type: bytes
     value_buffer,  # type: typing.List[float]
     timestamp_buffer,  # type: typing.List[int]
@@ -249,7 +249,7 @@ def nx_convert_frames_to_signals_single_point(
 
 
 def nx_convert_signals_to_frames_single_point(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     value_buffer,  # type: typing.List[float]
     buffer,  # type: bytes
 ):
@@ -273,7 +273,7 @@ def nx_convert_signals_to_frames_single_point(
 
 
 def nx_blink(
-    interface_ref,  # type: _ctypedefs.nxSessionRef_t
+    interface_ref,  # type: int
     modifier,  # type: _enums.BlinkMode
 ):
     # type: (...) -> None
@@ -287,7 +287,7 @@ def nx_blink(
 
 
 def nx_clear(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
 ):
     # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
@@ -298,7 +298,7 @@ def nx_clear(
 
 
 def nx_connect_terminals(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     source,  # type: typing.Text
     destination,  # type: typing.Text
 ):
@@ -315,7 +315,7 @@ def nx_connect_terminals(
 
 
 def nx_disconnect_terminals(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     source,  # type: typing.Text
     destination,  # type: typing.Text
 ):
@@ -332,7 +332,7 @@ def nx_disconnect_terminals(
 
 
 def nx_flush(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
 ):
     # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
@@ -343,7 +343,7 @@ def nx_flush(
 
 
 def nx_start(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     scope,  # type: _enums.StartStopScope
 ):
     # type: (...) -> None
@@ -357,7 +357,7 @@ def nx_start(
 
 
 def nx_stop(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     scope,  # type: _enums.StartStopScope
 ):
     # type: (...) -> None
@@ -372,7 +372,7 @@ def nx_stop(
 
 def nx_system_open(
 ):
-    # type: (...) -> _ctypedefs.nxSessionRef_t
+    # type: (...) -> int
     system_ref_ctypes = _ctypedefs.nxSessionRef_t()
     result = _cfuncs.lib.nx_system_open(
         ctypes.pointer(system_ref_ctypes),
@@ -382,7 +382,7 @@ def nx_system_open(
 
 
 def nx_system_close(
-    system_ref,  # type: _ctypedefs.nxSessionRef_t
+    system_ref,  # type: int
 ):
     # type: (...) -> None
     system_ref_ctypes = _ctypedefs.nxSessionRef_t(system_ref)
@@ -393,7 +393,7 @@ def nx_system_close(
 
 
 def nx_wait(
-    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    session_ref,  # type: int
     condition,  # type: int
     param_in,  # type: int
     timeout,  # type: float
@@ -418,7 +418,7 @@ def nx_wait(
 def nxdb_open_database(
     database_name,  # type: typing.Text
 ):
-    # type: (...) -> _ctypedefs.nxDatabaseRef_t
+    # type: (...) -> int
     database_name_ctypes = _ctypedefs.char_p(database_name.encode('ascii'))
     database_ref_ctypes = _ctypedefs.nxDatabaseRef_t()
     result = _cfuncs.lib.nxdb_open_database(
@@ -430,7 +430,7 @@ def nxdb_open_database(
 
 
 def nxdb_close_database(
-    database_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    database_ref,  # type: int
     close_all_refs,  # type: bool
 ):
     # type: (...) -> None
@@ -444,11 +444,11 @@ def nxdb_close_database(
 
 
 def nxdb_create_object(
-    parent_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    parent_object_ref,  # type: int
     object_class,  # type: _enums.ObjectClass
     object_name,  # type: typing.Text
 ):
-    # type: (...) -> _ctypedefs.nxDatabaseRef_t
+    # type: (...) -> int
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
     object_class_ctypes = _ctypedefs.u32(object_class.value)
     object_name_ctypes = _ctypedefs.char_p(object_name.encode('ascii'))
@@ -464,11 +464,11 @@ def nxdb_create_object(
 
 
 def nxdb_find_object(
-    parent_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    parent_object_ref,  # type: int
     object_class,  # type: _enums.ObjectClass
     object_name,  # type: typing.Text
 ):
-    # type: (...) -> _ctypedefs.nxDatabaseRef_t
+    # type: (...) -> int
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
     object_class_ctypes = _ctypedefs.u32(object_class.value)
     object_name_ctypes = _ctypedefs.char_p(object_name.encode('ascii'))
@@ -484,7 +484,7 @@ def nxdb_find_object(
 
 
 def nxdb_delete_object(
-    db_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    db_object_ref,  # type: int
 ):
     # type: (...) -> None
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
@@ -495,7 +495,7 @@ def nxdb_delete_object(
 
 
 def nxdb_save_database(
-    database_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    database_ref,  # type: int
     db_filepath,  # type: typing.Text
 ):
     # type: (...) -> None
@@ -509,7 +509,7 @@ def nxdb_save_database(
 
 
 def nxdb_get_property_size(
-    db_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    db_object_ref,  # type: int
     property_id,  # type: int
 ):
     # type: (...) -> int
@@ -526,7 +526,7 @@ def nxdb_get_property_size(
 
 
 def nxdb_get_dbc_attribute_size(
-    db_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    db_object_ref,  # type: int
     mode,  # type: int
     attribute_name,  # type: typing.Text
 ):
@@ -546,7 +546,7 @@ def nxdb_get_dbc_attribute_size(
 
 
 def nxdb_get_dbc_attribute(
-    db_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    db_object_ref,  # type: int
     mode,  # type: int
     attribute_name,  # type: typing.Text
     attribute_text_size,  # type: int
@@ -572,8 +572,8 @@ def nxdb_get_dbc_attribute(
 
 
 def nxdb_merge(
-    target_cluster_ref,  # type: _ctypedefs.nxDatabaseRef_t
-    source_obj_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    target_cluster_ref,  # type: int
+    source_obj_ref,  # type: int
     copy_mode,  # type: int
     prefix,  # type: typing.Text
     wait_for_complete,  # type: bool

@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
+import typing  # NOQA: F401
 import warnings
 
 from nixnet import _funcs
@@ -18,6 +19,7 @@ from nixnet.system import _interface
 class System(object):
 
     def __init__(self):
+        # type: () -> None
         self._handle = None  # To satisfy `__del__` in case nx_system_open throws
         self._handle = _funcs.nx_system_open()
 
@@ -36,7 +38,7 @@ class System(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self._handle == other._handle
+            return self._handle == typing.cast(System, other._handle)
         return False
 
     def __ne__(self, other):
@@ -46,9 +48,11 @@ class System(object):
         return hash(self._handle)
 
     def __repr__(self):
+        # type: () -> typing.Text
         return 'System(handle={0})'.format(self._handle)
 
     def close(self):
+        # type: () -> None
         if self._handle is None:
             warnings.warn(
                 'Attempting to close NI-XNET system but system was already '
@@ -61,31 +65,37 @@ class System(object):
 
     @property
     def dev_refs(self):
+        # type: () -> typing.Iterable[_device.Device]
         for ref in _props.get_system_dev_refs(self._handle):
             yield _device.Device(ref)
 
     @property
     def intf_refs(self):
+        # type: () -> typing.Iterable[_interface.Interface]
         for ref in _props.get_system_intf_refs(self._handle):
             yield _interface.Interface(ref)
 
     @property
     def intf_refs_can(self):
+        # type: () -> typing.Iterable[_interface.Interface]
         for ref in _props.get_system_intf_refs_can(self._handle):
             yield _interface.Interface(ref)
 
     @property
     def intf_refs_flex_ray(self):
+        # type: () -> typing.Iterable[_interface.Interface]
         for ref in _props.get_system_intf_refs_flex_ray(self._handle):
             yield _interface.Interface(ref)
 
     @property
     def intf_refs_lin(self):
+        # type: () -> typing.Iterable[_interface.Interface]
         for ref in _props.get_system_intf_refs_lin(self._handle):
             yield _interface.Interface(ref)
 
     @property
     def ver(self):
+        # type: () -> types.DriverVersion
         return types.DriverVersion(
             self._ver_major,
             self._ver_minor,
@@ -95,33 +105,41 @@ class System(object):
 
     @property
     def _ver_build(self):
+        # type: () -> int
         return _props.get_system_ver_build(self._handle)
 
     @property
     def _ver_major(self):
+        # type: () -> int
         return _props.get_system_ver_major(self._handle)
 
     @property
     def _ver_minor(self):
+        # type: () -> int
         return _props.get_system_ver_minor(self._handle)
 
     @property
     def _ver_phase(self):
+        # type: () -> constants.Phase
         return constants.Phase(_props.get_system_ver_phase(self._handle))
 
     @property
     def _ver_update(self):
+        # type: () -> int
         return _props.get_system_ver_update(self._handle)
 
     @property
     def cdaq_pkt_time(self):
+        # type: () -> float
         return _props.get_system_cdaq_pkt_time(self._handle)
 
     @cdaq_pkt_time.setter
     def cdaq_pkt_time(self, value):
+        # type: (float) -> None
         _props.set_system_cdaq_pkt_time(self._handle, value)
 
     @property
     def intf_refs_all(self):
+        # type: () -> typing.Iterable[_interface.Interface]
         for ref in _props.get_system_intf_refs_all(self._handle):
             yield _interface.Interface(ref)

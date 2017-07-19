@@ -66,7 +66,7 @@ def test_unknown_warning():
         _errors.check_for_error(error_code)
     assert len(record) == 1
     assert record[0].message.error_code == error_code
-    assert record[0].message.error_type == _enums.Err.INTERNAL_ERROR
+    assert record[0].message.error_type is None
     assert record[0].message.args == ('Warning 201232 occurred.\n\n', )
 
 
