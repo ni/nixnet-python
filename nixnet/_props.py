@@ -286,7 +286,7 @@ def get_session_intf_name(
 def get_session_intf_out_strm_list(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_ref_array(
         ref,
         _cconsts.NX_PROP_SESSION_INTF_OUT_STRM_LIST,
@@ -295,7 +295,7 @@ def get_session_intf_out_strm_list(
 
 def set_session_intf_out_strm_list(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_session_ref_array(
@@ -496,7 +496,7 @@ def set_session_intf_can_tcvr_type(
 def get_session_intf_can_out_strm_list_by_id(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_u32_array(
         ref,
         _cconsts.NX_PROP_SESSION_INTF_CAN_OUT_STRM_LIST_BY_ID,
@@ -505,7 +505,7 @@ def get_session_intf_can_out_strm_list_by_id(
 
 def set_session_intf_can_out_strm_list_by_id(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_session_u32_array(
@@ -1150,7 +1150,7 @@ def set_session_intf_flex_ray_sym_to_in_strm(
 def get_session_intf_flex_ray_sync_ch_a_even(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_u32_array(
         ref,
         _cconsts.NX_PROP_SESSION_INTF_FLEX_RAY_SYNC_CH_A_EVEN,
@@ -1160,7 +1160,7 @@ def get_session_intf_flex_ray_sync_ch_a_even(
 def get_session_intf_flex_ray_sync_ch_a_odd(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_u32_array(
         ref,
         _cconsts.NX_PROP_SESSION_INTF_FLEX_RAY_SYNC_CH_A_ODD,
@@ -1170,7 +1170,7 @@ def get_session_intf_flex_ray_sync_ch_a_odd(
 def get_session_intf_flex_ray_sync_ch_b_even(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_u32_array(
         ref,
         _cconsts.NX_PROP_SESSION_INTF_FLEX_RAY_SYNC_CH_B_EVEN,
@@ -1180,7 +1180,7 @@ def get_session_intf_flex_ray_sync_ch_b_even(
 def get_session_intf_flex_ray_sync_ch_b_odd(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_u32_array(
         ref,
         _cconsts.NX_PROP_SESSION_INTF_FLEX_RAY_SYNC_CH_B_ODD,
@@ -1454,7 +1454,7 @@ def set_session_intf_lin_alw_start_wo_bus_pwr(
 def get_session_intf_lino_str_slv_rsp_lst_by_nad(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_u32_array(
         ref,
         _cconsts.NX_PROP_SESSION_INTF_LINO_STR_SLV_RSP_LST_BY_NAD,
@@ -1463,7 +1463,7 @@ def get_session_intf_lino_str_slv_rsp_lst_by_nad(
 
 def set_session_intf_lino_str_slv_rsp_lst_by_nad(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_session_u32_array(
@@ -2012,7 +2012,7 @@ def set_session_j1939_addr_filter(
 def get_system_dev_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_ref_array(
         ref,
         _cconsts.NX_PROP_SYS_DEV_REFS,
@@ -2022,7 +2022,7 @@ def get_system_dev_refs(
 def get_system_intf_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_ref_array(
         ref,
         _cconsts.NX_PROP_SYS_INTF_REFS,
@@ -2032,7 +2032,7 @@ def get_system_intf_refs(
 def get_system_intf_refs_can(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_ref_array(
         ref,
         _cconsts.NX_PROP_SYS_INTF_REFS_CAN,
@@ -2042,7 +2042,7 @@ def get_system_intf_refs_can(
 def get_system_intf_refs_flex_ray(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_ref_array(
         ref,
         _cconsts.NX_PROP_SYS_INTF_REFS_FLEX_RAY,
@@ -2052,7 +2052,7 @@ def get_system_intf_refs_flex_ray(
 def get_system_intf_refs_lin(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_ref_array(
         ref,
         _cconsts.NX_PROP_SYS_INTF_REFS_LIN,
@@ -2134,7 +2134,7 @@ def set_system_cdaq_pkt_time(
 def get_system_intf_refs_all(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_ref_array(
         ref,
         _cconsts.NX_PROP_SYS_INTF_REFS_ALL,
@@ -2154,7 +2154,7 @@ def get_device_form_fac(
 def get_device_intf_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_ref_array(
         ref,
         _cconsts.NX_PROP_DEV_INTF_REFS,
@@ -2224,7 +2224,7 @@ def get_device_num_ports_all(
 def get_device_intf_refs_all(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_session_ref_array(
         ref,
         _cconsts.NX_PROP_DEV_INTF_REFS_ALL,
@@ -2374,7 +2374,7 @@ def get_database_name(
 def get_database_clst_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_DATABASE_CLST_REFS,
@@ -2492,7 +2492,7 @@ def get_cluster_database_ref(
 def get_cluster_ecu_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_CLST_ECU_REFS,
@@ -2502,7 +2502,7 @@ def get_cluster_ecu_refs(
 def get_cluster_frm_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_CLST_FRM_REFS,
@@ -2534,7 +2534,7 @@ def set_cluster_name(
 def get_cluster_pdu_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_CLST_PDU_REFS,
@@ -2576,7 +2576,7 @@ def set_cluster_protocol(
 def get_cluster_sig_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_CLST_SIG_REFS,
@@ -3382,7 +3382,7 @@ def set_cluster_flex_ray_use_wakeup(
 def get_cluster_lin_schedules(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_CLST_LIN_SCHEDULES,
@@ -3532,7 +3532,7 @@ def get_frame_config_status(
 def get_frame_default_payload(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_u8_array(
         ref,
         _cconsts.NX_PROP_FRM_DEFAULT_PAYLOAD,
@@ -3541,7 +3541,7 @@ def get_frame_default_payload(
 
 def set_frame_default_payload(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_u8_array(
@@ -3620,7 +3620,7 @@ def set_frame_payload_len(
 def get_frame_sig_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_FRM_SIG_REFS,
@@ -3860,7 +3860,7 @@ def get_frame_flex_ray_in_cyc_rep_enabled(
 def get_frame_flex_ray_in_cyc_rep_i_ds(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_u32_array(
         ref,
         _cconsts.NX_PROP_FRM_FLEX_RAY_IN_CYC_REP_I_DS,
@@ -3869,7 +3869,7 @@ def get_frame_flex_ray_in_cyc_rep_i_ds(
 
 def set_frame_flex_ray_in_cyc_rep_i_ds(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_u32_array(
@@ -3882,7 +3882,7 @@ def set_frame_flex_ray_in_cyc_rep_i_ds(
 def get_frame_flex_ray_in_cyc_rep_ch_assigns(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_u32_array(
         ref,
         _cconsts.NX_PROP_FRM_FLEX_RAY_IN_CYC_REP_CH_ASSIGNS,
@@ -3891,7 +3891,7 @@ def get_frame_flex_ray_in_cyc_rep_ch_assigns(
 
 def set_frame_flex_ray_in_cyc_rep_ch_assigns(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_u32_array(
@@ -3934,7 +3934,7 @@ def get_frame_mux_data_mux_sig_ref(
 def get_frame_mux_static_sig_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_FRM_MUX_STATIC_SIG_REFS,
@@ -3944,7 +3944,7 @@ def get_frame_mux_static_sig_refs(
 def get_frame_mux_subframe_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_FRM_MUX_SUBFRAME_REFS,
@@ -3954,7 +3954,7 @@ def get_frame_mux_subframe_refs(
 def get_frame_pdu_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_FRM_PDU_REFS,
@@ -3963,7 +3963,7 @@ def get_frame_pdu_refs(
 
 def set_frame_pdu_refs(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_ref_array(
@@ -3976,7 +3976,7 @@ def set_frame_pdu_refs(
 def get_frame_pdu_start_bits(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_u32_array(
         ref,
         _cconsts.NX_PROP_FRM_PDU_START_BITS,
@@ -3985,7 +3985,7 @@ def get_frame_pdu_start_bits(
 
 def set_frame_pdu_start_bits(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_u32_array(
@@ -3998,7 +3998,7 @@ def set_frame_pdu_start_bits(
 def get_frame_pdu_update_bits(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_u32_array(
         ref,
         _cconsts.NX_PROP_FRM_PDU_UPDATE_BITS,
@@ -4007,7 +4007,7 @@ def get_frame_pdu_update_bits(
 
 def set_frame_pdu_update_bits(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_u32_array(
@@ -4074,7 +4074,7 @@ def get_pdu_cluster_ref(
 def get_pdu_default_payload(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_u8_array(
         ref,
         _cconsts.NX_PROP_PDU_DEFAULT_PAYLOAD,
@@ -4083,7 +4083,7 @@ def get_pdu_default_payload(
 
 def set_pdu_default_payload(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_u8_array(
@@ -4128,7 +4128,7 @@ def get_pdu_config_status(
 def get_pdu_frm_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_PDU_FRM_REFS,
@@ -4182,7 +4182,7 @@ def set_pdu_payload_len(
 def get_pdu_sig_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_PDU_SIG_REFS,
@@ -4212,7 +4212,7 @@ def get_pdu_mux_data_mux_sig_ref(
 def get_pdu_mux_static_sig_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_PDU_MUX_STATIC_SIG_REFS,
@@ -4222,7 +4222,7 @@ def get_pdu_mux_static_sig_refs(
 def get_pdu_mux_subframe_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_PDU_MUX_SUBFRAME_REFS,
@@ -4598,7 +4598,7 @@ def get_subframe_config_status(
 def get_subframe_dyn_sig_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_SUBFRM_DYN_SIG_REFS,
@@ -4746,7 +4746,7 @@ def set_ecu_name(
 def get_ecu_rx_frm_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_ECU_RX_FRM_REFS,
@@ -4755,7 +4755,7 @@ def get_ecu_rx_frm_refs(
 
 def set_ecu_rx_frm_refs(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_ref_array(
@@ -4768,7 +4768,7 @@ def set_ecu_rx_frm_refs(
 def get_ecu_tx_frm_refs(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_ECU_TX_FRM_REFS,
@@ -4777,7 +4777,7 @@ def get_ecu_tx_frm_refs(
 
 def set_ecu_tx_frm_refs(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_ref_array(
@@ -5138,7 +5138,7 @@ def get_lin_sched_config_status(
 def get_lin_sched_entries(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_LIN_SCHED_ENTRIES,
@@ -5280,7 +5280,7 @@ def set_lin_sched_entry_event_id(
 def get_lin_sched_entry_frames(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_ref_array(
         ref,
         _cconsts.NX_PROP_LIN_SCHED_ENTRY_FRAMES,
@@ -5289,7 +5289,7 @@ def get_lin_sched_entry_frames(
 
 def set_lin_sched_entry_frames(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_ref_array(
@@ -5366,7 +5366,7 @@ def set_lin_sched_entry_type(
 def get_lin_sched_entry_nc_ff_data_bytes(
     ref,  # type: int
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.List[int]
     return _cprops.get_database_u8_array(
         ref,
         _cconsts.NX_PROP_LIN_SCHED_ENTRY_NC_FF_DATA_BYTES,
@@ -5375,7 +5375,7 @@ def get_lin_sched_entry_nc_ff_data_bytes(
 
 def set_lin_sched_entry_nc_ff_data_bytes(
     ref,  # type: int
-    value,  # type: int
+    value,  # type: typing.List[int]
 ):
     # type: (...) -> None
     _cprops.set_database_u8_array(
