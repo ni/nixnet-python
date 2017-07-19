@@ -13,7 +13,7 @@ node('xnetPython') {
 		stage('Testing'){
 			// Run tox with the tox-integration.ini file in the root of the repository
 			echo "Running Tox integration script"
-			sh 'tox -c tox-integration.ini'
+			bat 'tox -c tox-integration.ini'
 		}
 		
 	}
