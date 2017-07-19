@@ -97,8 +97,8 @@ def nx_read_frame(
     timeout
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    buffer_ctypes = (_ctypedefs.char * bytes_to_read)()
-    size_of_buffer_ctypes = _ctypedefs.u32(_ctypedefs.char.BYTES * bytes_to_read)
+    buffer_ctypes = (_ctypedefs.byte * bytes_to_read)()
+    size_of_buffer_ctypes = _ctypedefs.u32(_ctypedefs.byte.BYTES * bytes_to_read)
     number_of_bytes_returned_ctypes = _ctypedefs.u32()
     timeout_ctypes = _ctypedefs.f64(timeout)
     result = _cfuncs.lib.nx_read_frame(
@@ -134,17 +134,18 @@ def nx_read_signal_single_point(
 def nx_write_frame(
     session_ref,
     buffer,
-    timeout
+    timeout,
 ):
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    buffer_ctypes = (_ctypedefs.char * len(buffer))(*buffer)
-    size_of_buffer_ctypes = _ctypedefs.u32(_ctypedefs.char.BYTES * len(buffer))
+    buffer_ctypes = (_ctypedefs.byte * len(buffer))(*buffer)
+    size_of_buffer_ctypes = _ctypedefs.u32(len(buffer) * _ctypedefs.byte.BYTES)
     timeout_ctypes = _ctypedefs.f64(timeout)
     result = _cfuncs.lib.nx_write_frame(
         session_ref_ctypes,
         buffer_ctypes,
         size_of_buffer_ctypes,
-        timeout_ctypes)
+        timeout_ctypes,
+    )
     _errors.check_for_error(result.value)
 
 
