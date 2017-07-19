@@ -3,20 +3,23 @@ from __future__ import division
 from __future__ import print_function
 from __future__ import unicode_literals
 
-import ctypes
+import ctypes  # type: ignore
+import typing  # NOQA: F401
 
 from nixnet import _cfuncs
 from nixnet import _ctypedefs
+from nixnet import _enums  # NOQA: F401
 from nixnet import _errors
 
 
 def nx_create_session(
-    database_name,
-    cluster_name,
-    list,
-    interface,
-    mode,
+    database_name,  # type: typing.Text
+    cluster_name,  # type: typing.Text
+    list,  # type: typing.Text
+    interface,  # type: typing.Text
+    mode,  # type: _enums.CreateSessionMode
 ):
+    # type: (...) -> _ctypedefs.nxSessionRef_t
     database_name_ctypes = _ctypedefs.char_p(database_name.encode('ascii'))
     cluster_name_ctypes = _ctypedefs.char_p(cluster_name.encode('ascii'))
     list_ctypes = _ctypedefs.char_p(list.encode('ascii'))
@@ -36,12 +39,13 @@ def nx_create_session(
 
 
 def nx_create_session_by_ref(
-    database_refs,
-    interface,
-    mode,
+    database_refs,  # type: typing.List[_ctypedefs.nxDatabaseRef_t]
+    interface,  # type: typing.Text
+    mode,  # type: _enums.CreateSessionMode
 ):
+    # type: (...) -> _ctypedefs.nxSessionRef_t
     size_of_database_refs_ctypes = _ctypedefs.u32(len(database_refs) * _ctypedefs.nxDatabaseRef_t.BYTES)
-    database_refs_ctypes = (_ctypedefs.nxDatabaseRef_t * len(database_refs))(*database_refs)
+    database_refs_ctypes = (_ctypedefs.nxDatabaseRef_t * len(database_refs))(*database_refs)  # type: ignore
     interface_ctypes = _ctypedefs.char_p(interface.encode('ascii'))
     mode_ctypes = _ctypedefs.u32(mode.value)
     session_ref_ctypes = _ctypedefs.nxSessionRef_t()
@@ -57,9 +61,10 @@ def nx_create_session_by_ref(
 
 
 def nx_get_property_size(
-    session_ref,
-    property_id,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    property_id,  # type: int
 ):
+    # type: (...) -> int
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     property_id_ctypes = _ctypedefs.u32(property_id)
     property_size_ctypes = _ctypedefs.u32()
@@ -73,10 +78,11 @@ def nx_get_property_size(
 
 
 def nx_get_sub_property_size(
-    session_ref,
-    active_index,
-    property_id,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    active_index,  # type: int
+    property_id,  # type: int
 ):
+    # type: (...) -> int
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     active_index_ctypes = _ctypedefs.u32(active_index)
     property_id_ctypes = _ctypedefs.u32(property_id)
@@ -92,12 +98,13 @@ def nx_get_sub_property_size(
 
 
 def nx_read_frame(
-    session_ref,
-    bytes_to_read,
-    timeout
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    bytes_to_read,  # type: int
+    timeout,  # type: float
 ):
+    # type: (...) -> typing.Tuple[bytes, int]
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    buffer_ctypes = (_ctypedefs.byte * bytes_to_read)()
+    buffer_ctypes = (_ctypedefs.byte * bytes_to_read)()  # type: ignore
     size_of_buffer_ctypes = _ctypedefs.u32(_ctypedefs.byte.BYTES * bytes_to_read)
     number_of_bytes_returned_ctypes = _ctypedefs.u32()
     timeout_ctypes = _ctypedefs.f64(timeout)
@@ -112,13 +119,14 @@ def nx_read_frame(
 
 
 def nx_read_signal_single_point(
-    session_ref,
-    num_signals,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    num_signals,  # type: int
 ):
+    # type: (...) -> typing.Tuple[typing.List[int], typing.List[float]]
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    value_buffer_ctypes = (_ctypedefs.f64 * num_signals)()
+    value_buffer_ctypes = (_ctypedefs.f64 * num_signals)()  # type: ignore
     size_of_value_buffer_ctypes = _ctypedefs.u32(_ctypedefs.f64.BYTES * num_signals)
-    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * num_signals)()
+    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * num_signals)()  # type: ignore
     size_of_timestamp_buffer_ctypes = _ctypedefs.u32(_ctypedefs.nxTimestamp_t.BYTES * num_signals)
     result = _cfuncs.lib.nx_read_signal_single_point(
         session_ref_ctypes,
@@ -132,12 +140,13 @@ def nx_read_signal_single_point(
 
 
 def nx_write_frame(
-    session_ref,
-    buffer,
-    timeout,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    buffer,  # type: typing.Any
+    timeout,  # type: float
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    buffer_ctypes = (_ctypedefs.byte * len(buffer))(*buffer)
+    buffer_ctypes = (_ctypedefs.byte * len(buffer))(*buffer)  # type: ignore
     size_of_buffer_ctypes = _ctypedefs.u32(len(buffer) * _ctypedefs.byte.BYTES)
     timeout_ctypes = _ctypedefs.f64(timeout)
     result = _cfuncs.lib.nx_write_frame(
@@ -150,11 +159,12 @@ def nx_write_frame(
 
 
 def nx_write_signal_single_point(
-    session_ref,
-    value_buffer,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    value_buffer,  # type: typing.List[float]
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)  # type: ignore
     size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
     result = _cfuncs.lib.nx_write_signal_single_point(
         session_ref_ctypes,
@@ -165,13 +175,14 @@ def nx_write_signal_single_point(
 
 
 def nx_write_signal_waveform(
-    session_ref,
-    timeout,
-    value_buffer,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    timeout,  # type: float
+    value_buffer,  # type: typing.List[float]
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     timeout_ctypes = _ctypedefs.f64(timeout)
-    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)  # type: ignore
     size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
     result = _cfuncs.lib.nx_write_signal_waveform(
         session_ref_ctypes,
@@ -183,19 +194,20 @@ def nx_write_signal_waveform(
 
 
 def nx_write_signal_xy(
-    session_ref,
-    timeout,
-    value_buffer,
-    timestamp_buffer,
-    num_pairs_buffer,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    timeout,  # type: float
+    value_buffer,  # type: typing.List[float]
+    timestamp_buffer,  # type: typing.List[int]
+    num_pairs_buffer,  # type: typing.List[int]
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     timeout_ctypes = _ctypedefs.f64(timeout)
-    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)  # type: ignore
     size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
-    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * len(timestamp_buffer))(*timestamp_buffer)
+    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * len(timestamp_buffer))(*timestamp_buffer)  # type: ignore
     size_of_timestamp_buffer_ctypes = _ctypedefs.u32(len(timestamp_buffer) * _ctypedefs.nxTimestamp_t.BYTES)
-    num_pairs_buffer_ctypes = (_ctypedefs.u32 * len(num_pairs_buffer))(*num_pairs_buffer)
+    num_pairs_buffer_ctypes = (_ctypedefs.u32 * len(num_pairs_buffer))(*num_pairs_buffer)  # type: ignore
     size_of_num_pairs_buffer_ctypes = _ctypedefs.u32(len(num_pairs_buffer) * _ctypedefs.u32.BYTES)
     result = _cfuncs.lib.nx_write_signal_xy(
         session_ref_ctypes,
@@ -211,17 +223,18 @@ def nx_write_signal_xy(
 
 
 def nx_convert_frames_to_signals_single_point(
-    session_ref,
-    frame_buffer,
-    value_buffer,
-    timestamp_buffer,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    frame_buffer,  # type: bytes
+    value_buffer,  # type: typing.List[float]
+    timestamp_buffer,  # type: typing.List[int]
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    frame_buffer_ctypes = (_ctypedefs.byte * len(frame_buffer))(*frame_buffer)
+    frame_buffer_ctypes = (_ctypedefs.byte * len(frame_buffer))(*frame_buffer)  # type: ignore
     size_of_frame_buffer_ctypes = _ctypedefs.u32(len(frame_buffer) * _ctypedefs.byte.BYTES)
-    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)  # type: ignore
     size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
-    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * len(timestamp_buffer))(*timestamp_buffer)
+    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * len(timestamp_buffer))(*timestamp_buffer)  # type: ignore
     size_of_timestamp_buffer_ctypes = _ctypedefs.u32(len(timestamp_buffer) * _ctypedefs.nxTimestamp_t.BYTES)
     result = _cfuncs.lib.nx_convert_frames_to_signals_single_point(
         session_ref_ctypes,
@@ -236,14 +249,15 @@ def nx_convert_frames_to_signals_single_point(
 
 
 def nx_convert_signals_to_frames_single_point(
-    session_ref,
-    value_buffer,
-    buffer,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    value_buffer,  # type: typing.List[float]
+    buffer,  # type: bytes
 ):
+    # type: (...) -> int
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
-    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)
+    value_buffer_ctypes = (_ctypedefs.f64 * len(value_buffer))(*value_buffer)  # type: ignore
     size_of_value_buffer_ctypes = _ctypedefs.u32(len(value_buffer) * _ctypedefs.f64.BYTES)
-    buffer_ctypes = (_ctypedefs.byte * len(buffer))(*buffer)
+    buffer_ctypes = (_ctypedefs.byte * len(buffer))(*buffer)  # type: ignore
     size_of_buffer_ctypes = _ctypedefs.u32(len(buffer) * _ctypedefs.byte.BYTES)
     number_of_bytes_returned_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nx_convert_signals_to_frames_single_point(
@@ -259,9 +273,10 @@ def nx_convert_signals_to_frames_single_point(
 
 
 def nx_blink(
-    interface_ref,
-    modifier,
+    interface_ref,  # type: _ctypedefs.nxSessionRef_t
+    modifier,  # type: _enums.BlinkMode
 ):
+    # type: (...) -> None
     interface_ref_ctypes = _ctypedefs.nxSessionRef_t(interface_ref)
     modifier_ctypes = _ctypedefs.u32(modifier.value)
     result = _cfuncs.lib.nx_blink(
@@ -272,8 +287,9 @@ def nx_blink(
 
 
 def nx_clear(
-    session_ref,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     result = _cfuncs.lib.nx_clear(
         session_ref_ctypes,
@@ -282,10 +298,11 @@ def nx_clear(
 
 
 def nx_connect_terminals(
-    session_ref,
-    source,
-    destination,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    source,  # type: typing.Text
+    destination,  # type: typing.Text
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     source_ctypes = _ctypedefs.char_p(source.encode('ascii'))
     destination_ctypes = _ctypedefs.char_p(destination.encode('ascii'))
@@ -298,10 +315,11 @@ def nx_connect_terminals(
 
 
 def nx_disconnect_terminals(
-    session_ref,
-    source,
-    destination,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    source,  # type: typing.Text
+    destination,  # type: typing.Text
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     source_ctypes = _ctypedefs.char_p(source.encode('ascii'))
     destination_ctypes = _ctypedefs.char_p(destination.encode('ascii'))
@@ -314,8 +332,9 @@ def nx_disconnect_terminals(
 
 
 def nx_flush(
-    session_ref,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     result = _cfuncs.lib.nx_flush(
         session_ref_ctypes,
@@ -324,9 +343,10 @@ def nx_flush(
 
 
 def nx_start(
-    session_ref,
-    scope,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    scope,  # type: _enums.StartStopScope
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     scope_ctypes = _ctypedefs.u32(scope.value)
     result = _cfuncs.lib.nx_start(
@@ -337,9 +357,10 @@ def nx_start(
 
 
 def nx_stop(
-    session_ref,
-    scope,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    scope,  # type: _enums.StartStopScope
 ):
+    # type: (...) -> None
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     scope_ctypes = _ctypedefs.u32(scope.value)
     result = _cfuncs.lib.nx_stop(
@@ -351,6 +372,7 @@ def nx_stop(
 
 def nx_system_open(
 ):
+    # type: (...) -> _ctypedefs.nxSessionRef_t
     system_ref_ctypes = _ctypedefs.nxSessionRef_t()
     result = _cfuncs.lib.nx_system_open(
         ctypes.pointer(system_ref_ctypes),
@@ -360,8 +382,9 @@ def nx_system_open(
 
 
 def nx_system_close(
-    system_ref,
+    system_ref,  # type: _ctypedefs.nxSessionRef_t
 ):
+    # type: (...) -> None
     system_ref_ctypes = _ctypedefs.nxSessionRef_t(system_ref)
     result = _cfuncs.lib.nx_system_close(
         system_ref_ctypes,
@@ -370,11 +393,12 @@ def nx_system_close(
 
 
 def nx_wait(
-    session_ref,
-    condition,
-    param_in,
-    timeout,
+    session_ref,  # type: _ctypedefs.nxSessionRef_t
+    condition,  # type: int
+    param_in,  # type: int
+    timeout,  # type: float
 ):
+    # type: (...) -> int
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     condition_ctypes = _ctypedefs.u32(condition)
     param_in_ctypes = _ctypedefs.u32(param_in)
@@ -392,8 +416,9 @@ def nx_wait(
 
 
 def nxdb_open_database(
-    database_name,
+    database_name,  # type: typing.Text
 ):
+    # type: (...) -> _ctypedefs.nxDatabaseRef_t
     database_name_ctypes = _ctypedefs.char_p(database_name.encode('ascii'))
     database_ref_ctypes = _ctypedefs.nxDatabaseRef_t()
     result = _cfuncs.lib.nxdb_open_database(
@@ -405,9 +430,10 @@ def nxdb_open_database(
 
 
 def nxdb_close_database(
-    database_ref,
-    close_all_refs,
+    database_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    close_all_refs,  # type: bool
 ):
+    # type: (...) -> None
     database_ref_ctypes = _ctypedefs.nxDatabaseRef_t(database_ref)
     close_all_refs_ctypes = _ctypedefs.bool32(close_all_refs)
     result = _cfuncs.lib.nxdb_close_database(
@@ -418,10 +444,11 @@ def nxdb_close_database(
 
 
 def nxdb_create_object(
-    parent_object_ref,
-    object_class,
-    object_name,
+    parent_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    object_class,  # type: _enums.ObjectClass
+    object_name,  # type: typing.Text
 ):
+    # type: (...) -> _ctypedefs.nxDatabaseRef_t
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
     object_class_ctypes = _ctypedefs.u32(object_class.value)
     object_name_ctypes = _ctypedefs.char_p(object_name.encode('ascii'))
@@ -437,10 +464,11 @@ def nxdb_create_object(
 
 
 def nxdb_find_object(
-    parent_object_ref,
-    object_class,
-    object_name,
+    parent_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    object_class,  # type: _enums.ObjectClass
+    object_name,  # type: typing.Text
 ):
+    # type: (...) -> _ctypedefs.nxDatabaseRef_t
     parent_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(parent_object_ref)
     object_class_ctypes = _ctypedefs.u32(object_class.value)
     object_name_ctypes = _ctypedefs.char_p(object_name.encode('ascii'))
@@ -456,8 +484,9 @@ def nxdb_find_object(
 
 
 def nxdb_delete_object(
-    db_object_ref,
+    db_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
 ):
+    # type: (...) -> None
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
     result = _cfuncs.lib.nxdb_delete_object(
         db_object_ref_ctypes,
@@ -466,9 +495,10 @@ def nxdb_delete_object(
 
 
 def nxdb_save_database(
-    database_ref,
-    db_filepath,
+    database_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    db_filepath,  # type: typing.Text
 ):
+    # type: (...) -> None
     database_ref_ctypes = _ctypedefs.nxDatabaseRef_t(database_ref)
     db_filepath_ctypes = _ctypedefs.char_p(db_filepath.encode('ascii'))
     result = _cfuncs.lib.nxdb_save_database(
@@ -479,9 +509,10 @@ def nxdb_save_database(
 
 
 def nxdb_get_property_size(
-    db_object_ref,
-    property_id,
+    db_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    property_id,  # type: int
 ):
+    # type: (...) -> int
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
     property_id_ctypes = _ctypedefs.u32(property_id)
     property_size_ctypes = _ctypedefs.u32()
@@ -495,10 +526,11 @@ def nxdb_get_property_size(
 
 
 def nxdb_get_dbc_attribute_size(
-    db_object_ref,
-    mode,
-    attribute_name,
+    db_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    mode,  # type: int
+    attribute_name,  # type: typing.Text
 ):
+    # type: (...) -> int
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
     mode_ctypes = _ctypedefs.u32(mode)
     attribute_name_ctypes = _ctypedefs.char_p(attribute_name.encode('ascii'))
@@ -514,12 +546,13 @@ def nxdb_get_dbc_attribute_size(
 
 
 def nxdb_get_dbc_attribute(
-    db_object_ref,
-    mode,
-    attribute_name,
-    attribute_text_size,
-    attribute_text,
+    db_object_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    mode,  # type: int
+    attribute_name,  # type: typing.Text
+    attribute_text_size,  # type: int
+    attribute_text,  # type: typing.Text
 ):
+    # type: (...) -> int
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
     mode_ctypes = _ctypedefs.u32(mode)
     attribute_name_ctypes = _ctypedefs.char_p(attribute_name.encode('ascii'))
@@ -539,12 +572,13 @@ def nxdb_get_dbc_attribute(
 
 
 def nxdb_merge(
-    target_cluster_ref,
-    source_obj_ref,
-    copy_mode,
-    prefix,
-    wait_for_complete,
+    target_cluster_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    source_obj_ref,  # type: _ctypedefs.nxDatabaseRef_t
+    copy_mode,  # type: int
+    prefix,  # type: typing.Text
+    wait_for_complete,  # type: bool
 ):
+    # type: (...) -> int
     target_cluster_ref_ctypes = _ctypedefs.nxDatabaseRef_t(target_cluster_ref)
     source_obj_ref_ctypes = _ctypedefs.nxDatabaseRef_t(source_obj_ref)
     copy_mode_ctypes = _ctypedefs.u32(copy_mode)
@@ -564,10 +598,11 @@ def nxdb_merge(
 
 
 def nxdb_add_alias(
-    database_alias,
-    database_filepath,
-    default_baud_rate,
+    database_alias,  # type: typing.Text
+    database_filepath,  # type: typing.Text
+    default_baud_rate,  # type: int
 ):
+    # type: (...) -> None
     database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
     database_filepath_ctypes = _ctypedefs.char_p(database_filepath.encode('ascii'))
     default_baud_rate_ctypes = _ctypedefs.u32(default_baud_rate)
@@ -580,10 +615,11 @@ def nxdb_add_alias(
 
 
 def nxdb_add_alias64(
-    database_alias,
-    database_filepath,
-    default_baud_rate,
+    database_alias,  # type: typing.Text
+    database_filepath,  # type: typing.Text
+    default_baud_rate,  # type: int
 ):
+    # type: (...) -> None
     database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
     database_filepath_ctypes = _ctypedefs.char_p(database_filepath.encode('ascii'))
     default_baud_rate_ctypes = _ctypedefs.u64(default_baud_rate)
@@ -596,8 +632,9 @@ def nxdb_add_alias64(
 
 
 def nxdb_remove_alias(
-    database_alias,
+    database_alias,  # type: typing.Text
 ):
+    # type: (...) -> None
     database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
     result = _cfuncs.lib.nxdb_remove_alias(
         database_alias_ctypes,
@@ -606,10 +643,11 @@ def nxdb_remove_alias(
 
 
 def nxdb_deploy(
-    ip_address,
-    database_alias,
-    wait_for_complete,
+    ip_address,  # type: typing.Text
+    database_alias,  # type: typing.Text
+    wait_for_complete,  # type: bool
 ):
+    # type: (...) -> int
     ip_address_ctypes = _ctypedefs.char_p(ip_address.encode('ascii'))
     database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
     wait_for_complete_ctypes = _ctypedefs.bool32(wait_for_complete)
@@ -625,9 +663,10 @@ def nxdb_deploy(
 
 
 def nxdb_undeploy(
-    ip_address,
-    database_alias,
+    ip_address,  # type: typing.Text
+    database_alias,  # type: typing.Text
 ):
+    # type: (...) -> None
     ip_address_ctypes = _ctypedefs.char_p(ip_address.encode('ascii'))
     database_alias_ctypes = _ctypedefs.char_p(database_alias.encode('ascii'))
     result = _cfuncs.lib.nxdb_undeploy(
