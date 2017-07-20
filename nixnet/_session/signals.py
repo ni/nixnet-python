@@ -4,6 +4,7 @@ from __future__ import print_function
 from __future__ import unicode_literals
 
 from nixnet import _funcs
+from nixnet import _props
 
 from nixnet._session import collection
 
@@ -16,6 +17,22 @@ class Signals(collection.Collection):
 
     def _create_item(self, handle, index, name):
         return Signal(handle, index, name)
+
+    @property
+    def resamp_rate(self):
+        """float: Rate used to resample frame data to/from signal data in waveforms.
+
+        This property applies only when the session mode is Signal Input
+        Waveform or Signal Output Waveform. This property is ignored for all
+        other modes.
+
+        The data type is 64-bit floating point. The units are in Hertz (samples per second).
+        """
+        return _props.get_session_resamp_rate(self._handle)
+
+    @resamp_rate.setter
+    def resamp_rate(self, value):
+        _props.set_session_resamp_rate(self._handle, value)
 
 
 class SinglePointInSignals(Signals):

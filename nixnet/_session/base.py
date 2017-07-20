@@ -444,26 +444,6 @@ class SessionBase(object):
         return _props.get_session_num_unused(self._handle)
 
     @property
-    def payld_len_max(self):
-        """int: Returns the maximum payload length of all frames in this session, expressed as bytes (0-254).
-
-        This property does not apply to Signal sessions (only Frame sessions).
-
-        For CAN Stream (Input and Output), this property depends on the XNET
-        Cluster CAN I/O Mode property. If the I/O mode is
-        `constants.CanIoMode.CAN`, this property is 8 bytes. If the I/O mode is
-        'constants.CanIoMode.CAN_FD' or 'constants.CanIoMode.CAN_FD_BRS', this
-        property is 64 bytes.
-
-        For LIN Stream (Input and Output), this property always is 8 bytes. For
-        FlexRay Stream (Input and Output), this property is the same as the XNET
-        Cluster FlexRay Payload Length Maximum property value. For Queued and
-        Single-Point (Input and Output), this is the maximum payload of all
-        frames specified in the List property.
-        """
-        return _props.get_session_payld_len_max(self._handle)
-
-    @property
     def protocol(self):
         """:any:`nixnet._enums.Protocol`: This property returns the protocol that the interface in the session uses."""
         return constants.Protocol(_props.get_session_protocol(self._handle))
@@ -530,19 +510,3 @@ class SessionBase(object):
     @queue_size.setter
     def queue_size(self, value):
         _props.set_session_queue_size(self._handle, value)
-
-    @property
-    def resamp_rate(self):
-        """float: Rate used to resample frame data to/from signal data in waveforms.
-
-        This property applies only when the session mode is Signal Input
-        Waveform or Signal Output Waveform. This property is ignored for all
-        other modes.
-
-        The data type is 64-bit floating point. The units are in Hertz (samples per second).
-        """
-        return _props.get_session_resamp_rate(self._handle)
-
-    @resamp_rate.setter
-    def resamp_rate(self, value):
-        _props.set_session_resamp_rate(self._handle, value)
