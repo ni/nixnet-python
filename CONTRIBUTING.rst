@@ -44,19 +44,23 @@ the following minimum requirements:
   - Machine has a supported version of CPython or PyPy installed.
   - **TODO** Document required hardware and system setup.
 
-To run the **nixnet** unit tests in a specific version of Python, run
-the following command in the root of the distribution::
-
-  $ <Python executable> setup.py test
-
-To run the unit tests in all Python interpreters supported by **nixnet**,
-run the following commands in the root of the distribution::
+**nixnet** relies on `tox <http://tox.readthedocs.io>`_ and `pytest <https://docs.pytest.org/en/latest/usage.html>`_ for testing
 
   $ pip install tox
-  $ tox
 
-This requires you to have all the Python interpreters supported by
-**nixnet** installed on your machine.
+To run the tests::
+
+  $ # Unit tests:
+  $ tox
+  $ # Integration tests:
+  $ tox -c tox-integration.ini -- --nixnet-in-interface CAN1 --nixnet-out-interface CAN2
+
+Examples for debugging failures::
+
+  $ # Only run tests with test_frames in the name; under python3
+  $ tox py3-test -- -k test_frames
+  $ # Drop into PDB on first failure and quit when done
+  $ tox py3-test -- -x --pdb
 
 Developer Certificate of Origin (DCO)
 -------------------------------------
