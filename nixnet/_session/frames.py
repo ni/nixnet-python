@@ -26,19 +26,19 @@ class Frames(collection.Collection):
     def payld_len_max(self):
         """int: Returns the maximum payload length of all frames in this session, expressed as bytes (0-254).
 
-        This property does not apply to Signal sessions (only Frame sessions).
-
         For CAN Stream (Input and Output), this property depends on the XNET
         Cluster CAN I/O Mode property. If the I/O mode is
         `constants.CanIoMode.CAN`, this property is 8 bytes. If the I/O mode is
         'constants.CanIoMode.CAN_FD' or 'constants.CanIoMode.CAN_FD_BRS', this
         property is 64 bytes.
 
-        For LIN Stream (Input and Output), this property always is 8 bytes. For
-        FlexRay Stream (Input and Output), this property is the same as the XNET
-        Cluster FlexRay Payload Length Maximum property value. For Queued and
-        Single-Point (Input and Output), this is the maximum payload of all
-        frames specified in the List property.
+        For LIN Stream (Input and Output), this property always is 8 bytes.
+
+        For FlexRay Stream (Input and Output), this property is the same as the
+        XNET Cluster FlexRay Payload Length Maximum property value.
+
+        For Queued and Single-Point (Input and Output), this is the maximum
+        payload of all frames specified in the List property.
         """
         return _props.get_session_payld_len_max(self._handle)
 

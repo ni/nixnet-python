@@ -22,11 +22,7 @@ class Signals(collection.Collection):
     def resamp_rate(self):
         """float: Rate used to resample frame data to/from signal data in waveforms.
 
-        This property applies only when the session mode is Signal Input
-        Waveform or Signal Output Waveform. This property is ignored for all
-        other modes.
-
-        The data type is 64-bit floating point. The units are in Hertz (samples per second).
+        The units are in Hertz (samples per second).
         """
         return _props.get_session_resamp_rate(self._handle)
 
