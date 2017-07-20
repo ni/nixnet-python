@@ -100,7 +100,7 @@ The areas that are more mature include:
 **nixnet** currently supports
 
 - Windows operating system.
-- CPython 2.7, 3.4+, PyPy2, and PyPy3.
+- CPython 2.7.7+, 3.4+, PyPy2, and PyPy3.
 
 You can checkout the `issues page <https://github.com/ni/nixnet-python/issues>`_ for more details.
 
