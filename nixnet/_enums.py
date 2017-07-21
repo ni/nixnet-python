@@ -1242,6 +1242,34 @@ class IntfCanFdIsoMode(enum.Enum):
 
 
 class CanFdIsoMode(enum.Enum):
+    """CAN FD ISO MODE.
+
+    Values:
+        ISO:
+            ISO CAN FD standard (ISO standard 11898-1:2015)
+
+            In ISO CAN FD mode, for every transmitted frame, you can specify in
+            the database or frame header whether a frame must be sent in CAN
+            2.0, CAN FD, or CAN FD+BRS mode. In the frame type field of the
+            frame header, received frames indicate whether they have been sent
+            with CAN 2.0, CAN FD, or CAN FD+BRS. You cannot use the
+            Interface:CAN:Transmit I/O Mode property in ISO CAN FD mode, as the
+            frame defines the transmit mode.
+        NON_ISO:
+            non-ISO CAN FD standard (Bosch CAN FD 1.0 specification)
+
+            In Non-ISO CAN FD mode, CAN data frames are received at CAN
+            data typed frames, which is either CAN 2.0, CAN FD, or CAN FD+BRS,
+            but you cannot distinguish the standard in which the frame has been
+            transmitted.
+        ISO_LEGACY:
+            You also can set the mode to Legacy ISO mode. In this mode,
+            the behavior is the same as in Non-ISO CAN FD mode
+            (Interface:CAN:Transmit I/O Mode is working, and received frames
+            have the CAN data type). But the interface is working in ISO CAN FD
+            mode, so you can communicate with other ISO CAN FD devices. Use this
+            mode only for compatibility with existing applications.
+    """
     ISO = _cconsts.NX_CAN_FD_MODE_ISO
     NON_ISO = _cconsts.NX_CAN_FD_MODE_NON_ISO
     ISO_LEGACY = _cconsts.NX_CAN_FD_MODE_ISO_LEGACY
@@ -1312,6 +1340,7 @@ class CanLastErr(enum.Enum):
 
 
 class CaNioMode(enum.Enum):
+    """CAN IO Mode."""
     CAN = _cconsts.NX_CA_NIO_MODE_CAN
     CANFD = _cconsts.NX_CA_NIO_MODE_CAN_FD
     CANFDBRS = _cconsts.NX_CA_NIO_MODE_CAN_FD_BRS
@@ -1410,8 +1439,46 @@ class CanTermCap(enum.Enum):
 
 
 class CanTerm(enum.Enum):
-    NO = _cconsts.NX_CAN_TERM_CAP_NO
-    YES = _cconsts.NX_CAN_TERM_CAP_YES
+    '''CAN Termination.
+
+    Different CAN hardware has different termination requirements, and the OFF
+    and ON values have different meanings.
+
+    **High-Speed CAN**
+
+    High-Speed CAN networks are typically terminated on the bus itself instead
+    of within a node. However, NI-XNET allows you to configure termination
+    within the node to simplify testing. If your bus already has the correct
+    amount of termination, leave this property in the default state of Off.
+    However, if you require termination, set this property to On.
+
+    Values:
+        OFF:
+            Termination is disabled.
+        On:
+            Termination (120 Ohms) is enabled.
+
+    **Low-Speed/Fault-Tolerant CAN**
+
+    Every node on a Low-Speed CAN network requires termination for each CAN
+    data line (CAN_H and CAN_L). This configuration allows the
+    Low-Speed/Fault-Tolerant CAN port to provide fault detection and recovery.
+    Refer to Termination for more information about low-speed termination. In
+    general, if the existing network has an overall network termination of 125 Ohms
+    or less, turn on termination to enable the 4.99 kOhms option. Otherwise, you
+    should select the default 1.11 kOhms option.
+
+    Values:
+        OFF:
+            Termination is set to 1.11 kOhms.
+        ON:
+            Termination is set to 4.99 kOhms.
+
+    **Single-Wire CAN**
+
+    The ISO standard requires Single-Wire transceivers to have a 9.09 kOhms
+    resistor, and no additional configuration is supported.
+    '''
     OFF = _cconsts.NX_CAN_TERM_OFF
     ON = _cconsts.NX_CAN_TERM_ON
 
@@ -1437,6 +1504,86 @@ class AppProtocol(enum.Enum):
 
 
 class CanTcvrState(enum.Enum):
+    '''CAN Transceiver State.
+
+    Values:
+        NORMAL:
+            This state sets the transceiver to normal communication mode. If
+            the transceiver is in the Sleep mode, this performs a local wakeup
+            of the transceiver and CAN controller chip.
+        SLEEP:
+            This state sets the transceiver and CAN controller chip to Sleep
+            (or standby) mode. You can set the interface to Sleep mode only
+            while the interface is communicating. If the interface has not been
+            started, setting the transceiver to Sleep mode returns an error.
+
+            Before going to sleep, all pending transmissions are transmitted
+            onto the CAN bus. Once all pending frames have been transmitted,
+            the interface and transceiver go into Sleep (or standby) mode. Once
+            the interface enters Sleep mode, further communication is not
+            possible until a wakeup occurs.  The transceiver and CAN controller
+            wake from Sleep mode when either a local wakeup or remote wakeup
+            occurs.
+
+            A local wakeup occurs when the application sets the transceiver
+            state to either Normal or Single Wire Wakeup.
+
+            A remote wakeup occurs when a remote node transmits a CAN frame
+            (referred to as the wakeup frame). The wakeup frame wakes up the
+            NI-XNET interface transceiver and CAN controller chip. The CAN
+            controller chip does not receive or acknowledge the wakeup frame.
+            After detecting the wakeup frame and idle bus, the CAN interface
+            enters Normal mode.
+
+            When the local or remote wakeup occurs, frame transmissions resume
+            from the point at which the original Sleep mode was set.
+        SW_WAKEUP:
+            For a remote wakeup to occur for Single Wire transceivers, the node
+            that transmits the wakeup frame first must place the network into
+            the Single Wire Wakeup Transmission mode by asserting a higher
+            voltage.
+
+            This state sets a Single Wire transceiver into the Single Wire
+            Wakeup Transmission mode, which forces the Single Wire transceiver
+            to drive a higher voltage level on the network to wake up all
+            sleeping nodes. Other than this higher voltage, this mode is
+            similar to Normal mode. CAN frames can be received and transmitted
+            normally.
+
+            If you are not using a Single Wire transceiver, setting this state
+            returns an error. If your current mode is Single Wire High-Speed,
+            setting this mode returns an error because you are not allowed to
+            wake up the bus in high-speed mode.
+
+            The application controls the timing of how long the wakeup voltage
+            is driven. The application typically changes to Single Wire Wakeup
+            mode, transmits a single wakeup frame, and then returns to Normal
+            mode.
+        SW_HIGH_SPEED:
+            This state sets a Single Wire transceiver into Single Wire
+            High-Speed Communication mode. If you are not using a Single Wire
+            transceiver, setting this state returns an error.
+
+            Single Wire High-Speed Communication mode disables the
+            transceiver's internal waveshaping function, allowing the SAE J2411
+            High-Speed baud rate of 83.333 kbytes/s to be used. The
+            disadvantage versus Single Wire Normal Communication mode, which
+            allows only the SAE J2411 baud rate of 33.333 kbytes/s, is degraded
+            EMC performance. Other than the disabled waveshaping, this mode is
+            similar to Normal mode. CAN frames can be received and transmitted
+            normally.
+
+            This mode has no relationship to High-Speed transceivers. It is
+            merely a higher speed mode of the Single Wire transceiver,
+            typically used to download data when the onboard network is
+            attached to an offboard tester ECU.
+
+            The Single Wire transceiver does not support use of this mode in
+            conjunction with Sleep mode. For example, a remote wakeup cannot
+            transition from sleep to this Single Wire High-Speed mode.
+            Therefore, setting the mode to Sleep from Single Wire High-Speed
+            mode returns an error.
+    '''
     NORMAL = _cconsts.NX_CAN_TCVR_STATE_NORMAL
     SLEEP = _cconsts.NX_CAN_TCVR_STATE_SLEEP
     SW_WAKEUP = _cconsts.NX_CAN_TCVR_STATE_SW_WAKEUP
@@ -1444,6 +1591,30 @@ class CanTcvrState(enum.Enum):
 
 
 class CanTcvrType(enum.Enum):
+    '''CAN Transceiver Type
+
+    Values:
+        High-Speed (HS):
+            This configuration enables the High-Speed transceiver. This transceiver
+            supports baud rates of 40 kbaud to 1 Mbaud. When using a High-Speed
+            transceiver, you also can communicate with a CAN FD bus. Refer to NI-XNET
+            Hardware Overview to determine which CAN FD baud rates are supported.
+        Low-Speed/Fault-Tolerant (LS):
+            This configuration enables the Low-Speed/Fault-Tolerant
+            transceiver. This transceiver supports baud rates of 40-125 kbaud.
+        Single Wire (SW):
+            This configuration enables the Single Wire transceiver. This
+            transceiver supports baud rates of 33.333 kbaud and 83.333 kbaud.
+        External (EXT):
+            This configuration allows you to use an external transceiver to
+            connect to your CAN bus. Refer to the XNET Session
+            Interface:CAN:External Transceiver Config property for more
+            information.
+        Disconnect (DISC):
+            This configuration allows you to disconnect the CAN controller chip
+            from the connector. You can use this value when you physically
+            change the external transceiver.
+    '''
     HS = _cconsts.NX_CAN_TCVR_TYPE_HS
     LS = _cconsts.NX_CAN_TCVR_TYPE_LS
     SW = _cconsts.NX_CAN_TCVR_TYPE_SW
@@ -1469,12 +1640,72 @@ class LinTerm(enum.Enum):
 
 
 class OutStrmTimng(enum.Enum):
+    '''Output Stream Timing
+
+    Values:
+        IMMEDIATE:
+            Frames are dequeued from the queue and transmitted immediately to
+            the bus. The hardware transmits all frames in the queue as fast as
+            possible. There are no restrictions on frames that you use in other
+            sessions.
+
+            For replay modes, the hardware is placed into a Replay mode. In
+            this mode, the hardware evaluates the frame timestamps and attempts
+            to maintain the original transmission times as the timestamp stored
+            in the frame indicates.  The actual transmission time is based on
+            the relative time difference between the first dequeued frame and
+            the time contained in the dequeued frame.
+        REPLAY_EXCLUSIVE:
+            The hardware transmits only frames that do not appear in the list.
+            You cannot create any other output sessions. Attempting to create
+            an output session returns an error. Input sessions have no
+            restrictions.
+
+            This can be used to test an ECU when the output stream list
+            contains the frames the ECU transmits.  You can replay all frames
+            in this mode if the output stream list is unset.
+
+        REPLAY_INCLUSIVE:
+            The hardware transmits only frames that appear in the list.  You
+            can create output sessions that use frames that do not appear in
+            the Interface:Output Stream List property.  Attempting to create an
+            output session that uses a frame from the Interface:Output Stream
+            List property results in an error. Input sessions have no
+            restrictions.
+
+            This can be used to emulate an ECU when the output stream list
+            contains the frames the ECU transmits.
+    '''
     IMMEDIATE = _cconsts.NX_OUT_STRM_TIMNG_IMMEDIATE
     REPLAY_EXCLUSIVE = _cconsts.NX_OUT_STRM_TIMNG_REPLAY_EXCLUSIVE
     REPLAY_INCLUSIVE = _cconsts.NX_OUT_STRM_TIMNG_REPLAY_INCLUSIVE
 
 
 class CanPendTxOrder(enum.Enum):
+    '''Can Pending Transmit Order.
+
+    Values:
+        AS_SUBMITTED:
+            Frames are transmitted in the order that they were submitted into
+            the queue. There is no reordering of any frames, and a higher
+            priority frame may be delayed due to the transmission or
+            retransmission of a previously submitted frame. However, this mode
+            has the highest performance.
+        BY_IDENTIFIER:
+            Frames with the highest priority identifier (lower CAN ID value)
+            transmit first. The frames are stored in a priority queue sorted by
+            ID. If a frame currently being transmitted requires retransmission
+            (for example, it lost arbitration or failed with a bus error), and
+            a higher priority frame is queued in the meantime, the lower
+            priority frame is not immediately retried, but the higher priority
+            frame is transmitted instead.  In this mode, you can emulate
+            multiple ECUs and still see a behavior similar to a real bus in
+            that the highest priority message is transmitted on the bus. This
+            mode may be slower in performance (possible delays between
+            transmissions as the queue is re-evaluated), and lower priority
+            messages may be delayed indefinitely due to frequent high-priority
+            messages.
+    '''
     AS_SUBMITTED = _cconsts.NX_CAN_PEND_TX_ORDER_AS_SUBMITTED
     BY_IDENTIFIER = _cconsts.NX_CAN_PEND_TX_ORDER_BY_IDENTIFIER
 

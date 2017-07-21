@@ -37,18 +37,10 @@ class Cluster(object):
 
     @property
     def baud_rate(self):
-        return _props.get_cluster_baud_rate(self._handle)
+        return _props.get_cluster_baud_rate64(self._handle)
 
     @baud_rate.setter
     def baud_rate(self, value):
-        _props.set_cluster_baud_rate(self._handle, value)
-
-    @property
-    def baud_rate64(self):
-        return _props.get_cluster_baud_rate64(self._handle)
-
-    @baud_rate64.setter
-    def baud_rate64(self, value):
         _props.set_cluster_baud_rate64(self._handle, value)
 
     @property
@@ -113,18 +105,10 @@ class Cluster(object):
 
     @property
     def can_fd_baud_rate(self):
-        return _props.get_cluster_can_fd_baud_rate(self._handle)
+        return _props.get_cluster_can_fd_baud_rate64(self._handle)
 
     @can_fd_baud_rate.setter
     def can_fd_baud_rate(self, value):
-        _props.set_cluster_can_fd_baud_rate(self._handle, value)
-
-    @property
-    def can_fd_baud_rate64(self):
-        return _props.get_cluster_can_fd_baud_rate64(self._handle)
-
-    @can_fd_baud_rate64.setter
-    def can_fd_baud_rate64(self, value):
         _props.set_cluster_can_fd_baud_rate64(self._handle, value)
 
     @property
