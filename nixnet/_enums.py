@@ -1339,11 +1339,11 @@ class CanLastErr(enum.Enum):
     CRC = _cconsts.NX_CAN_LAST_ERR_CRC
 
 
-class CaNioMode(enum.Enum):
+class CanIoMode(enum.Enum):
     """CAN IO Mode."""
     CAN = _cconsts.NX_CA_NIO_MODE_CAN
-    CANFD = _cconsts.NX_CA_NIO_MODE_CAN_FD
-    CANFDBRS = _cconsts.NX_CA_NIO_MODE_CAN_FD_BRS
+    CAN_FD = _cconsts.NX_CA_NIO_MODE_CAN_FD
+    CAN_FD_BRS = _cconsts.NX_CA_NIO_MODE_CAN_FD_BRS
 
 
 class FlexRayPocState(enum.Enum):

@@ -97,7 +97,7 @@ class Cluster(object):
 
     @property
     def can_io_mode(self):
-        return constants.CaNioMode(_props.get_cluster_can_io_mode(self._handle))
+        return constants.CanIoMode(_props.get_cluster_can_io_mode(self._handle))
 
     @can_io_mode.setter
     def can_io_mode(self, value):

@@ -4039,7 +4039,7 @@ def set_frame_variable_payload(
     )
 
 
-def get_frame_ca_nio_mode(
+def get_frame_can_io_mode(
     ref,  # type: int
 ):
     # type: (...) -> int
@@ -4049,7 +4049,7 @@ def get_frame_ca_nio_mode(
     )
 
 
-def set_frame_ca_nio_mode(
+def set_frame_can_io_mode(
     ref,  # type: int
     value,  # type: int
 ):

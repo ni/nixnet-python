@@ -143,6 +143,39 @@ class Interface(object):
         _props.set_session_intf_out_strm_list(self._handle, frame_handles)
 
     @property
+    def out_strm_list_by_id(self):
+        # type: () -> typing.Iterable[int]
+        '''int: Output Stream List by Frame Identifier.
+
+        Provide a list of frames for use with the replay feature
+        Interface:Output Stream Timing property.
+
+        This property serves the same purpose as Interface:Output Stream List,
+        in that it provides a list of frames for replay filtering. This
+        property provides an alternate format for you to specify the frames by
+        their CAN arbitration ID or LIN unprotected ID. The property's data
+        type is an array of unsigned 32-bit integer (U32). Each integer
+        represents a CAN or LIN frame's identifier, using the same encoding as
+        the Raw Frame Format.
+
+        Within each CAN frame ID value, bit 29 (hex 20000000) indicates the CAN
+        identifier format (set for extended, clear for standard). If bit 29 is
+        clear, the lower 11 bits (0-10) contain the CAN frame identifier. If
+        bit 29 is set, the lower 29 bits (0-28) contain the CAN frame
+        identifier. LIN frame ID values may be within the range of possible LIN
+        IDs (0-63).
+
+        See also :any:`Interface.out_strm_list`.
+        '''
+        for id in _props.get_session_intf_can_out_strm_list_by_id(self._handle):
+            yield id
+
+    @out_strm_list_by_id.setter
+    def out_strm_list_by_id(self, value):
+        # type: (typing.Iterable[int]) -> None
+        _props.set_session_intf_can_out_strm_list_by_id(self._handle, list(value))
+
+    @property
     def out_strm_timng(self):
         # type: () -> constants.OutStrmTimng
         ''':any:`nixnet._enums.OutStrmTimng`: Output Stream Timing.
@@ -325,42 +358,9 @@ class Interface(object):
         _props.set_session_intf_can_tcvr_type(self._handle, value.value)
 
     @property
-    def can_out_strm_list_by_id(self):
-        # type: () -> typing.Iterable[int]
-        '''int: Output Stream List by Frame Identifier.
-
-        Provide a list of frames for use with the replay feature
-        Interface:Output Stream Timing property.
-
-        This property serves the same purpose as Interface:Output Stream List,
-        in that it provides a list of frames for replay filtering. This
-        property provides an alternate format for you to specify the frames by
-        their CAN arbitration ID or LIN unprotected ID. The property's data
-        type is an array of unsigned 32-bit integer (U32). Each integer
-        represents a CAN or LIN frame's identifier, using the same encoding as
-        the Raw Frame Format.
-
-        Within each CAN frame ID value, bit 29 (hex 20000000) indicates the CAN
-        identifier format (set for extended, clear for standard). If bit 29 is
-        clear, the lower 11 bits (0-10) contain the CAN frame identifier. If
-        bit 29 is set, the lower 29 bits (0-28) contain the CAN frame
-        identifier. LIN frame ID values may be within the range of possible LIN
-        IDs (0-63).
-
-        See also :any:`Interface.out_strm_list`.
-        '''
-        for id in _props.get_session_intf_can_out_strm_list_by_id(self._handle):
-            yield id
-
-    @can_out_strm_list_by_id.setter
-    def can_out_strm_list_by_id(self, value):
-        # type: (typing.Iterable[int]) -> None
-        _props.set_session_intf_can_out_strm_list_by_id(self._handle, list(value))
-
-    @property
     def can_io_mode(self):
-        # type: () -> constants.CaNioMode
-        ''':any:`nixnet._enums.CaNioMode`: CAN IO Mode.
+        # type: () -> constants.CanIoMode
+        ''':any:`nixnet._enums.CanIoMode`: CAN IO Mode.
 
         This property indicates the I/O Mode the interface is using.
 
@@ -368,12 +368,12 @@ class Interface(object):
         created and cannot be changed later. However, you can transmit standard
         CAN frames on a CAN FD network.
         '''
-        return constants.CaNioMode(_props.get_session_intf_can_io_mode(self._handle))
+        return constants.CanIoMode(_props.get_session_intf_can_io_mode(self._handle))
 
     @property
     def can_fd_baud_rate(self):
         # type: () -> int
-        '''int: The fast data baud rate for :any:`can_io_mode` of :any:`nixnet._enums.CaNioMode` ``CANFDBRS``
+        '''int: The fast data baud rate for :any:`can_io_mode` of :any:`nixnet._enums.CanIoMode` ``CAN_FD_BRS``
 
         The default value for this interface property is the same as the
         cluster's FD baud rate in the database. Your application can set this
@@ -400,8 +400,8 @@ class Interface(object):
 
     @property
     def can_tx_io_mode(self):
-        # type: () -> constants.CaNioMode
-        ''':any:`nixnet._enums.CaNioMode`: CAN Transmit IO Mode
+        # type: () -> constants.CanIoMode
+        ''':any:`nixnet._enums.CanIoMode`: CAN Transmit IO Mode
 
         This property specifies the I/O Mode the interface uses when
         transmitting a CAN frame. By default, it is the same as the XNET
@@ -423,11 +423,11 @@ class Interface(object):
            receive frames in FD modes (if the XNET Cluster CAN:I/O Mode
            property is configured in an FD mode).
         '''
-        return constants.CaNioMode(_props.get_session_intf_can_tx_io_mode(self._handle))
+        return constants.CanIoMode(_props.get_session_intf_can_tx_io_mode(self._handle))
 
     @can_tx_io_mode.setter
     def can_tx_io_mode(self, value):
-        # type: (constants.CaNioMode) -> None
+        # type: (constants.CanIoMode) -> None
         _props.set_session_intf_can_tx_io_mode(self._handle, value.value)
 
     @property
