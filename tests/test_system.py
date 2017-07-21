@@ -127,7 +127,7 @@ def test_intf_blink(nixnet_in_interface):
             input_session.start()
             with pytest.raises(errors.XnetError) as excinfo:
                 in_intf.blink(constants.BlinkMode.ENABLE)
-            assert excinfo.value.error_type == constants.Err.PORT_LE_DS_BUSY
+            assert excinfo.value.error_type == constants.Err.PORT_LEDS_BUSY
             in_intf.blink(constants.BlinkMode.DISABLE)
         in_intf.blink(constants.BlinkMode.ENABLE)
         in_intf.blink(constants.BlinkMode.DISABLE)
