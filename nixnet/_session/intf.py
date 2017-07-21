@@ -143,6 +143,39 @@ class Interface(object):
         _props.set_session_intf_out_strm_list(self._handle, frame_handles)
 
     @property
+    def out_strm_list_by_id(self):
+        # type: () -> typing.Iterable[int]
+        '''int: Output Stream List by Frame Identifier.
+
+        Provide a list of frames for use with the replay feature
+        Interface:Output Stream Timing property.
+
+        This property serves the same purpose as Interface:Output Stream List,
+        in that it provides a list of frames for replay filtering. This
+        property provides an alternate format for you to specify the frames by
+        their CAN arbitration ID or LIN unprotected ID. The property's data
+        type is an array of unsigned 32-bit integer (U32). Each integer
+        represents a CAN or LIN frame's identifier, using the same encoding as
+        the Raw Frame Format.
+
+        Within each CAN frame ID value, bit 29 (hex 20000000) indicates the CAN
+        identifier format (set for extended, clear for standard). If bit 29 is
+        clear, the lower 11 bits (0-10) contain the CAN frame identifier. If
+        bit 29 is set, the lower 29 bits (0-28) contain the CAN frame
+        identifier. LIN frame ID values may be within the range of possible LIN
+        IDs (0-63).
+
+        See also :any:`Interface.out_strm_list`.
+        '''
+        for id in _props.get_session_intf_can_out_strm_list_by_id(self._handle):
+            yield id
+
+    @out_strm_list_by_id.setter
+    def out_strm_list_by_id(self, value):
+        # type: (typing.Iterable[int]) -> None
+        _props.set_session_intf_can_out_strm_list_by_id(self._handle, list(value))
+
+    @property
     def out_strm_timng(self):
         # type: () -> constants.OutStrmTimng
         ''':any:`nixnet._enums.OutStrmTimng`: Output Stream Timing.
@@ -323,39 +356,6 @@ class Interface(object):
     def can_tcvr_type(self, value):
         # type: (constants.CanTcvrType) -> None
         _props.set_session_intf_can_tcvr_type(self._handle, value.value)
-
-    @property
-    def can_out_strm_list_by_id(self):
-        # type: () -> typing.Iterable[int]
-        '''int: Output Stream List by Frame Identifier.
-
-        Provide a list of frames for use with the replay feature
-        Interface:Output Stream Timing property.
-
-        This property serves the same purpose as Interface:Output Stream List,
-        in that it provides a list of frames for replay filtering. This
-        property provides an alternate format for you to specify the frames by
-        their CAN arbitration ID or LIN unprotected ID. The property's data
-        type is an array of unsigned 32-bit integer (U32). Each integer
-        represents a CAN or LIN frame's identifier, using the same encoding as
-        the Raw Frame Format.
-
-        Within each CAN frame ID value, bit 29 (hex 20000000) indicates the CAN
-        identifier format (set for extended, clear for standard). If bit 29 is
-        clear, the lower 11 bits (0-10) contain the CAN frame identifier. If
-        bit 29 is set, the lower 29 bits (0-28) contain the CAN frame
-        identifier. LIN frame ID values may be within the range of possible LIN
-        IDs (0-63).
-
-        See also :any:`Interface.out_strm_list`.
-        '''
-        for id in _props.get_session_intf_can_out_strm_list_by_id(self._handle):
-            yield id
-
-    @can_out_strm_list_by_id.setter
-    def can_out_strm_list_by_id(self, value):
-        # type: (typing.Iterable[int]) -> None
-        _props.set_session_intf_can_out_strm_list_by_id(self._handle, list(value))
 
     @property
     def can_io_mode(self):
