@@ -369,7 +369,7 @@ class Err(enum.Enum):
     # You tried to blink the port LEDs but these are currently busy. Solution:
     # stop all applications running on that port; do not access it from MAX or LV
     # Project.
-    PORT_LE_DS_BUSY = _cconsts.NX_ERR_PORT_LE_DS_BUSY
+    PORT_LEDS_BUSY = _cconsts.NX_ERR_PORT_LE_DS_BUSY
     # You tried to set a FlexRay keyslot ID that is not listed as valid in the
     # database. Solution: only pass slot IDs of frames that have the startup or
     # sync property set in the database.
