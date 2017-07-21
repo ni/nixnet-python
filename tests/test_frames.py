@@ -213,15 +213,11 @@ def test_session_properties(nixnet_out_interface):
 
         print(output_session.num_pend)
         print(output_session.num_unused)
-        print(output_session.payld_len_max)
+        print(output_session.frames.payld_len_max)
 
         print(output_session.queue_size)
         output_session.queue_size = 2040
         assert output_session.queue_size == 2040
-
-        print(output_session.resamp_rate)
-        output_session.resamp_rate = 30
-        assert output_session.resamp_rate == 30
 
 
 @pytest.mark.integration
