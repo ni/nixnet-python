@@ -240,7 +240,7 @@ class Frame(object):
 
     @property
     def ca_nio_mode(self):
-        return constants.CaNioMode(_props.get_frame_ca_nio_mode(self._handle))
+        return constants.CanIoMode(_props.get_frame_ca_nio_mode(self._handle))
 
     @ca_nio_mode.setter
     def ca_nio_mode(self, value):

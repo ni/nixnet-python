@@ -451,8 +451,8 @@ class SessionBase(object):
 
         For CAN Stream (Input and Output), this property depends on the XNET
         Cluster CAN I/O Mode property. If the I/O mode is CAN, this property is
-        8 bytes. If the I/O mode is 'constants.CaNioMode.CANFD' or
-        'constants.CaNioMode.CANFD', this property is 64 bytes.
+        8 bytes. If the I/O mode is 'constants.CanIoMode.CANFD' or
+        'constants.CanIoMode.CANFD', this property is 64 bytes.
 
         For LIN Stream (Input and Output), this property always is 8 bytes. For
         FlexRay Stream (Input and Output), this property is the same as the XNET

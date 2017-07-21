@@ -359,8 +359,8 @@ class Interface(object):
 
     @property
     def can_io_mode(self):
-        # type: () -> constants.CaNioMode
-        ''':any:`nixnet._enums.CaNioMode`: CAN IO Mode.
+        # type: () -> constants.CanIoMode
+        ''':any:`nixnet._enums.CanIoMode`: CAN IO Mode.
 
         This property indicates the I/O Mode the interface is using.
 
@@ -368,12 +368,12 @@ class Interface(object):
         created and cannot be changed later. However, you can transmit standard
         CAN frames on a CAN FD network.
         '''
-        return constants.CaNioMode(_props.get_session_intf_can_io_mode(self._handle))
+        return constants.CanIoMode(_props.get_session_intf_can_io_mode(self._handle))
 
     @property
     def can_fd_baud_rate(self):
         # type: () -> int
-        '''int: The fast data baud rate for :any:`can_io_mode` of :any:`nixnet._enums.CaNioMode` ``CANFDBRS``
+        '''int: The fast data baud rate for :any:`can_io_mode` of :any:`nixnet._enums.CanIoMode` ``CANFDBRS``
 
         The default value for this interface property is the same as the
         cluster's FD baud rate in the database. Your application can set this
@@ -400,8 +400,8 @@ class Interface(object):
 
     @property
     def can_tx_io_mode(self):
-        # type: () -> constants.CaNioMode
-        ''':any:`nixnet._enums.CaNioMode`: CAN Transmit IO Mode
+        # type: () -> constants.CanIoMode
+        ''':any:`nixnet._enums.CanIoMode`: CAN Transmit IO Mode
 
         This property specifies the I/O Mode the interface uses when
         transmitting a CAN frame. By default, it is the same as the XNET
@@ -423,11 +423,11 @@ class Interface(object):
            receive frames in FD modes (if the XNET Cluster CAN:I/O Mode
            property is configured in an FD mode).
         '''
-        return constants.CaNioMode(_props.get_session_intf_can_tx_io_mode(self._handle))
+        return constants.CanIoMode(_props.get_session_intf_can_tx_io_mode(self._handle))
 
     @can_tx_io_mode.setter
     def can_tx_io_mode(self, value):
-        # type: (constants.CaNioMode) -> None
+        # type: (constants.CanIoMode) -> None
         _props.set_session_intf_can_tx_io_mode(self._handle, value.value)
 
     @property
