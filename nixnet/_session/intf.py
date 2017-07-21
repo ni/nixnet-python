@@ -373,7 +373,7 @@ class Interface(object):
     @property
     def can_fd_baud_rate(self):
         # type: () -> int
-        '''int: The fast data baud rate for :any:`can_io_mode` of :any:`nixnet._enums.CanIoMode` ``CANFDBRS``
+        '''int: The fast data baud rate for :any:`can_io_mode` of :any:`nixnet._enums.CanIoMode` ``CAN_FD_BRS``
 
         The default value for this interface property is the same as the
         cluster's FD baud rate in the database. Your application can set this
