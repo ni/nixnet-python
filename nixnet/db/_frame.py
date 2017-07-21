@@ -239,9 +239,9 @@ class Frame(object):
         _props.set_frame_variable_payload(self._handle, value)
 
     @property
-    def ca_nio_mode(self):
-        return constants.CanIoMode(_props.get_frame_ca_nio_mode(self._handle))
+    def can_io_mode(self):
+        return constants.CanIoMode(_props.get_frame_can_io_mode(self._handle))
 
-    @ca_nio_mode.setter
-    def ca_nio_mode(self, value):
-        _props.set_frame_ca_nio_mode(self._handle, value.value)
+    @can_io_mode.setter
+    def can_io_mode(self, value):
+        _props.set_frame_can_io_mode(self._handle, value.value)
