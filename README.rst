@@ -23,6 +23,11 @@ Author       National Instruments
     :target: https://travis-ci.org/ni/nixnet-python
     :alt: Build
 
+.. image:: https://coveralls.io/repos/github/ni/nixnet-python/badge.svg?branch=master
+    :target: https://coveralls.io/github/ni/nixnet-python?branch=master
+    :alt: Unit-test Coverage
+
+
 .. code-block:: python
 
    >>> import nixnet
