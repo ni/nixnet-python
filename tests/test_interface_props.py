@@ -66,3 +66,26 @@ def test_interface_props(nixnet_out_interface):
         expected_frames = [
             types.CanFrame(0, False, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
         output_session.frames.write_can(expected_frames)
+
+
+@pytest.mark.integration
+def test_stream_session_without_baud_rate(nixnet_out_interface):
+    """Stream session without setting baud rate.
+
+    Ensure Stream session cannot start without setting the baud_rate property.
+    """
+    with nixnet.FrameOutStreamSession(nixnet_out_interface) as output_session:
+        with pytest.raises(errors.XnetError) as start_excinfo:
+            output_session.start()
+        assert start_excinfo.value.error_type == constants.Err.BAUD_RATE_NOT_CONFIGURED
+
+        output_session.intf.baud_rate = 125000
+        assert output_session.intf.baud_rate == 125000
+
+        # Starting the stream session does not error because the baud_rate is set
+        output_session.start()
+
+        payload_list = [2, 4, 8, 16]
+        expected_frames = [
+            types.CanFrame(0, False, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
+        output_session.frames.write_can(expected_frames)
