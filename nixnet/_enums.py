@@ -1277,6 +1277,18 @@ class CanFdIsoMode(enum.Enum):
 
 
 class SessionInfoState(enum.Enum):
+    """State of running session.
+
+    Values:
+        STOPPED:
+            All frames in the session are stopped.
+        STARTED:
+            All frames in the session are started.
+        MIX:
+            Some frames in the session are started while other frames are
+            stopped. This state may occur when using ``start`` or ``stop`` with
+            ``StartStopScope.SESSION_ONLY``.
+    """
     STOPPED = _cconsts.NX_SESSION_INFO_STATE_STOPPED
     STARTED = _cconsts.NX_SESSION_INFO_STATE_STARTED
     MIX = _cconsts.NX_SESSION_INFO_STATE_MIX

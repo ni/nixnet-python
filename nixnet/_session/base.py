@@ -5,6 +5,8 @@ from __future__ import print_function
 import typing  # NOQA: F401
 import warnings
 
+from nixnet import _ctypedefs
+from nixnet import _errors
 from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
@@ -328,6 +330,60 @@ class SessionBase(object):
             destination: A string representing the connection destination name.
         """
         _funcs.nx_disconnect_terminals(self._handle, source, destination)
+
+    @property
+    def time_current(self):
+        # type: () -> int
+        """int: Current interface time."""
+        time, _ = _funcs.nx_read_state(self._handle, constants.ReadState.TIME_CURRENT, _ctypedefs.nxTimestamp_t)
+        return time
+
+    @property
+    def time_start(self):
+        # type: () -> int
+        """int: Time the interface was started."""
+        time, _ = _funcs.nx_read_state(self._handle, constants.ReadState.TIME_START, _ctypedefs.nxTimestamp_t)
+        if time == 0:
+            # The interface is not communicating.
+            _errors.check_for_error(constants.Err.SESSION_NOT_STARTED.value)
+        return time
+
+    @property
+    def time_communicating(self):
+        # type: () -> int
+        """int: Time the interface started communicating.
+
+        The time is usually later than ``time_start`` because the interface
+        must undergo a communication startup procedure.
+        """
+        time, _ = _funcs.nx_read_state(self._handle, constants.ReadState.TIME_COMMUNICATING, _ctypedefs.nxTimestamp_t)
+        if time == 0:
+            # The interface is not communicating.
+            _errors.check_for_error(constants.Err.SESSION_NOT_STARTED.value)
+        return time
+
+    @property
+    def state(self):
+        # type: () -> constants.SessionInfoState
+        """:any:`nixnet._enums.SessionInfoState`: Session running state."""
+        state, _ = _funcs.nx_read_state(self._handle, constants.ReadState.SESSION_INFO, _ctypedefs.u32)
+        return constants.SessionInfoState(state)
+
+    @property
+    def check_fault(self):
+        # type: () -> None
+        """Check for an asynchronous fault.
+
+        A fault is an error that occurs asynchronously to the NI-XNET
+        application calls. The fault cause may be related to network
+        communication, but it also can be related to XNET hardware, such as a
+        fault in the onboard processor. Although faults are extremely rare,
+        nxReadState provides a detection method distinct from the status of
+        NI-XNET function calls, yet easy to use alongside the common practice
+        of checking the communication state.
+        """
+        _, fault = _funcs.nx_read_state(self._handle, constants.ReadState.SESSION_INFO, _ctypedefs.u32)
+        _errors.check_for_error(fault)
 
     @property
     def intf(self):
