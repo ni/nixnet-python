@@ -8,6 +8,7 @@ import pytest  # type: ignore
 
 import nixnet
 from nixnet import _frames
+from nixnet import _utils
 from nixnet import constants
 from nixnet import errors
 from nixnet import types
@@ -203,6 +204,7 @@ def test_session_properties(nixnet_out_interface):
             frame_name) as output_session:
         print(output_session.time_current)
         assert output_session.state == constants.SessionInfoState.STOPPED
+        print(output_session.can_comm)
 
         assert output_session.database_name == database_name
         assert output_session.cluster_name == cluster_name
@@ -252,6 +254,27 @@ def test_session_properties_transition(nixnet_out_interface):
             print(output_session.time_start)
             print(output_session.time_communicating)
         assert output_session.state == constants.SessionInfoState.STOPPED
+
+
+def test_parse_can_comm_bitfield():
+    """A part of Session.can_comm"""
+    comm = _utils.parse_can_comm_bitfield(0)
+    assert comm == types.CanComm(
+        constants.CanCommState.ERROR_ACTIVE,
+        tcvr_err=False,
+        sleep=False,
+        last_err=constants.CanLastErr.NONE,
+        tx_err_count=0,
+        rx_err_count=0)
+
+    comm = _utils.parse_can_comm_bitfield(0xFFFFF6F3)
+    assert comm == types.CanComm(
+        constants.CanCommState.INIT,
+        tcvr_err=True,
+        sleep=True,
+        last_err=constants.CanLastErr.CRC,
+        tx_err_count=255,
+        rx_err_count=255)
 
 
 @pytest.mark.integration

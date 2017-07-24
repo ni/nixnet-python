@@ -1343,6 +1343,36 @@ class CanCommState(enum.Enum):
 
 
 class CanLastErr(enum.Enum):
+    """CAN Last Error
+
+    Values:
+        NONE:
+            The last receive or transmit was successful.
+        STUFF:
+            More than 5 equal bits have occurred in sequence, which the CAN
+            specification does not allow.
+        FORM:
+            A fixed format part of the received frame used the wrong format.
+        ACK:
+            Another node (ECU) did not acknowledge the frame transmit.
+
+            If you call the appropriate ``write`` function and do not have a
+            cable connected, or the cable is connected to a node that is not
+            communicating, you see this error repeatedly. The CAN communication
+            state eventually transitions to Error Passive, and the frame
+            transmit retries indefinitely.
+        BIT1:
+            During a frame transmit (with the exception of the arbitration ID
+            field), the interface wanted to send a recessive bit (logical 1),
+            but the monitored bus value was dominant (logical 0).
+        BIT0:
+            During a frame transmit (with the exception of the arbitration ID
+            field), the interface wanted to send a dominant bit (logical 0),
+            but the monitored bus value was recessive (logical 1).
+        CRC:
+            The CRC contained within a received frame does not match the CRC
+            calculated for the incoming bits.
+    """
     NONE = _cconsts.NX_CAN_LAST_ERR_NONE
     STUFF = _cconsts.NX_CAN_LAST_ERR_STUFF
     FORM = _cconsts.NX_CAN_LAST_ERR_FORM

@@ -9,8 +9,10 @@ from nixnet import _ctypedefs
 from nixnet import _errors
 from nixnet import _funcs
 from nixnet import _props
+from nixnet import _utils
 from nixnet import constants
 from nixnet import errors
+from nixnet import types  # NOQA: F401
 
 from nixnet._session import intf as session_intf
 from nixnet._session import j1939 as session_j1939
@@ -368,6 +370,13 @@ class SessionBase(object):
         """:any:`nixnet._enums.SessionInfoState`: Session running state."""
         state, _ = _funcs.nx_read_state(self._handle, constants.ReadState.SESSION_INFO, _ctypedefs.u32)
         return constants.SessionInfoState(state)
+
+    @property
+    def can_comm(self):
+        # type: () -> types.CanComm
+        """:any:`nixnet.types.CanComm`: CAN Communication state"""
+        bitfield, _ = _funcs.nx_read_state(self._handle, constants.ReadState.CAN_COMM, _ctypedefs.u32)
+        return _utils.parse_can_comm_bitfield(bitfield)
 
     @property
     def check_fault(self):
