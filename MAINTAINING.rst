@@ -8,11 +8,12 @@ Update the version
 
 #. ``nixnet/VERSION``
 #. ``docs/conf.py``'s ``version`` and ``release`` fields
-#. Create PR
+#. Create release notes (``clog-cli`` can help)
+#. Include release notes in commit messaage
+#. Publish a PR
 
 Tagging a release
 
-#. Create release notes (``clog-cli`` can help)
 #. (on master) ``git tag -a <VERSION>`` with the release notes as the message
 #. ``git push --tags <UPSTREAM>``
 
