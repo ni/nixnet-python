@@ -23,10 +23,6 @@ Author       National Instruments
     :target: https://travis-ci.org/ni/nixnet-python
     :alt: Build
 
-.. image:: https://pyup.io/repos/github/ni/nixnet-python/shield.svg
-    :target: https://pyup.io/repos/github/ni/nixnet-python/
-    :alt: Dependencies
-
 .. code-block:: python
 
    >>> import nixnet
