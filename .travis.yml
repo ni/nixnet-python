@@ -13,8 +13,12 @@ python:
 install:
   - pip install --upgrade setuptools
   - pip install -U tox-travis
+  - pip install -U coveralls
 
 script:
   - tox
   # Verify the file is at least valid even if it isn't run.
   - tox -c tox-integration.ini -l
+
+after_success:
+  - coveralls
