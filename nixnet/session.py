@@ -2,6 +2,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import typing  # NOQA: F401
+
 from nixnet import _funcs
 from nixnet import _utils
 from nixnet import constants
@@ -54,9 +56,11 @@ class FrameInStreamSession(base.SessionBase):
 
     def __init__(
             self,
-            interface_name,
-            database_name=':memory:',
-            cluster_name=''):
+            interface_name,  # type: typing.Text
+            database_name=':memory:',  # type: typing.Text
+            cluster_name='',  # type: typing.Text
+    ):
+        # type: (...) -> None
         """Create a Frame Input Stream session.
 
         This function creates a Frame Input Stream session using the named
@@ -87,6 +91,7 @@ class FrameInStreamSession(base.SessionBase):
 
     @property
     def frames(self):
+        # type: () -> session_frames.InFrames
         return self._frames
 
 
@@ -131,9 +136,11 @@ class FrameOutStreamSession(base.SessionBase):
 
     def __init__(
             self,
-            interface_name,
-            database_name=':memory:',
-            cluster_name=''):
+            interface_name,  # type: typing.Text
+            database_name=':memory:',  # type: typing.Text
+            cluster_name='',  # type: typing.Text
+    ):
+        # type: (...) -> None
         """Create a Frame Input Stream session.
 
         This function creates a Frame Output Stream session using the named
@@ -164,6 +171,7 @@ class FrameOutStreamSession(base.SessionBase):
 
     @property
     def frames(self):
+        # type: () -> session_frames.OutFrames
         return self._frames
 
 
@@ -185,10 +193,12 @@ class FrameInQueuedSession(base.SessionBase):
 
     def __init__(
             self,
-            interface_name,
-            database_name,
-            cluster_name,
-            frame):
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            frame,  # type: typing.Text
+    ):
+        # type: (...) -> None
         """Create a Frame Input Queued session.
 
         This function creates a Frame Input Queued session using the named
@@ -228,6 +238,7 @@ class FrameInQueuedSession(base.SessionBase):
 
     @property
     def frames(self):
+        # type: () -> session_frames.InFrames
         return self._frames
 
 
@@ -262,10 +273,12 @@ class FrameOutQueuedSession(base.SessionBase):
 
     def __init__(
             self,
-            interface_name,
-            database_name,
-            cluster_name,
-            frame):
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            frame,  # type: typing.Text
+    ):
+        # type: (...) -> None
         """Create a Frame Output Queued session.
 
         This function creates a Frame Output Stream session using the named
@@ -305,6 +318,7 @@ class FrameOutQueuedSession(base.SessionBase):
 
     @property
     def frames(self):
+        # type: () -> session_frames.OutFrames
         return self._frames
 
 
@@ -325,10 +339,12 @@ class FrameInSinglePointSession(base.SessionBase):
 
     def __init__(
             self,
-            interface_name,
-            database_name,
-            cluster_name,
-            frames):
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            frames,  # type: typing.Union[typing.Text, typing.List[typing.Text]]
+    ):
+        # type: (...) -> None
         """Create a Frame Input Single-Point session.
 
         This function creates a Frame Input Single-Point session using the named
@@ -371,6 +387,7 @@ class FrameInSinglePointSession(base.SessionBase):
 
     @property
     def frames(self):
+        # type: () -> session_frames.SinglePointInFrames
         return self._frames
 
 
@@ -401,10 +418,12 @@ class FrameOutSinglePointSession(base.SessionBase):
     """
     def __init__(
             self,
-            interface_name,
-            database_name,
-            cluster_name,
-            frames):
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            frames,  # type: typing.Union[typing.Text, typing.List[typing.Text]]
+    ):
+        # type: (...) -> None
         """Create a Frame Output Single-Point session.
 
         This function creates a Frame Output Single-Point session using the named
@@ -447,6 +466,7 @@ class FrameOutSinglePointSession(base.SessionBase):
 
     @property
     def frames(self):
+        # type: () -> session_frames.SinglePointOutFrames
         return self._frames
 
 
@@ -479,10 +499,12 @@ class SignalInSinglePointSession(base.SessionBase):
 
     def __init__(
             self,
-            interface_name,
-            database_name,
-            cluster_name,
-            signals):
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            signals,  # type: typing.Union[typing.Text, typing.List[typing.Text]]
+    ):
+        # type: (...) -> None
         """Create a Signal Input Single-Point session.
 
         This function creates a Signal Input Single-Point session using the named
@@ -530,6 +552,7 @@ class SignalInSinglePointSession(base.SessionBase):
 
     @property
     def signals(self):
+        # type: () -> session_signals.SinglePointInSignals
         return self._signals
 
 
@@ -556,10 +579,12 @@ class SignalOutSinglePointSession(base.SessionBase):
 
     def __init__(
             self,
-            interface_name,
-            database_name,
-            cluster_name,
-            signals):
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            signals,  # type: typing.Union[typing.Text, typing.List[typing.Text]]
+    ):
+        # type: (...) -> None
         """Create a Signal Output Single-Point session.
 
         This function creates a Signal Output Single-Point session using the named
@@ -607,6 +632,7 @@ class SignalOutSinglePointSession(base.SessionBase):
 
     @property
     def signals(self):
+        # type: () -> session_signals.SinglePointOutSignals
         return self._signals
 
 

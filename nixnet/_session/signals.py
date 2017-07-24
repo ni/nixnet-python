@@ -2,6 +2,8 @@
 from __future__ import division
 from __future__ import print_function
 
+import typing  # NOQA: F401
+
 from nixnet import _funcs
 from nixnet import _props
 
@@ -19,6 +21,7 @@ class Signals(collection.Collection):
 
     @property
     def resamp_rate(self):
+        # type: () -> float
         """float: Rate used to resample frame data to/from signal data in waveforms.
 
         The units are in Hertz (samples per second).
@@ -27,6 +30,7 @@ class Signals(collection.Collection):
 
     @resamp_rate.setter
     def resamp_rate(self, value):
+        # type: (float) -> None
         _props.set_session_resamp_rate(self._handle, value)
 
 
@@ -37,6 +41,7 @@ class SinglePointInSignals(Signals):
         return 'Session.SinglePointInSignals(handle={0})'.format(self._handle)
 
     def read(self):
+        # type: () -> typing.Iterable[typing.Tuple[int, float]]
         """Read data from a Signal Input Single-Point session.
 
         Yields:
@@ -58,12 +63,13 @@ class SinglePointOutSignals(Signals):
     def write(
             self,
             value_buffer):
+        # type: (typing.Iterable[float]) -> None
         """Write data to a Signal Output Single-Point session.
 
         Args:
             value_buffer: A list of singal values (float).
         """
-        _funcs.nx_write_signal_single_point(self._handle, value_buffer)
+        _funcs.nx_write_signal_single_point(self._handle, list(value_buffer))
 
 
 class Signal(collection.Item):
