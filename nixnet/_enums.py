@@ -8,6 +8,7 @@ from nixnet import _cconsts
 
 
 class Err(enum.Enum):
+    """Error codes returned by NI-XNET."""
     # An internal error occurred in the NI-XNET driver. Please contact National
     # Instruments and provide the information from the file
     # %LOCALAPPDATA%\\National Instruments\\NI-XNET\\log\\niXntErr.log. On Windows XP,
@@ -1038,6 +1039,7 @@ class Err(enum.Enum):
 
 
 class Warn(enum.Enum):
+    """Warning codes returned by NI-XNET."""
     # The CAN FD baud rate you supplied exceeds the capabilities the transceiver
     # manufacturer specified. In our internal testing, we have found this baud
     # rate to run, but bus errors may be detected or generated during
@@ -1491,6 +1493,7 @@ class CanTcvrCap(enum.Enum):
 
 
 class Protocol(enum.Enum):
+    """Protocol."""
     UNKNOWN = _cconsts.NX_PROTOCOL_UNKNOWN
     CAN = _cconsts.NX_PROTOCOL_CAN
     FLEX_RAY = _cconsts.NX_PROTOCOL_FLEX_RAY
@@ -1498,6 +1501,7 @@ class Protocol(enum.Enum):
 
 
 class AppProtocol(enum.Enum):
+    """Application Protocol."""
     NONE = _cconsts.NX_APP_PROTOCOL_NONE
     J1939 = _cconsts.NX_APP_PROTOCOL_J1939
 
@@ -1771,6 +1775,7 @@ class FrmLinChecksum(enum.Enum):
 
 
 class FrameType(enum.Enum):
+    """Frame format type."""
     CAN_DATA = _cconsts.NX_FRAME_TYPE_CAN_DATA
     CAN_REMOTE = _cconsts.NX_FRAME_TYPE_CAN_REMOTE
     CAN_BUS_ERROR = _cconsts.NX_FRAME_TYPE_CAN_BUS_ERROR
