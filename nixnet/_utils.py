@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import collections
+import typing  # NOQA: F401
 
 import six
 
@@ -11,6 +12,7 @@ from nixnet import _errors
 
 
 def flatten_items(list):
+    # (typing.Union[typing.Text, typing.List[typing.Text]]) -> typing.Text
     """Flatten an item list to a string
 
     >>> str(flatten_items('Item'))
