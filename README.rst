@@ -7,10 +7,6 @@ Author       National Instruments
     :target: https://pypi.python.org/pypi/nixnet
     :alt: PyPI
 
-.. image:: https://img.shields.io/pypi/pyversions/nixnet.svg
-    :target: https://pypi.python.org/pypi/nixnet
-    :alt: Language versions
-
 .. image:: https://readthedocs.org/projects/nixnet/badge/?version=latest
     :target: http://nixnet.readthedocs.io/en/latest/?badge=latest
     :alt: Documentation
@@ -18,6 +14,10 @@ Author       National Instruments
 .. image:: https://img.shields.io/pypi/l/nixnet.svg
     :target: https://github.com/ni/nixnet-python/blob/master/LICENSE
     :alt: License
+
+.. image:: https://img.shields.io/pypi/pyversions/nixnet.svg
+    :target: https://pypi.python.org/pypi/nixnet
+    :alt: Language versions
 
 .. image:: https://travis-ci.org/ni/nixnet-python.svg?branch=master
     :target: https://travis-ci.org/ni/nixnet-python
