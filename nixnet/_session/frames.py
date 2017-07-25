@@ -433,10 +433,6 @@ class Frame(collection.Item):
         """
         _props.set_session_skip_n_cyclic_frames(self._handle, self._index, value)
 
-    def set_output_queue_update_freq(self, value):
-        # type: (int) -> None
-        _props.set_session_output_queue_update_freq(self._handle, self._index, value)
-
     def set_lin_tx_n_corrupted_chksums(self, value):
         # type: (int) -> None
         """int: Set LIN Transmit N Corrupted Checksums.

@@ -1966,20 +1966,6 @@ def set_session_skip_n_cyclic_frames(
     )
 
 
-def set_session_output_queue_update_freq(
-    ref,  # type: int
-    sub,  # type: int
-    value,  # type: int
-):
-    # type: (...) -> None
-    _cprops.set_session_sub_u32(
-        ref,
-        sub,
-        _cconsts.NX_PROP_SESSION_SUB_OUTPUT_QUEUE_UPDATE_FREQ,
-        value,
-    )
-
-
 def set_session_lin_tx_n_corrupted_chksums(
     ref,  # type: int
     sub,  # type: int
