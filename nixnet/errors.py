@@ -26,8 +26,8 @@ class XnetError(Error):
         """Initialize error.
 
         Args:
-            message: A string specifing the error message.
-            error_code: An integer specifing the NI-XNET error code.
+            message(str): Error message.
+            error_code(int): NI-XNET error code.
         """
         super(XnetError, self).__init__(message)
 
@@ -41,21 +41,13 @@ class XnetError(Error):
     @property
     def error_code(self):
         # type: (...) -> int
-        """Error code reported by NI-XNET.
-
-        Returns:
-            An integer specifing the NI-XNET error code.
-        """
+        """int: Error code reported by NI-XNET."""
         return self._error_code
 
     @property
     def error_type(self):
         # type: (...) -> _enums.Err
-        """Error enum reported by NI-XNET.
-
-        Returns:
-            A :any:`nixnet._enums.Err` specifing the NI-XNET error type.
-        """
+        """:any:`nixnet._enums.Err`: Error type reported by NI-XNET."""
         return self._error_type
 
 
@@ -64,44 +56,36 @@ class XnetWarning(Warning):
     def __init__(
         self,
         message,  # type: typing.Text
-        error_code,  # type: int
+        warning_code,  # type: int
     ):
         # type: (...) -> None
         """Initialize warning.
 
         Args:
-            message: A string specifing the warning message.
-            error_code: An integer specifing the NI-DAQmx error code.
+            message(str): Warning message.
+            warning_code(int): NI-XNET warning code.
         """
         super(XnetWarning, self).__init__(
-            'Warning {0} occurred.\n\n{1}'.format(error_code, message))
+            'Warning {0} occurred.\n\n{1}'.format(warning_code, message))
 
-        self._error_code = error_code
+        self._warning_code = warning_code
 
         try:
-            self._error_type = _enums.Warn(self._error_code)
+            self._warning_type = _enums.Warn(self._warning_code)
         except ValueError:
-            self._error_type = None
+            self._warning_type = None
 
     @property
-    def error_code(self):
+    def warning_code(self):
         # type: (...) -> int
-        """Error code reported by NI-XNET.
-
-        Returns:
-            An integer specifing the NI-XNET error code.
-        """
-        return self._error_code
+        """int: Warning code reported by NI-XNET."""
+        return self._warning_code
 
     @property
-    def error_type(self):
+    def warning_type(self):
         # type: (...) -> _enums.Warn
-        """Warning enum reported by NI-XNET.
-
-        Returns:
-            A :any:`nixnet._enums.Warn` specifiing the NI-XNET warning type.
-        """
-        return self._error_type
+        """:any:`nixnet._enums.Warn`: Warning type reported by NI-XNET."""
+        return self._warning_type
 
 
 class _ResourceWarning(Warning):

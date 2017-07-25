@@ -49,23 +49,23 @@ def test_known_warning():
     with pytest.warns(errors.XnetWarning) as record:
         _errors.check_for_error(_enums.Warn.DATABASE_IMPORT.value)
     assert len(record) == 1
-    assert record[0].message.error_code == _enums.Warn.DATABASE_IMPORT.value
-    assert record[0].message.error_type == _enums.Warn.DATABASE_IMPORT
+    assert record[0].message.warning_code == _enums.Warn.DATABASE_IMPORT.value
+    assert record[0].message.warning_type == _enums.Warn.DATABASE_IMPORT
     assert record[0].message.args == ('Warning 1073098885 occurred.\n\n', )
 
 
 @mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 def test_unknown_warning():
-    error_code = 201232  # Arbitrary number
+    warning_code = 201232  # Arbitrary number
     # Ensure it is an unknown error
     with pytest.raises(ValueError):
-        _enums.Warn(error_code)
+        _enums.Warn(warning_code)
 
     with pytest.warns(errors.XnetWarning) as record:
-        _errors.check_for_error(error_code)
+        _errors.check_for_error(warning_code)
     assert len(record) == 1
-    assert record[0].message.error_code == error_code
-    assert record[0].message.error_type is None
+    assert record[0].message.warning_code == warning_code
+    assert record[0].message.warning_type is None
     assert record[0].message.args == ('Warning 201232 occurred.\n\n', )
 
 

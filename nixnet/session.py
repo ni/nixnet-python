@@ -67,17 +67,14 @@ class FrameInStreamSession(base.SessionBase):
         references to database objects.
 
         Args:
-            interface_name: A string representing the XNET Interface to use for
+            interface_name(str): XNET Interface name to use for
                 this session.
-            database_name: A string representing the XNET database to use for
+            database_name(str): XNET database name to use for
                 interface configuration. The database name must use the <alias>
                 or <filepath> syntax (refer to Databases).
-            cluster_name: A string representing the XNET cluster to use for
+            cluster_name(str): XNET cluster name to use for
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter.
-
-        Returns:
-            A Frame Input Stream session object.
         """
         flattened_list = _utils.flatten_items(None)
         base.SessionBase.__init__(
@@ -92,6 +89,7 @@ class FrameInStreamSession(base.SessionBase):
     @property
     def frames(self):
         # type: () -> session_frames.InFrames
+        """:any:`nixnet._session.frames.InFrames`: Operate on session's frames"""
         return self._frames
 
 
@@ -147,17 +145,14 @@ class FrameOutStreamSession(base.SessionBase):
         references to database objects.
 
         Args:
-            interface_name: A string representing the XNET Interface to use for
+            interface_name(str): XNET Interface name to use for
                 this session.
-            database_name: A string representing the XNET database to use for
+            database_name(str): XNET database name to use for
                 interface configuration. The database name must use the <alias>
                 or <filepath> syntax (refer to Databases).
-            cluster_name: A string representing the XNET cluster to use for
+            cluster_name(str): XNET cluster name to use for
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter.
-
-        Returns:
-            A Frame Output Stream session object.
         """
         flattened_list = _utils.flatten_items(None)
         base.SessionBase.__init__(
@@ -172,6 +167,7 @@ class FrameOutStreamSession(base.SessionBase):
     @property
     def frames(self):
         # type: () -> session_frames.OutFrames
+        """:any:`nixnet._session.frames.InFrames`: Operate on session's frames"""
         return self._frames
 
 
@@ -205,26 +201,23 @@ class FrameInQueuedSession(base.SessionBase):
         references to database objects.
 
         Args:
-            interface_name: A string representing the XNET Interface to use for
+            interface_name(str): XNET Interface name to use for
                 this session.
-            database_name: A string representing the XNET database to use for
+            database_name(str): XNET database name to use for
                 interface configuration. The database name must use the <alias>
-                or <filepath> syntax(refer to Databases).
-            cluster_name: A string representing the XNET cluster to use for
+                or <filepath> syntax (refer to Databases).
+            cluster_name(str): XNET cluster name to use for
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
-                blank, the cluster is extracted from the 'frame' parameter.
-            frame: A string describing one XNET Frame or PDU name. This name
+                blank, the cluster is extracted from the ``frame`` parameter.
+            frame(str): XNET Frame or PDU name. This name
                 must be one of the following options, whichever uniquely
                 identifies a frame within the database given:
 
-                    -<Frame>
-                    -<Cluster>.<Frame>
-                    -<PDU>
-                    -<Cluster>.<PDU>
-
-        Returns:
-            A Frame Input Queued session object.
+                    - ``<Frame>``
+                    - ``<Cluster>.<Frame>``
+                    - ``<PDU>``
+                    - ``<Cluster>.<PDU>``
         """
         flattened_list = _utils.flatten_items(frame)
         base.SessionBase.__init__(
@@ -239,6 +232,7 @@ class FrameInQueuedSession(base.SessionBase):
     @property
     def frames(self):
         # type: () -> session_frames.InFrames
+        """:any:`nixnet._session.frames.InFrames`: Operate on session's frames"""
         return self._frames
 
 
@@ -285,26 +279,23 @@ class FrameOutQueuedSession(base.SessionBase):
         references to database objects.
 
         Args:
-            interface_name: A string representing the XNET Interface to use for
+            interface_name(str): XNET Interface name to use for
                 this session.
-            database_name: A string representing the XNET database to use for
+            database_name(str): XNET database name to use for
                 interface configuration. The database name must use the <alias>
                 or <filepath> syntax (refer to Databases).
-            cluster_name: A string representing the XNET cluster to use for
+            cluster_name(str): XNET cluster name to use for
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
-                blank, the cluster is extracted from the 'frame' parameter.
-            frame: A string describing one XNET Frame or PDU name. This name
+                blank, the cluster is extracted from the ``frame`` parameter.
+            frame(str): XNET Frame or PDU name. This name
                 must be one of the following options, whichever uniquely
                 identifies a frame within the database given:
 
-                    -<Frame>
-                    -<Cluster>.<Frame>
-                    -<PDU>
-                    -<Cluster>.<PDU>
-
-        Returns:
-            A Frame Output Queued session object.
+                    - ``<Frame>``
+                    - ``<Cluster>.<Frame>``
+                    - ``<PDU>``
+                    - ``<Cluster>.<PDU>``
         """
         flattened_list = _utils.flatten_items(frame)
         base.SessionBase.__init__(
@@ -319,6 +310,7 @@ class FrameOutQueuedSession(base.SessionBase):
     @property
     def frames(self):
         # type: () -> session_frames.OutFrames
+        """:any:`nixnet._session.frames.InFrames`: Operate on session's frames"""
         return self._frames
 
 
@@ -351,29 +343,26 @@ class FrameInSinglePointSession(base.SessionBase):
         references to database objects.
 
         Args:
-            interface_name: A string representing the XNET Interface to use for
+            interface_name(str): XNET Interface name to use for
                 this session.
-            database_name: A string representing the XNET database to use for
+            database_name(str): XNET database name to use for
                 interface configuration. The database name must use the <alias>
                 or <filepath> syntax (refer to Databases).
-            cluster_name: A string representing the XNET cluster to use for
+            cluster_name(str): XNET cluster name to use for
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
-                blank, the cluster is extracted from the 'frames' parameter.
-            frames: A list of strings describing frames for the session. The
+                blank, the cluster is extracted from the ``frames`` parameter.
+            frames(list): Strings describing frames for the session. The
                 list syntax is as follows:
 
-                    List contains one or more XNET Frame or PDU names. Each name
-                    must be one of the following options, whichever uniquely
-                    identifies a frame within the database given:
+                List contains one or more XNET Frame or PDU names. Each name
+                must be one of the following options, whichever uniquely
+                identifies a frame within the database given:
 
-                        -<Frame>
-                        -<Cluster>.<Frame>
-                        -<PDU>
-                        -<Cluster>.<PDU>
-
-        Returns:
-            A Frame Input Single-Point session object.
+                    - ``<Frame>``
+                    - ``<Cluster>.<Frame>``
+                    - ``<PDU>``
+                    - ``<Cluster>.<PDU>``
         """
         flattened_list = _utils.flatten_items(frames)
         base.SessionBase.__init__(
@@ -388,6 +377,7 @@ class FrameInSinglePointSession(base.SessionBase):
     @property
     def frames(self):
         # type: () -> session_frames.SinglePointInFrames
+        """:any:`nixnet._session.frames.InFrames`: Operate on session's frames"""
         return self._frames
 
 
@@ -430,29 +420,26 @@ class FrameOutSinglePointSession(base.SessionBase):
         references to database objects.
 
         Args:
-            interface_name: A string representing the XNET Interface to use for
+            interface_name(str): XNET Interface name to use for
                 this session.
-            database_name: A string representing the XNET database to use for
+            database_name(str): XNET database name to use for
                 interface configuration. The database name must use the <alias>
                 or <filepath> syntax (refer to Databases).
-            cluster_name: A string representing the XNET cluster to use for
+            cluster_name(str): XNET cluster name to use for
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
-                blank, the cluster is extracted from the 'frames' parameter.
-            frames: A list of strings describing frames for the session. The
+                blank, the cluster is extracted from the ``frames`` parameter.
+            frames(list): Strings describing frames for the session. The
                 list syntax is as follows:
 
-                    List contains one or more XNET Frame or PDU names. Each name
-                    must be one of the following options, whichever uniquely
-                    identifies a frame within the database given:
+                List contains one or more XNET Frame or PDU names. Each name
+                must be one of the following options, whichever uniquely
+                identifies a frame within the database given:
 
-                        -<Frame>
-                        -<Cluster>.<Frame>
-                        -<PDU>
-                        -<Cluster>.<PDU>
-
-        Returns:
-            A Frame Output Single-Point session object.
+                    - ``<Frame>``
+                    - ``<Cluster>.<Frame>``
+                    - ``<PDU>``
+                    - ``<Cluster>.<PDU>``
         """
         flattened_list = _utils.flatten_items(frames)
         base.SessionBase.__init__(
@@ -467,6 +454,7 @@ class FrameOutSinglePointSession(base.SessionBase):
     @property
     def frames(self):
         # type: () -> session_frames.SinglePointOutFrames
+        """:any:`nixnet._session.frames.InFrames`: Operate on session's frames"""
         return self._frames
 
 
@@ -486,7 +474,7 @@ class SignalInSinglePointSession(base.SessionBase):
     Use :any:`nixnet._session.signals.SinglePointInSignals.read` for this session.
 
     You also can specify a trigger signal for a frame. This signal name is
-    :trigger:.<frame name>, and once it is specified in the __init__ 'signals'
+    :trigger:.<frame name>, and once it is specified in the __init__ ``signals``
     list, it returns a value of 0.0 if the frame did not arrive since the last
     Read (or Start), and 1.0 if at least one frame of this ID arrived. You can
     specify multiple trigger signals for different frames in the same session.
@@ -511,34 +499,31 @@ class SignalInSinglePointSession(base.SessionBase):
         references to database objects.
 
         Args:
-            interface_name: A string representing the XNET Interface to use for
+            interface_name(str): XNET Interface name to use for
                 this session.
-            database_name: A string representing the XNET database to use for
+            database_name(str): XNET database name to use for
                 interface configuration. The database name must use the <alias>
                 or <filepath> syntax (refer to Databases).
-            cluster_name: A string representing the XNET cluster to use for
+            cluster_name(str): XNET cluster name to use for
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
-                blank, the cluster is extracted from the signals parameter.
-            signals: A list of strings describing signals for the session. The
+                blank, the cluster is extracted from the ``signals`` parameter.
+            signals(list): Strings describing signals for the session. The
                 list syntax is as follows:
 
-                    List contains one or more XNET Signal names. Each name must
-                    be one of the following options, whichever uniquely
-                    identifies a signal within the database given:
+                ``signals`` contains one or more XNET Signal names. Each name must
+                be one of the following options, whichever uniquely
+                identifies a signal within the database given:
 
-                        -<Signal>
-                        -<Frame>.<Signal>
-                        -<Cluster>.<Frame>.<Signal>
-                        -<PDU>.<Signal>
-                        -<Cluster>.<PDU>.<Signal>
+                    - ``<Signal>``
+                    - ``<Frame>.<Signal>``
+                    - ``<Cluster>.<Frame>.<Signal>``
+                    - ``<PDU>.<Signal>``
+                    - ``<Cluster>.<PDU>.<Signal>``
 
-                    List may also contain one or more trigger signals. For
-                    information about trigger signals, refer to Signal Output
-                    Single-Point Mode or Signal Input Single-Point Mode.
-
-        Returns:
-            A Signal Input Single-Point session object.
+                ``signals`` may also contain one or more trigger signals. For
+                information about trigger signals, refer to Signal Output
+                Single-Point Mode or Signal Input Single-Point Mode.
         """
         flattened_list = _utils.flatten_items(signals)
         base.SessionBase.__init__(
@@ -553,6 +538,7 @@ class SignalInSinglePointSession(base.SessionBase):
     @property
     def signals(self):
         # type: () -> session_signals.SinglePointInSignals
+        """:any:`nixnet._session.signals.SinglePointInSignals`: Operate on session's signals"""
         return self._signals
 
 
@@ -571,7 +557,7 @@ class SignalOutSinglePointSession(base.SessionBase):
     Use :any:`nixnet._session.signals.SinglePointOutSignals.write` for this session.
 
     You also can specify a trigger signal for a frame. This signal name is
-    :trigger:.<frame name>, and once it is specified in the __init__ 'signals'
+    :trigger:.<frame name>, and once it is specified in the __init__ ``signals``
     list, you can write a value of 0.0 to suppress writing of that frame, or any
     value not equal to 0.0 to write the frame. You can specify multiple trigger
     signals for different frames in the same session.
@@ -591,34 +577,31 @@ class SignalOutSinglePointSession(base.SessionBase):
         references to database objects.
 
         Args:
-            interface_name: A string representing the XNET Interface to use for
+            interface_name(str): XNET Interface name to use for
                 this session.
-            database_name: A string representing the XNET database to use for
+            database_name(str): XNET database name to use for
                 interface configuration. The database name must use the <alias>
                 or <filepath> syntax (refer to Databases).
-            cluster_name: A string representing the XNET cluster to use for
+            cluster_name(str): XNET cluster name to use for
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
-                blank, the cluster is extracted from the signals parameter.
-            signals: A list of strings describing signals for the session. The
+                blank, the cluster is extracted from the ``signals`` parameter.
+            signals(list): Strings describing signals for the session. The
                 list syntax is as follows:
 
-                    List contains one or more XNET Signal names. Each name must
-                    be one of the following options, whichever uniquely
-                    identifies a signal within the database given:
+                ``signals`` contains one or more XNET Signal names. Each name must
+                be one of the following options, whichever uniquely
+                identifies a signal within the database given:
 
-                        -<Signal>
-                        -<Frame>.<Signal>
-                        -<Cluster>.<Frame>.<Signal>
-                        -<PDU>.<Signal>
-                        -<Cluster>.<PDU>.<Signal>
+                    - ``<Signal>``
+                    - ``<Frame>.<Signal>``
+                    - ``<Cluster>.<Frame>.<Signal>``
+                    - ``<PDU>.<Signal>``
+                    - ``<Cluster>.<PDU>.<Signal>``
 
-                    List may also contain one or more trigger signals. For
-                    information about trigger signals, refer to Signal Output
-                    Single-Point Mode or Signal Output Single-Point Mode.
-
-        Returns:
-            A Signal Output Single-Point session object.
+                ``signals`` may also contain one or more trigger signals. For
+                information about trigger signals, refer to Signal Output
+                Single-Point Mode or Signal Output Single-Point Mode.
         """
         flattened_list = _utils.flatten_items(signals)
         base.SessionBase.__init__(
@@ -633,6 +616,7 @@ class SignalOutSinglePointSession(base.SessionBase):
     @property
     def signals(self):
         # type: () -> session_signals.SinglePointOutSignals
+        """:any:`nixnet._session.signals.SinglePointInSignals`: Operate on session's signals"""
         return self._signals
 
 

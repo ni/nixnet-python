@@ -45,8 +45,7 @@ class SinglePointInSignals(Signals):
         """Read data from a Signal Input Single-Point session.
 
         Yields:
-            A tuple of timestamp (internal NI-XNET ctype around u64) and signal
-            values (float).
+            A tuple of timestamp (int) and signal values (float).
         """
         num_signals = len(self)
         timestamps, values = _funcs.nx_read_signal_single_point(self._handle, num_signals)
@@ -67,7 +66,7 @@ class SinglePointOutSignals(Signals):
         """Write data to a Signal Output Single-Point session.
 
         Args:
-            value_buffer: A list of singal values (float).
+            value_buffer(list): A list of singal values (float).
         """
         _funcs.nx_write_signal_single_point(self._handle, list(value_buffer))
 
