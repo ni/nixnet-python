@@ -34,5 +34,6 @@ node('xnetPython') {
 	}
 	catch (err) {
 		currentBuild.result = "FAILURE"
+		emailextrecipients([[$class: 'CulpritsRecipientProvider'], [$class: 'DevelopersRecipientProvider'], [$class: 'RequesterRecipientProvider']])
 	}
 }
