@@ -60,11 +60,11 @@ def test_intf_properties_settable_only_when_stopped(nixnet_out_interface):
         # when the session is stopped. Note that we've only picked a select few
         # interface properties to test this behavior.
         with pytest.raises(errors.XnetError) as term_excinfo:
-            output_session.intf.can_term = constants.CanTerm.OFF
+            output_session.intf.can_term = constants.CanTerm.ON
         assert term_excinfo.value.error_type == constants.Err.OBJECT_STARTED
 
         with pytest.raises(errors.XnetError) as baud_rate_excinfo:
-            output_session.intf.baud_rate = 125000
+            output_session.intf.baud_rate = 100000
         assert baud_rate_excinfo.value.error_type == constants.Err.OBJECT_STARTED
 
         with pytest.raises(errors.XnetError) as transmit_pause_excinfo:
@@ -74,12 +74,12 @@ def test_intf_properties_settable_only_when_stopped(nixnet_out_interface):
         output_session.stop()
 
         # Should not error because the session has stopped.
-        output_session.intf.can_term = constants.CanTerm.OFF
-        output_session.intf.baud_rate = 125000
+        output_session.intf.can_term = constants.CanTerm.ON
+        output_session.intf.baud_rate = 100000
         output_session.intf.can_transmit_pause = True
 
-        assert output_session.intf.can_term == constants.CanTerm.OFF
-        assert output_session.intf.baud_rate == 125000
+        assert output_session.intf.can_term == constants.CanTerm.ON
+        assert output_session.intf.baud_rate == 100000
         assert output_session.intf.can_transmit_pause
 
 
