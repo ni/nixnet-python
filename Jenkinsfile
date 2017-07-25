@@ -24,11 +24,12 @@ node('xnetPython') {
 		stage('Testing'){
 			// Run tox with the tox-integration.ini file in the root of the repository
 			echo "Running Tox integration script"
-			 try {
+			try {
 				bat 'tox -c tox-integration.ini'
-			 } finally {
+			} finally {
+				step([$class: 'CoberturaPublisher', coberturaReportFile: 'coverage.xml'])
 				junit "junit/*.xml"
-			 }
+			}
 		}
 	}
 	catch (err) {

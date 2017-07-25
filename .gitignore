@@ -1,6 +1,8 @@
 .cache/
 .tox/
+junit/
 __pycache__
 .coverage
+coverage.xml
 *.egg-info/
 *.pyc
