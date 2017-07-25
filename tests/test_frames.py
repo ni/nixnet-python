@@ -221,22 +221,6 @@ def test_session_properties(nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_intf_container(nixnet_in_interface):
-    database_name = 'NIXNET_example'
-    cluster_name = 'CAN_Cluster'
-    frame_name = 'CANEventFrame1'
-
-    with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
-            database_name,
-            cluster_name,
-            frame_name) as input_session:
-        assert str(input_session.intf) == nixnet_in_interface
-        assert input_session.intf == nixnet_in_interface
-        assert input_session.intf != "<random>"
-
-
-@pytest.mark.integration
 def test_frames_container(nixnet_in_interface):
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'

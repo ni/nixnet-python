@@ -8,7 +8,12 @@ import pytest  # type: ignore
 import nixnet
 from nixnet import constants
 from nixnet import errors
-from nixnet import types
+
+
+@pytest.fixture
+def nixnet_in_interface(request):
+    interface = request.config.getoption("--nixnet-in-interface")
+    return interface
 
 
 @pytest.fixture
@@ -18,10 +23,26 @@ def nixnet_out_interface(request):
 
 
 @pytest.mark.integration
-def test_interface_props(nixnet_out_interface):
-    """Verify Interface properties.
+def test_intf_container(nixnet_in_interface):
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
 
-    Ensure interface properties can only be modified when the session is stopped.
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        assert str(input_session.intf) == nixnet_in_interface
+        assert input_session.intf == nixnet_in_interface
+        assert input_session.intf != "<random>"
+
+
+@pytest.mark.integration
+def test_intf_properties_settable_only_when_stopped(nixnet_out_interface):
+    """Verify Interface properties settable only when stopped.
+
+    Ensure that Interface properties are only allowed to be set when the session is stopped.
     """
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
@@ -36,7 +57,8 @@ def test_interface_props(nixnet_out_interface):
         output_session.start()
 
         # These should error because interfrace properties can only be modified
-        # when the session is stopped.
+        # when the session is stopped. Note that we've only picked a select few
+        # interface properties to test this behavior.
         with pytest.raises(errors.XnetError) as term_excinfo:
             output_session.intf.can_term = constants.CanTerm.OFF
         assert term_excinfo.value.error_type == constants.Err.OBJECT_STARTED
@@ -58,19 +80,12 @@ def test_interface_props(nixnet_out_interface):
 
         assert output_session.intf.can_term == constants.CanTerm.OFF
         assert output_session.intf.baud_rate == 125000
-        assert output_session.intf.can_transmit_pause == True
-
-        output_session.start()
-
-        payload_list = [2, 4, 8, 16]
-        expected_frames = [
-            types.CanFrame(0, False, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
-        output_session.frames.write_can(expected_frames)
+        assert output_session.intf.can_transmit_pause
 
 
 @pytest.mark.integration
-def test_stream_session_without_baud_rate(nixnet_out_interface):
-    """Stream session without setting baud rate.
+def test_stream_session_requires_baud_rate(nixnet_out_interface):
+    """Stream session requires setting baud rate.
 
     Ensure Stream session cannot start without setting the baud_rate property.
     """
@@ -84,8 +99,3 @@ def test_stream_session_without_baud_rate(nixnet_out_interface):
 
         # Starting the stream session does not error because the baud_rate is set
         output_session.start()
-
-        payload_list = [2, 4, 8, 16]
-        expected_frames = [
-            types.CanFrame(0, False, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
-        output_session.frames.write_can(expected_frames)
