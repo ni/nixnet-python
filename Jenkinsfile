@@ -31,7 +31,7 @@ node('xnetPython') {
 			 }
 		}
 	}
-	finally {
+	catch (err) {
 		currentBuild.result = "FAILURE"
 	}
 }
