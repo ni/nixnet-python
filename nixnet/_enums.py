@@ -8,6 +8,7 @@ from nixnet import _cconsts
 
 
 class Err(enum.Enum):
+    """Error codes returned by NI-XNET."""
     # An internal error occurred in the NI-XNET driver. Please contact National
     # Instruments and provide the information from the file
     # %LOCALAPPDATA%\\National Instruments\\NI-XNET\\log\\niXntErr.log. On Windows XP,
@@ -1038,6 +1039,7 @@ class Err(enum.Enum):
 
 
 class Warn(enum.Enum):
+    """Warning codes returned by NI-XNET."""
     # The CAN FD baud rate you supplied exceeds the capabilities the transceiver
     # manufacturer specified. In our internal testing, we have found this baud
     # rate to run, but bus errors may be detected or generated during
@@ -1275,6 +1277,18 @@ class CanFdIsoMode(enum.Enum):
 
 
 class SessionInfoState(enum.Enum):
+    """State of running session.
+
+    Values:
+        STOPPED:
+            All frames in the session are stopped.
+        STARTED:
+            All frames in the session are started.
+        MIX:
+            Some frames in the session are started while other frames are
+            stopped. This state may occur when using ``start`` or ``stop`` with
+            ``StartStopScope.SESSION_ONLY``.
+    """
     STOPPED = _cconsts.NX_SESSION_INFO_STATE_STOPPED
     STARTED = _cconsts.NX_SESSION_INFO_STATE_STARTED
     MIX = _cconsts.NX_SESSION_INFO_STATE_MIX
@@ -1329,6 +1343,36 @@ class CanCommState(enum.Enum):
 
 
 class CanLastErr(enum.Enum):
+    """CAN Last Error
+
+    Values:
+        NONE:
+            The last receive or transmit was successful.
+        STUFF:
+            More than 5 equal bits have occurred in sequence, which the CAN
+            specification does not allow.
+        FORM:
+            A fixed format part of the received frame used the wrong format.
+        ACK:
+            Another node (ECU) did not acknowledge the frame transmit.
+
+            If you call the appropriate ``write`` function and do not have a
+            cable connected, or the cable is connected to a node that is not
+            communicating, you see this error repeatedly. The CAN communication
+            state eventually transitions to Error Passive, and the frame
+            transmit retries indefinitely.
+        BIT1:
+            During a frame transmit (with the exception of the arbitration ID
+            field), the interface wanted to send a recessive bit (logical 1),
+            but the monitored bus value was dominant (logical 0).
+        BIT0:
+            During a frame transmit (with the exception of the arbitration ID
+            field), the interface wanted to send a dominant bit (logical 0),
+            but the monitored bus value was recessive (logical 1).
+        CRC:
+            The CRC contained within a received frame does not match the CRC
+            calculated for the incoming bits.
+    """
     NONE = _cconsts.NX_CAN_LAST_ERR_NONE
     STUFF = _cconsts.NX_CAN_LAST_ERR_STUFF
     FORM = _cconsts.NX_CAN_LAST_ERR_FORM
@@ -1491,6 +1535,7 @@ class CanTcvrCap(enum.Enum):
 
 
 class Protocol(enum.Enum):
+    """Protocol."""
     UNKNOWN = _cconsts.NX_PROTOCOL_UNKNOWN
     CAN = _cconsts.NX_PROTOCOL_CAN
     FLEX_RAY = _cconsts.NX_PROTOCOL_FLEX_RAY
@@ -1498,6 +1543,7 @@ class Protocol(enum.Enum):
 
 
 class AppProtocol(enum.Enum):
+    """Application Protocol."""
     NONE = _cconsts.NX_APP_PROTOCOL_NONE
     J1939 = _cconsts.NX_APP_PROTOCOL_J1939
 
@@ -1771,6 +1817,7 @@ class FrmLinChecksum(enum.Enum):
 
 
 class FrameType(enum.Enum):
+    """Frame format type."""
     CAN_DATA = _cconsts.NX_FRAME_TYPE_CAN_DATA
     CAN_REMOTE = _cconsts.NX_FRAME_TYPE_CAN_REMOTE
     CAN_BUS_ERROR = _cconsts.NX_FRAME_TYPE_CAN_BUS_ERROR
