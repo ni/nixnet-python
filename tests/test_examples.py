@@ -4,6 +4,8 @@ from __future__ import print_function
 
 import mock  # type: ignore
 
+import pytest  # type: ignore
+
 from nixnet import _cfuncs
 from nixnet import _ctypedefs
 
@@ -35,22 +37,42 @@ def six_input(queue):
     return _six_input
 
 
+@pytest.mark.parametrize("input_values", [
+    ['y', '1, 2, 3', 'q'],
+    ['n', '1, 2, 3', 'q'],
+    ['invalid', '1, 2, 3', 'q'],
+    ['y', 'invalid', 'q'],
+])
 @mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
-@mock.patch('six.moves.input', six_input(['y', '1, 2, 3', 'q']))
 @mock.patch('time.sleep', lambda time: None)
-def test_can_frame_queued_empty_session():
-    can_frame_queued_io.main()
+def test_can_frame_queued_empty_session(input_values):
+    with mock.patch('six.moves.input', six_input(input_values)):
+        can_frame_queued_io.main()
 
 
+@pytest.mark.parametrize("input_values", [
+    ['y', '1, 2, 3', 'q'],
+    ['n', '1, 2, 3', 'q'],
+    ['invalid', '1, 2, 3', 'q'],
+    ['y', 'invalid', 'q'],
+])
 @mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
-@mock.patch('six.moves.input', six_input(['y', '1, 2, 3', 'q']))
 @mock.patch('time.sleep', lambda time: None)
-def test_can_frame_stream_empty_session():
-    can_frame_stream_io.main()
+def test_can_frame_stream_empty_session(input_values):
+    with mock.patch('six.moves.input', six_input(input_values)):
+        can_frame_stream_io.main()
 
 
+@pytest.mark.parametrize("input_values", [
+    ['y', '1, 2', 'q'],
+    ['n', '1, 2', 'q'],
+    ['invalid', '1, 2', 'q'],
+    ['y', '1', 'q'],
+    ['y', '1, 2, 3', 'q'],
+    ['y', 'invalid', 'q'],
+])
 @mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
-@mock.patch('six.moves.input', six_input(['y', '1, 2', 'q']))
 @mock.patch('time.sleep', lambda time: None)
-def test_can_signal_single_point_empty_session():
-    can_signal_single_point_io.main()
+def test_can_signal_single_point_empty_session(input_values):
+    with mock.patch('six.moves.input', six_input(input_values)):
+        can_signal_single_point_io.main()
