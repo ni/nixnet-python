@@ -66,12 +66,12 @@ class RawFrame(object):
     """Raw Frame.
 
     Attributes:
-        timestamp: Absolute time the XNET interface received the end-of-frame.
-        identifier: An integer repersenting the CAN frame arbitration identifier.
-        type: Frame type as described in :any:`nixnet._enums.FrameType`.
-        flags: An integer repersenting flags that qualify the type.
-        info: An integer repersenting info that qualify the type.
-        payload: A byte string representing the payload.
+        timestamp(int): Absolute time the XNET interface received the end-of-frame.
+        identifier(int): CAN frame arbitration identifier.
+        type(:any:`nixnet._enums.FrameType`): Frame type.
+        flags(int): Flags that qualify the type.
+        info(int): Info that qualify the type.
+        payload(bytes): Payload.
     """
 
     __slots__ = [
@@ -125,13 +125,13 @@ class CanFrame(object):
     """CAN Frame.
 
     Attributes:
-        identifier: An integer representing the CAN frame arbitration identifier.
-        extended: A boolean indicating if the identifier uses an extended format.
-        echo: A boolean indicating if the frame is an echo of a successful
+        identifier(int): CAN frame arbitration identifier.
+        extended(bool): If the identifier uses an extended format.
+        echo(bool): If the frame is an echo of a successful
             transmit rather than being received from the network.
-        type: Frame type as described in :any:`nixnet._enums.FrameType`.
-        timestamp: Absolute time the XNET interface received the end-of-frame.
-        payload: A byte string representing the payload.
+        type(:any:`nixnet._enums.FrameType`): Frame type.
+        timestamp(int): Absolute time the XNET interface received the end-of-frame.
+        payload(bytes): Payload.
     """
 
     __slots__ = [

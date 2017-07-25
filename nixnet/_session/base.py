@@ -152,9 +152,9 @@ class SessionBase(object):
         Default Value properties.
 
         Args:
-            scope: Describes the impact of this operation on the underlying
-                state models for the session and its interface.
-                See :any:`nixnet._enums.StartStopScope`.
+            scope(:any:`nixnet._enums.StartStopScope`): Describes the impact of
+                this operation on the underlying state models for the session
+                and its interface.
         """
         _funcs.nx_start(self._handle, scope)
 
@@ -181,9 +181,9 @@ class SessionBase(object):
         to State Models.
 
         Args:
-            scope: Describes the impact of this operation on the underlying
-                state models for the session and its interface.
-                See :any:`nixnet._enums.StartStopScope`.
+            scope(:any:`nixnet._enums.StartStopScope`): Describes the impact of
+                this operation on the underlying state models for the session
+                and its interface.
         """
         _funcs.nx_stop(self._handle, scope)
 
@@ -230,8 +230,7 @@ class SessionBase(object):
         based, and the state is Boolean (true/false).
 
         Args:
-            timeout: A float representing the maximum amount of time to wait in
-                seconds.
+            timeout(float): The maximum amount of time to wait in seconds.
         """
         _funcs.nx_wait(self._handle, constants.Condition.TRANSMIT_COMPLETE, 0, timeout)
 
@@ -254,8 +253,7 @@ class SessionBase(object):
             communication (invalid time of 0 prior)
 
         Args:
-            timeout: A float representing the maximum amount of time to wait in
-                seconds.
+            timeout(float): The maximum amount of time to wait in seconds.
         """
         _funcs.nx_wait(self._handle, constants.Condition.INTF_COMMUNICATING, 0, timeout)
 
@@ -277,8 +275,7 @@ class SessionBase(object):
         detects that remote wakeup.
 
         Args:
-            timeout: A float representing the maximum amount of time to wait in
-                seconds.
+            timeout(float): The maximum amount of time to wait in seconds.
         """
         _funcs.nx_wait(self._handle, constants.Condition.INTF_REMOTE_WAKEUP, 0, timeout)
 
@@ -298,8 +295,8 @@ class SessionBase(object):
         pair is an internal and the other an external.
 
         Args:
-            source: A string representing the connection source name.
-            destination: A string representing the connection destination name.
+            source(str): Connection source name.
+            destination(str): Connection destination name.
         """
         _funcs.nx_connect_terminals(self._handle, source, destination)
 
@@ -328,8 +325,8 @@ class SessionBase(object):
         Attempting to disconnect a nonconnected terminal results in an error.
 
         Args:
-            source: A string representing the connection source name.
-            destination: A string representing the connection destination name.
+            source(str): Connection source name.
+            destination(str): Connection destination name.
         """
         _funcs.nx_disconnect_terminals(self._handle, source, destination)
 
