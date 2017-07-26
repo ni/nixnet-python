@@ -80,10 +80,15 @@ class Collection(collections.Mapping):
             return (
                 self._handle == other_collection._handle and
                 self._list_cache == other_collection._list_cache)
-        return False
+        else:
+            return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
 
     @property
     def _list_cache(self):
@@ -111,10 +116,15 @@ class Item(object):
             return (
                 self._handle == other_item._handle and
                 self._index == other_item._index)
-        return False
+        else:
+            return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
 
     def __int__(self):
         # type: () -> int

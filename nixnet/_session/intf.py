@@ -28,10 +28,15 @@ class Interface(object):
             return self._name == other._name
         elif isinstance(other, six.string_types):
             return self._name == other
-        return False
+        else:
+            return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
 
     @property
     def baud_rate(self):
