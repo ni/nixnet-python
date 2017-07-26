@@ -55,10 +55,9 @@ def main():
                 payload_list = [2, 4, 8, 16]
                 print('Unrecognized input ({}). Setting data buffer to {}', user_value, payload_list)
 
-            id = 0
-            extended = False
+            id = types.CanIdentifier(0)
             payload = bytearray(payload_list)
-            frame = types.CanFrame(id, extended, constants.FrameType.CAN_DATA, payload)
+            frame = types.CanFrame(id, constants.FrameType.CAN_DATA, payload)
 
             i = 0
             while True:

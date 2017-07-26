@@ -79,7 +79,6 @@ def test_serialize_frame_with_base_payload():
 
 def assert_can_frame(index, sent, received):
     assert sent.identifier == received.identifier
-    assert sent.extended == received.extended
     assert sent.echo == received.echo
     assert sent.type == received.type
     assert sent.payload == received.payload
@@ -100,7 +99,7 @@ def test_stream_loopback(nixnet_in_interface, nixnet_out_interface):
 
             payload_list = [2, 4, 8, 16]
             expected_frames = [
-                types.CanFrame(0, False, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
+                types.CanFrame(0, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
             output_session.frames.write(expected_frames)
 
             # Wait 1 s and then read the received values.
@@ -135,7 +134,7 @@ def test_queued_loopback(nixnet_in_interface, nixnet_out_interface):
 
             payload_list = [2, 4, 8, 16]
             expected_frames = [
-                types.CanFrame(66, False, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
+                types.CanFrame(66, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
             output_session.frames.write(expected_frames)
 
             # Wait 1 s and then read the received values.
@@ -171,8 +170,8 @@ def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
             first_payload_list = [2, 4, 8, 16]
             second_payload_list = [1, 3]
             expected_frames = [
-                types.CanFrame(66, False, constants.FrameType.CAN_DATA, bytes(bytearray(first_payload_list))),
-                types.CanFrame(67, False, constants.FrameType.CAN_DATA, bytes(bytearray(second_payload_list)))]
+                types.CanFrame(66, constants.FrameType.CAN_DATA, bytes(bytearray(first_payload_list))),
+                types.CanFrame(67, constants.FrameType.CAN_DATA, bytes(bytearray(second_payload_list)))]
             output_session.frames.write(expected_frames)
 
             # Wait 1 s and then read the received values.
