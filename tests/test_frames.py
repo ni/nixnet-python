@@ -101,13 +101,13 @@ def test_stream_loopback(nixnet_in_interface, nixnet_out_interface):
             payload_list = [2, 4, 8, 16]
             expected_frames = [
                 types.CanFrame(0, False, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
-            output_session.frames.write_can(expected_frames)
+            output_session.frames.write(expected_frames)
 
             # Wait 1 s and then read the received values.
             # They should be the same as the ones sent.
             time.sleep(1)
 
-            actual_frames = list(input_session.frames.read_can(1))
+            actual_frames = list(input_session.frames.read(1))
             assert len(expected_frames) == len(actual_frames)
             for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
                 assert_can_frame(i, expected, actual)
@@ -136,13 +136,13 @@ def test_queued_loopback(nixnet_in_interface, nixnet_out_interface):
             payload_list = [2, 4, 8, 16]
             expected_frames = [
                 types.CanFrame(66, False, constants.FrameType.CAN_DATA, bytes(bytearray(payload_list)))]
-            output_session.frames.write_can(expected_frames)
+            output_session.frames.write(expected_frames)
 
             # Wait 1 s and then read the received values.
             # They should be the same as the ones sent.
             time.sleep(1)
 
-            actual_frames = list(input_session.frames.read_can(1))
+            actual_frames = list(input_session.frames.read(1))
             assert len(expected_frames) == len(actual_frames)
             for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
                 assert_can_frame(i, expected, actual)
@@ -173,13 +173,13 @@ def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
             expected_frames = [
                 types.CanFrame(66, False, constants.FrameType.CAN_DATA, bytes(bytearray(first_payload_list))),
                 types.CanFrame(67, False, constants.FrameType.CAN_DATA, bytes(bytearray(second_payload_list)))]
-            output_session.frames.write_can(expected_frames)
+            output_session.frames.write(expected_frames)
 
             # Wait 1 s and then read the received values.
             # They should be the same as the ones sent.
             time.sleep(1)
 
-            actual_frames = list(input_session.frames.read_can())
+            actual_frames = list(input_session.frames.read())
             assert len(expected_frames) == len(actual_frames)
             for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
                 assert_can_frame(i, expected, actual)

@@ -35,7 +35,7 @@ Author       National Instruments
    >>>     input_session.intf.can_term = constants.CanTerm.ON
    >>>     input_session.intf.baud_rate = 125000
 
-   >>>     frames = input_session.frames.read_can(count)
+   >>>     frames = input_session.frames.read(count)
    >>>     for frame in frames:
    >>>         print('Received frame:')
    >>>         print(frame)
