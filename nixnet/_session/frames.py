@@ -95,11 +95,12 @@ class InFrames(Frames):
         buffer, number_of_bytes_returned = _funcs.nx_read_frame(self._handle, number_of_bytes_to_read, timeout)
         return buffer[0:number_of_bytes_returned]
 
-    def read_raw(
+    def read(
             self,
             number_to_read,
-            timeout=constants.TIMEOUT_NONE):
-        # type: (int, float) -> typing.Iterable[types.RawFrame]
+            timeout=constants.TIMEOUT_NONE,
+            frame_type=types.XnetFrame):
+        # type: (int, float, typing.Type[types.FrameFactory]) -> typing.Iterable[types.Frame]
         """Read raw CAN frames.
 
         Args:
@@ -119,45 +120,19 @@ class InFrames(Frames):
                 If 'timeout' is 'constants.TIMEOUT_NONE', this function does not
                 wait and immediately returns all available frames up to the
                 limit 'number_to_read' specifies.
+            frame_type(:any:`nixnet.types.FrameFactory`): A factory for the
+                desired frame formats.
 
         Yields:
-            :any:`nixnet.types.RawFrame`
+            :any:`nixnet.types.Frame`
         """
+        from_raw = typing.cast(typing.Callable[[types.RawFrame], types.Frame], frame_type.from_raw)
         # NOTE: If the frame payload exceeds the base unit, this will return
         # less than number_to_read
         number_of_bytes_to_read = number_to_read * _frames.nxFrameFixed_t.size
         buffer = self.read_bytes(number_of_bytes_to_read, timeout)
         for frame in _frames.iterate_frames(buffer):
-            yield frame
-
-    def read_can(
-            self,
-            number_to_read,
-            timeout=constants.TIMEOUT_NONE):
-        # type: (int, float) -> typing.Iterable[types.CanFrame]
-        """Read :any:`nixnet.types.CanFrame` data.
-
-        Args:
-            number_to_read(int): Number of CAN frames to read.
-            timeout(float): The time in seconds to wait for number to read
-                frame bytes to become available.
-
-                If 'timeout' is positive, this function waits for
-                'number_to_read' frames to be received, then
-                returns complete frames up to that number. If the frames do not
-                arrive prior to the 'timeout', an error is returned.
-
-                If 'timeout' is 'constants.TIMEOUT_INFINITE', this function
-                waits indefinitely for 'number_to_read' frames.
-
-                If 'timeout' is 'constants.TIMEOUT_NONE', this function does not
-                wait and immediately returns all available frames up to the
-                limit 'number_to_read' specifies.
-        Yields:
-            :any:`nixnet.types.CanFrame`
-        """
-        for frame in self.read_raw(number_to_read, timeout):
-            yield types.CanFrame.from_raw(frame)
+            yield from_raw(frame)
 
 
 class SinglePointInFrames(Frames):
@@ -184,30 +159,27 @@ class SinglePointInFrames(Frames):
             constants.TIMEOUT_NONE)
         return buffer[0:number_of_bytes_returned]
 
-    def read_raw(self):
-        # type: () -> typing.Iterable[types.RawFrame]
+    def read(
+            self,
+            frame_type=types.XnetFrame):
+        # type: (typing.Type[types.FrameFactory]) -> typing.Iterable[types.Frame]
         """Read raw CAN frames.
 
+        Args:
+            frame_type(:any:`nixnet.types.FrameFactory`): A factory for the
+                desired frame formats.
+
         Yields:
-            :any:`nixnet.types.RawFrame`
+            :any:`nixnet.types.Frame`
         """
+        from_raw = typing.cast(typing.Callable[[types.RawFrame], types.Frame], frame_type.from_raw)
         # NOTE: If the frame payload exceeds the base unit, this will return
         # less than number_to_read
         number_to_read = len(self)
         number_of_bytes_to_read = number_to_read * _frames.nxFrameFixed_t.size
         buffer = self.read_bytes(number_of_bytes_to_read)
         for frame in _frames.iterate_frames(buffer):
-            yield frame
-
-    def read_can(self):
-        # type: () -> typing.Iterable[types.CanFrame]
-        """Read :any:`nixnet.types.CanFrame` data.
-
-        Yields:
-            :any:`nixnet.types.CanFrame`
-        """
-        for frame in self.read_raw():
-            yield types.CanFrame.from_raw(frame)
+            yield from_raw(frame)
 
 
 class OutFrames(Frames):
@@ -245,15 +217,15 @@ class OutFrames(Frames):
         """
         _funcs.nx_write_frame(self._handle, bytes(frame_bytes), timeout)
 
-    def write_raw(
+    def write(
             self,
-            raw_frames,
+            frames,
             timeout=10):
-        # type: (typing.Iterable[types.RawFrame], float) -> None
+        # type: (typing.Iterable[types.Frame], float) -> None
         """Write raw CAN frame data.
 
         Args:
-            raw_frames(list): One or more :any:`nixnet.types.RawFrame` objects to be
+            frames(list): One or more :any:`nixnet.types.Frame` objects to be
                 written to the session.
             timeout(float): The time in seconds to wait for number to read
                 frame bytes to become available.
@@ -272,39 +244,10 @@ class OutFrames(Frames):
                 call this function again at a later time with the same data.
         """
         units = itertools.chain.from_iterable(
-            _frames.serialize_frame(frame)
-            for frame in raw_frames)
+            _frames.serialize_frame(frame.to_raw())
+            for frame in frames)
         bytes = b"".join(units)
         self.write_bytes(bytes, timeout)
-
-    def write_can(
-            self,
-            can_frames,
-            timeout=10):
-        # type: (typing.Iterable[types.CanFrame], float) -> None
-        """Write CAN frame data.
-
-        Args:
-            can_frames(list): One or more :any:`nixnet.types.CanFrame` objects to be
-                written to the session.
-            timeout(float): The time in seconds to wait for number to read
-                frame bytes to become available.
-
-                If 'timeout' is positive, this function waits up to that 'timeout'
-                for space to become available in queues. If the space is not
-                available prior to the 'timeout', a 'timeout' error is returned.
-
-                If 'timeout' is 'constants.TIMEOUT_INFINITE', this functions
-                waits indefinitely for space to become available in queues.
-
-                If 'timeout' is 'constants.TIMEOUT_NONE', this function does not
-                wait and immediately returns with a 'timeout' error if all data
-                cannot be queued. Regardless of the 'timeout' used, if a 'timeout'
-                error occurs, none of the data is queued, so you can attempt to
-                call this function again at a later time with the same data.
-        """
-        raw_frames = (frame.to_raw() for frame in can_frames)
-        self.write_raw(raw_frames, timeout)
 
 
 class SinglePointOutFrames(Frames):
@@ -326,34 +269,21 @@ class SinglePointOutFrames(Frames):
         """
         _funcs.nx_write_frame(self._handle, bytes(frame_bytes), constants.TIMEOUT_NONE)
 
-    def write_raw(
+    def write(
             self,
-            raw_frames):
-        # type: (typing.Iterable[types.RawFrame]) -> None
+            frames):
+        # type: (typing.Iterable[types.Frame]) -> None
         """Write raw CAN frame data.
 
         Args:
-            raw_frames(list): One or more :any:`nixnet.types.RawFrame` objects to be
+            frames(list): One or more :any:`nixnet.types.Frame` objects to be
                 written to the session.
         """
         units = itertools.chain.from_iterable(
-            _frames.serialize_frame(frame)
-            for frame in raw_frames)
+            _frames.serialize_frame(frame.to_raw())
+            for frame in frames)
         bytes = b"".join(units)
         self.write_bytes(bytes)
-
-    def write_can(
-            self,
-            can_frames):
-        # type: (typing.Iterable[types.CanFrame]) -> None
-        """Write CAN frame data.
-
-        Args:
-            can_frames(list): One or more :any:`nixnet.types.CanFrame` objects to be
-                written to the session.
-        """
-        raw_frames = (frame.to_raw() for frame in can_frames)
-        self.write_raw(raw_frames)
 
 
 class Frame(collection.Item):

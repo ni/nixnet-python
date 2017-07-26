@@ -2,14 +2,24 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import abc
 import collections
 import typing  # NOQA: F401
 
+import six
+
 from nixnet import _cconsts
 from nixnet import _errors
+from nixnet import _py2
 from nixnet import constants
 
-__all__ = ['DriverVersion', 'CanComm', 'RawFrame', 'CanFrame']
+__all__ = [
+    'DriverVersion',
+    'CanComm',
+    'FrameFactory',
+    'Frame',
+    'RawFrame',
+    'CanFrame']
 
 
 DriverVersion = collections.namedtuple(
@@ -62,7 +72,55 @@ class CanComm(CanComm_):
     pass
 
 
-class RawFrame(object):
+@six.add_metaclass(abc.ABCMeta)
+class FrameFactory(object):
+    """ABC for creating :any:`nixnet.types.Frame` objects."""
+
+    __slots__ = ()
+
+    @_py2.abstractclassmethod
+    def from_raw(cls, frame):  # NOQA: N805 can't detect abstractclassmethod
+        # No type annotation because mypy doesn't understand
+        # abstractclassmethod is the same as classmethod
+        """Convert from RawFrame."""
+        pass
+
+
+@six.add_metaclass(abc.ABCMeta)
+class Frame(FrameFactory):
+    """ABC for frame objects."""
+
+    __slots__ = ()
+
+    @abc.abstractmethod
+    def to_raw(self):
+        # type: () -> RawFrame
+        """Convert to RawFrame."""
+        pass
+
+    @abc.abstractproperty
+    def type(self):
+        # type: () -> constants.FrameType
+        """:any:`nixnet._enums.FrameType`: Frame format."""
+        pass
+
+    @abc.abstractmethod
+    def __eq__(self, other):
+        pass
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
+
+    @abc.abstractmethod
+    def __repr__(self):
+        pass
+
+
+class RawFrame(Frame):
     """Raw Frame.
 
     Attributes:
@@ -77,7 +135,7 @@ class RawFrame(object):
     __slots__ = [
         "timestamp",
         "identifier",
-        "type",
+        "_type",
         "flags",
         "info",
         "payload"]
@@ -86,10 +144,23 @@ class RawFrame(object):
         # type: (int, int, constants.FrameType, int, int, bytes) -> None
         self.timestamp = timestamp
         self.identifier = identifier
-        self.type = type
+        self._type = type
         self.flags = flags
         self.info = info
         self.payload = payload
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame."""
+        return frame
+
+    def to_raw(self):
+        """Convert to RawFrame."""
+        return self
+
+    @property
+    def type(self):
+        return self._type
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -103,13 +174,6 @@ class RawFrame(object):
                 self.payload == other_frame.payload))
         else:
             return NotImplemented
-
-    def __ne__(self, other):
-        result = self.__eq__(other)
-        if result is NotImplemented:
-            return result
-        else:
-            return not result
 
     def __repr__(self):
         # type: () -> typing.Text
@@ -126,7 +190,7 @@ class RawFrame(object):
             self.info)
 
 
-class CanFrame(object):
+class CanFrame(Frame):
     """CAN Frame.
 
     Attributes:
@@ -143,7 +207,7 @@ class CanFrame(object):
         "identifier",
         "extended",
         "echo",
-        "type",
+        "_type",
         "timestamp",
         "payload"]
 
@@ -155,13 +219,12 @@ class CanFrame(object):
         self.identifier = identifier
         self.extended = extended
         self.echo = False  # Used only for Read
-        self.type = type
+        self._type = type
         self.timestamp = 0  # Used only for Read
         self.payload = payload
 
     @classmethod
     def from_raw(cls, frame):
-        # type: (RawFrame) -> CanFrame
         """Convert from RawFrame.
 
         >>> raw = RawFrame(5, 0x20000001, constants.FrameType.CAN_DATA, _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO, 0, b'')
@@ -179,7 +242,6 @@ class CanFrame(object):
         return can_frame
 
     def to_raw(self):
-        # type: () -> RawFrame
         """Convert to RawFrame.
 
         >>> CanFrame(1, True, constants.FrameType.CAN_DATA).to_raw()
@@ -198,6 +260,10 @@ class CanFrame(object):
             flags |= _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO
         return RawFrame(self.timestamp, identifier, self.type, flags, 0, self.payload)
 
+    @property
+    def type(self):
+        return self._type
+
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             other_frame = typing.cast(CanFrame, other)
@@ -211,13 +277,6 @@ class CanFrame(object):
         else:
             return NotImplemented
 
-    def __ne__(self, other):
-        result = self.__eq__(other)
-        if result is NotImplemented:
-            return result
-        else:
-            return not result
-
     def __repr__(self):
         # type: () -> typing.Text
         """CanFrame debug representation.
@@ -230,3 +289,23 @@ class CanFrame(object):
             self.echo,
             self.type,
             self.timestamp)
+
+
+class XnetFrame(FrameFactory):
+    """Create `Frame` based on `RawFrame` content."""
+
+    __slots__ = ()
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame."""
+        frame_type = {
+            constants.FrameType.CAN_DATA: CanFrame,
+            constants.FrameType.CAN20_DATA: CanFrame,
+            constants.FrameType.CANFD_DATA: CanFrame,
+            constants.FrameType.CANFDBRS_DATA: CanFrame,
+            constants.FrameType.CAN_REMOTE: CanFrame,
+        }.get(frame.type)
+        if frame_type is None:
+            raise NotImplementedError("Unsupported frame type", frame.type)
+        return frame_type.from_raw(frame)

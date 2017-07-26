@@ -66,7 +66,7 @@ def main():
                     payload[index] = byte + i
 
                 frame.payload = payload
-                output_session.frames.write_can([frame])
+                output_session.frames.write([frame])
                 print('Sent frame with ID %s payload: %s' % (id, payload))
 
                 # Wait 1 s and then read the received values.
@@ -74,7 +74,7 @@ def main():
                 time.sleep(1)
 
                 count = 1
-                frames = input_session.frames.read_can(count)
+                frames = input_session.frames.read(count)
                 for frame in frames:
                     print('Received frame: ')
                     pp.pprint(frame)
