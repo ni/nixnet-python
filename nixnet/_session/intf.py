@@ -214,7 +214,7 @@ class Interface(object):
 
     def set_can_ext_tcvr_config(self, value):
         # type: (int) -> None
-        ''': Configure XS series CAN hardware to communicate properly with your external transceiver.
+        '''Configure XS series CAN hardware to communicate properly with your external transceiver.
 
         Args:
             value(int): Bitfield
