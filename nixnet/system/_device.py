@@ -23,10 +23,15 @@ class Device(object):
             return self._handle == typing.cast(Device, other._handle)
         elif isinstance(other, six.string_types):
             return self._name == typing.cast(typing.Text, other)
-        return False
+        else:
+            return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
 
     def __hash__(self):
         return hash(self._handle)

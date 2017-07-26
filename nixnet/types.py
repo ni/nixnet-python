@@ -101,10 +101,15 @@ class RawFrame(object):
                 self.flags == other_frame.flags,
                 self.info == other_frame.info,
                 self.payload == other_frame.payload))
-        return False
+        else:
+            return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
 
     def __repr__(self):
         # type: () -> typing.Text
@@ -203,10 +208,15 @@ class CanFrame(object):
                 self.type == other_frame.type,
                 self.timestamp == other_frame.timestamp,
                 self.payload == other_frame.payload))
-        return False
+        else:
+            return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
 
     def __repr__(self):
         # type: () -> typing.Text

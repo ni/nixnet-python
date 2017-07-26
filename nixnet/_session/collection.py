@@ -2,6 +2,7 @@
 from __future__ import division
 from __future__ import print_function
 
+import abc
 import collections
 import typing  # NOQA: F401
 
@@ -10,6 +11,7 @@ import six
 from nixnet import _props
 
 
+@six.add_metaclass(abc.ABCMeta)
 class Collection(collections.Mapping):
     """Collection of items in a session."""
 
@@ -80,10 +82,15 @@ class Collection(collections.Mapping):
             return (
                 self._handle == other_collection._handle and
                 self._list_cache == other_collection._list_cache)
-        return False
+        else:
+            return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
 
     @property
     def _list_cache(self):
@@ -92,9 +99,10 @@ class Collection(collections.Mapping):
             self.__list_cache = list(_props.get_session_list(self._handle))
         return self.__list_cache
 
+    @abc.abstractmethod
     def _create_item(self, handle, index, name):
         # type: (int, int, typing.Text) -> Item
-        raise NotImplementedError("Leaf classes must implement this")
+        pass
 
 
 class Item(object):
@@ -111,10 +119,15 @@ class Item(object):
             return (
                 self._handle == other_item._handle and
                 self._index == other_item._index)
-        return False
+        else:
+            return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
 
     def __int__(self):
         # type: () -> int

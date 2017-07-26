@@ -13,10 +13,15 @@ class SubFrame(object):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self._handle == other._handle
-        return False
+        else:
+            return NotImplemented
 
     def __ne__(self, other):
-        return not self.__eq__(other)
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
 
     def __hash__(self):
         return hash(self._handle)
