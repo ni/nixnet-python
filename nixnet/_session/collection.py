@@ -2,6 +2,7 @@
 from __future__ import division
 from __future__ import print_function
 
+import abc
 import collections
 import typing  # NOQA: F401
 
@@ -10,6 +11,7 @@ import six
 from nixnet import _props
 
 
+@six.add_metaclass(abc.ABCMeta)
 class Collection(collections.Mapping):
     """Collection of items in a session."""
 
@@ -97,9 +99,10 @@ class Collection(collections.Mapping):
             self.__list_cache = list(_props.get_session_list(self._handle))
         return self.__list_cache
 
+    @abc.abstractmethod
     def _create_item(self, handle, index, name):
         # type: (int, int, typing.Text) -> Item
-        raise NotImplementedError("Leaf classes must implement this")
+        pass
 
 
 class Item(object):
