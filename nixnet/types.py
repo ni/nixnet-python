@@ -16,6 +16,7 @@ from nixnet import constants
 __all__ = [
     'DriverVersion',
     'CanComm',
+    'CanIdentifier',
     'FrameFactory',
     'Frame',
     'RawFrame',
@@ -72,6 +73,96 @@ class CanComm(CanComm_):
     pass
 
 
+class CanIdentifier(object):
+    """CAN frame arbitration identifier.
+
+    Attributes:
+        identifier(int): CAN frame arbitration identifier
+        extended(bool): If the identifier is extended
+    """
+
+    _FRAME_ID_MASK = 0x000003FF
+    _EXTENDED_FRAME_ID_MASK = 0x1FFFFFFF
+
+    def __init__(self, identifier, extended=False):
+        # type: (int, bool) -> None
+        self.identifier = identifier
+        self.extended = extended
+
+    @classmethod
+    def from_raw(cls, raw):
+        # type: (int) -> CanIdentifier
+        """Parse a raw frame identifier into a CanIdentifier
+
+        Args:
+            raw(int): A raw frame identifier
+
+        Returns:
+            CanIdentifier: parsed value
+
+        >>> CanIdentifier.from_raw(0x1)
+        CanIdentifier(0x1)
+        >>> CanIdentifier.from_raw(0x20000001)
+        CanIdentifier(0x1, extended=True)
+        """
+        extended = bool(raw & _cconsts.NX_FRAME_ID_CAN_IS_EXTENDED)
+        if extended:
+            identifier = raw & cls._EXTENDED_FRAME_ID_MASK
+        else:
+            identifier = raw & cls._FRAME_ID_MASK
+        return cls(identifier, extended)
+
+    def __int__(self):
+        """Convert CanIdentifier into a raw frame identifier
+
+        >>> hex(int(CanIdentifier(1)))
+        '0x1'
+        >>> hex(int(CanIdentifier(1, True)))
+        '0x20000001'
+        """
+        identifier = self.identifier
+        if self.extended:
+            if identifier != (identifier & self._EXTENDED_FRAME_ID_MASK):
+                _errors.check_for_error(_cconsts.NX_ERR_UNDEFINED_FRAME_ID)
+            identifier |= _cconsts.NX_FRAME_ID_CAN_IS_EXTENDED
+        else:
+            if identifier != (identifier & self._FRAME_ID_MASK):
+                _errors.check_for_error(_cconsts.NX_ERR_UNDEFINED_FRAME_ID)
+        return identifier
+
+    def __eq__(self, other):
+        if isinstance(other, CanIdentifier):
+            other_id = typing.cast(CanIdentifier, other)
+            return all((
+                self.identifier == other_id.identifier,
+                self.extended == other_id.extended))
+        else:
+            return NotImplemented
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
+
+    def __repr__(self):
+        """CanIdentifier debug representation.
+
+        >>> CanIdentifier(1)
+        CanIdentifier(0x1)
+        >>> CanIdentifier(1, True)
+        CanIdentifier(0x1, extended=True)
+        """
+        if self.extended:
+            return "CanIdentifier(0x{:x}, extended={})".format(
+                self.identifier,
+                self.extended)
+        else:
+            return "CanIdentifier(0x{:x})".format(
+                self.identifier)
+
+
 @six.add_metaclass(abc.ABCMeta)
 class FrameFactory(object):
     """ABC for creating :any:`nixnet.types.Frame` objects."""
@@ -125,7 +216,7 @@ class RawFrame(Frame):
 
     Attributes:
         timestamp(int): Absolute time the XNET interface received the end-of-frame.
-        identifier(int): CAN frame arbitration identifier.
+        identifier(int): Frame identifier.
         type(:any:`nixnet._enums.FrameType`): Frame type.
         flags(int): Flags that qualify the type.
         info(int): Info that qualify the type.
@@ -194,8 +285,7 @@ class CanFrame(Frame):
     """CAN Frame.
 
     Attributes:
-        identifier(int): CAN frame arbitration identifier.
-        extended(bool): If the identifier uses an extended format.
+        identifier(:any:`nixnet.types.CanIdentifier`): CAN frame arbitration identifier.
         echo(bool): If the frame is an echo of a successful
             transmit rather than being received from the network.
         type(:any:`nixnet._enums.FrameType`): Frame type.
@@ -205,7 +295,6 @@ class CanFrame(Frame):
 
     __slots__ = [
         "identifier",
-        "extended",
         "echo",
         "_type",
         "timestamp",
@@ -214,10 +303,12 @@ class CanFrame(Frame):
     _FRAME_ID_MASK = 0x000003FF
     _EXTENDED_FRAME_ID_MASK = 0x1FFFFFFF
 
-    def __init__(self, identifier, extended, type, payload=b""):
-        # type: (int, bool, constants.FrameType, bytes) -> None
-        self.identifier = identifier
-        self.extended = extended
+    def __init__(self, identifier, type, payload=b""):
+        # type: (typing.Union[CanIdentifier, int], constants.FrameType, bytes) -> None
+        if isinstance(identifier, int):
+            self.identifier = CanIdentifier(identifier)
+        else:
+            self.identifier = identifier
         self.echo = False  # Used only for Read
         self._type = type
         self.timestamp = 0  # Used only for Read
@@ -229,14 +320,10 @@ class CanFrame(Frame):
 
         >>> raw = RawFrame(5, 0x20000001, constants.FrameType.CAN_DATA, _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO, 0, b'')
         >>> CanFrame.from_raw(raw)
-        CanFrame(identifier=0x1, echo=True, type=FrameType.CAN_DATA, timestamp=0x5, payload=...)
+        CanFrame(CanIdentifier(0x1, extended=True), echo=True, type=FrameType.CAN_DATA, timestamp=0x5, payload=...)
         """
-        extended = bool(frame.identifier & _cconsts.NX_FRAME_ID_CAN_IS_EXTENDED)
-        if extended:
-            identifier = frame.identifier & cls._EXTENDED_FRAME_ID_MASK
-        else:
-            identifier = frame.identifier & cls._FRAME_ID_MASK
-        can_frame = CanFrame(identifier, extended, constants.FrameType(frame.type), frame.payload)
+        identifier = CanIdentifier.from_raw(frame.identifier)
+        can_frame = CanFrame(identifier, constants.FrameType(frame.type), frame.payload)
         can_frame.timestamp = frame.timestamp
         can_frame.echo = bool(frame.flags & _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO)
         return can_frame
@@ -244,17 +331,10 @@ class CanFrame(Frame):
     def to_raw(self):
         """Convert to RawFrame.
 
-        >>> CanFrame(1, True, constants.FrameType.CAN_DATA).to_raw()
+        >>> CanFrame(CanIdentifier(1, True), constants.FrameType.CAN_DATA).to_raw()
         RawFrame(timestamp=0x0, identifier=0x20000001, type=FrameType.CAN_DATA, flags=0x0, info=0x0, payload=...)
         """
-        identifier = self.identifier
-        if self.extended:
-            if identifier != (identifier & self._EXTENDED_FRAME_ID_MASK):
-                _errors.check_for_error(_cconsts.NX_ERR_UNDEFINED_FRAME_ID)
-            identifier |= _cconsts.NX_FRAME_ID_CAN_IS_EXTENDED
-        else:
-            if identifier != (identifier & self._FRAME_ID_MASK):
-                _errors.check_for_error(_cconsts.NX_ERR_UNDEFINED_FRAME_ID)
+        identifier = int(self.identifier)
         flags = 0
         if self.echo:
             flags |= _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO
@@ -269,7 +349,6 @@ class CanFrame(Frame):
             other_frame = typing.cast(CanFrame, other)
             return all((
                 self.identifier == other_frame.identifier,
-                self.extended == other_frame.extended,
                 self.echo == other_frame.echo,
                 self.type == other_frame.type,
                 self.timestamp == other_frame.timestamp,
@@ -281,10 +360,10 @@ class CanFrame(Frame):
         # type: () -> typing.Text
         """CanFrame debug representation.
 
-        >>> CanFrame(1, True, constants.FrameType.CAN_DATA)
-        CanFrame(identifier=0x1, echo=False, type=FrameType.CAN_DATA, timestamp=0x0, payload=...)
+        >>> CanFrame(1, constants.FrameType.CAN_DATA)
+        CanFrame(CanIdentifier(0x1), echo=False, type=FrameType.CAN_DATA, timestamp=0x0, payload=...)
         """
-        return "CanFrame(identifier=0x{:x}, echo={}, type={}, timestamp=0x{:x}, payload=...)".format(
+        return "CanFrame({}, echo={}, type={}, timestamp=0x{:x}, payload=...)".format(
             self.identifier,
             self.echo,
             self.type,

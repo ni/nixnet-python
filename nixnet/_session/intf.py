@@ -158,15 +158,13 @@ class Interface(object):
         in that it provides a list of frames for replay filtering. This
         property provides an alternate format for you to specify the frames by
         their CAN arbitration ID or LIN unprotected ID. The property's data
-        type is an array of unsigned 32-bit integer (U32). Each integer
-        represents a CAN or LIN frame's identifier, using the same encoding as
-        the Raw Frame Format.
+        type is an array of integers. Each integer represents a CAN or LIN
+        frame's identifier, using the same encoding as :any:`nixnet.types.RawFrame`.
 
-        Within each CAN frame ID value, bit 29 (hex 20000000) indicates the CAN
-        identifier format (set for extended, clear for standard). If bit 29 is
-        clear, the lower 11 bits (0-10) contain the CAN frame identifier. If
-        bit 29 is set, the lower 29 bits (0-28) contain the CAN frame
-        identifier. LIN frame ID values may be within the range of possible LIN
+        For CAN Frames, see :any:`nixnet.types.CanIdentifier` for parsing and
+        generating raw identifiers.
+
+        LIN frame ID values may be within the range of possible LIN
         IDs (0-63).
 
         See also :any:`Interface.out_strm_list`.

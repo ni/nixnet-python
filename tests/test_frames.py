@@ -79,7 +79,6 @@ def test_serialize_frame_with_base_payload():
 
 def assert_can_frame(index, sent, received):
     assert sent.identifier == received.identifier
-    assert sent.extended == received.extended
     assert sent.echo == received.echo
     assert sent.type == received.type
     assert sent.payload == received.payload
