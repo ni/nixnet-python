@@ -1,5 +1,5 @@
-nixnet.signals
-==============
+nixnet.session.signals
+======================
 
 .. automodule:: nixnet._session.signals
     :members:

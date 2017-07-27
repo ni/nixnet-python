@@ -1,5 +1,5 @@
-nixnet.j1939
-============
+nixnet.session.j1939
+====================
 
 .. automodule:: nixnet._session.j1939
     :members:
