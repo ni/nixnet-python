@@ -180,3 +180,58 @@ def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
             assert len(expected_frames) == len(actual_frames)
             for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
                 assert_can_frame(i, expected, actual)
+
+
+@pytest.mark.integration
+def test_frames_container(nixnet_in_interface):
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        assert frame_name in input_session.frames
+        assert 0 in input_session.frames
+
+        assert len(input_session.frames) == 1
+        frames = list(input_session.frames)
+        assert len(frames) == 1
+        frame = frames[0]
+
+        assert str(frame) == frame_name
+        assert int(frame) == 0
+
+        assert frame == input_session.frames[0]
+        assert frame == input_session.frames[frame_name]
+        with pytest.raises(IndexError):
+            input_session.frames[1]
+        with pytest.raises(KeyError):
+            input_session.frames["<random>"]
+
+        assert frame == input_session.frames.get(0)
+        assert frame == input_session.frames.get(frame_name)
+        assert input_session.frames.get(1) is None
+        assert input_session.frames.get("<random>") is None
+
+
+@pytest.mark.integration
+def test_frames_properties(nixnet_out_interface):
+    """Verify Frames properties.
+
+    These are pretty transient and can't easily be verified against known good
+    values.  For now, we'll just verify the calls don't call catastrophically
+    and someone can always run py.test with ``-s``_.
+    """
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameOutQueuedSession(
+            nixnet_out_interface,
+            database_name,
+            cluster_name,
+            frame_name) as output_session:
+        print(output_session.frames.payld_len_max)

@@ -56,7 +56,6 @@ def test_session_properties(nixnet_out_interface):
 
         print(output_session.num_pend)
         print(output_session.num_unused)
-        print(output_session.frames.payld_len_max)
 
         print(output_session.queue_size)
         output_session.queue_size = 2040
@@ -113,38 +112,3 @@ def test_parse_can_comm_bitfield():
         last_err=constants.CanLastErr.CRC,
         tx_err_count=255,
         rx_err_count=255)
-
-
-@pytest.mark.integration
-def test_frames_container(nixnet_in_interface):
-    database_name = 'NIXNET_example'
-    cluster_name = 'CAN_Cluster'
-    frame_name = 'CANEventFrame1'
-
-    with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
-            database_name,
-            cluster_name,
-            frame_name) as input_session:
-        assert frame_name in input_session.frames
-        assert 0 in input_session.frames
-
-        assert len(input_session.frames) == 1
-        frames = list(input_session.frames)
-        assert len(frames) == 1
-        frame = frames[0]
-
-        assert str(frame) == frame_name
-        assert int(frame) == 0
-
-        assert frame == input_session.frames[0]
-        assert frame == input_session.frames[frame_name]
-        with pytest.raises(IndexError):
-            input_session.frames[1]
-        with pytest.raises(KeyError):
-            input_session.frames["<random>"]
-
-        assert frame == input_session.frames.get(0)
-        assert frame == input_session.frames.get(frame_name)
-        assert input_session.frames.get(1) is None
-        assert input_session.frames.get("<random>") is None
