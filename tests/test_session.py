@@ -403,3 +403,41 @@ def test_wait_for_intf_remote_wakeup(nixnet_in_interface, nixnet_out_interface):
 
         # Add a successful wait_for_intf_remote_wakeup (frame written to
         # output_session causes the input_session to wake up).
+
+
+@pytest.mark.integration
+def test_connect_terminals_failures(nixnet_in_interface):
+    """Verifies connect_terminals fails when expected to."""
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        with pytest.raises(errors.XnetError) as excinfo:
+            input_session.connect_terminals("FrontPanel0", "FrontPanel1")
+        assert excinfo.value.error_type in [
+            constants.Err.SYNCHRONIZATION_NOT_ALLOWED,
+            constants.Err.INVALID_SYNCHRONIZATION_COMBINATION]
+
+
+@pytest.mark.integration
+def test_disconnect_terminals_failures(nixnet_in_interface):
+    """Verifies disconnect_terminals fails when expected to."""
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        with pytest.raises(errors.XnetError) as excinfo:
+            input_session.disconnect_terminals("FrontPanel0", "FrontPanel1")
+        assert excinfo.value.error_type in [
+            constants.Err.SYNCHRONIZATION_NOT_ALLOWED,
+            constants.Err.INVALID_SYNCHRONIZATION_COMBINATION]
