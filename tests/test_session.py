@@ -24,6 +24,26 @@ def nixnet_out_interface(request):
 
 
 @pytest.mark.integration
+def test_session_container(nixnet_in_interface, nixnet_out_interface):
+    with nixnet.FrameInStreamSession(nixnet_in_interface) as input_session:
+        with nixnet.FrameInStreamSession(nixnet_out_interface) as output_session:
+            assert input_session == input_session
+            assert not (input_session == output_session)
+            assert not (input_session == 1)
+
+            assert not (input_session != input_session)
+            assert input_session != output_session
+            assert input_session != 1
+
+        set(input_session)  # Testing `__hash__`
+
+        print(repr(input_session))
+
+    with pytest.warns(errors.XnetResourceWarning):
+        input_session.close()
+
+
+@pytest.mark.integration
 def test_session_properties(nixnet_out_interface):
     """Verify Session properties.
 
@@ -76,6 +96,7 @@ def test_session_properties_transition(nixnet_out_interface):
             frame_name) as output_session:
         with pytest.raises(errors.XnetError):
             print(output_session.time_start)
+        with pytest.raises(errors.XnetError):
             print(output_session.time_communicating)
         assert output_session.state == constants.SessionInfoState.STOPPED
 
@@ -89,8 +110,11 @@ def test_session_properties_transition(nixnet_out_interface):
 
         with pytest.raises(errors.XnetError):
             print(output_session.time_start)
+        with pytest.raises(errors.XnetError):
             print(output_session.time_communicating)
         assert output_session.state == constants.SessionInfoState.STOPPED
+
+        output_session.check_fault()
 
 
 def test_parse_can_comm_bitfield():
