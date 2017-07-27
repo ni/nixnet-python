@@ -42,6 +42,7 @@ def six_input(queue):
     ['n', '1, 2, 3', 'q'],
     ['invalid', '1, 2, 3', 'q'],
     ['y', 'invalid', 'q'],
+    ['y', 'invalid'] + 0x100 * [''] + ['q'],
 ])
 @mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 @mock.patch('time.sleep', lambda time: None)
@@ -55,6 +56,7 @@ def test_can_frame_queued_empty_session(input_values):
     ['n', '1, 2, 3', 'q'],
     ['invalid', '1, 2, 3', 'q'],
     ['y', 'invalid', 'q'],
+    ['y', 'invalid'] + 0x100 * [''] + ['q'],
 ])
 @mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 @mock.patch('time.sleep', lambda time: None)
@@ -70,6 +72,7 @@ def test_can_frame_stream_empty_session(input_values):
     ['y', '1', 'q'],
     ['y', '1, 2, 3', 'q'],
     ['y', 'invalid', 'q'],
+    ['y', 'invalid'] + 0x100 * [''] + ['q'],
 ])
 @mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 @mock.patch('time.sleep', lambda time: None)
