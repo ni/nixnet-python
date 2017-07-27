@@ -99,7 +99,7 @@ def test_can_identifier_overflow():
 @mock.patch('nixnet._errors.check_for_error', raise_code)
 def test_can_identifier_extended_overflow():
     with pytest.raises(errors.XnetError):
-        int(types.CanIdentifier(0xFFFFFFFF))
+        int(types.CanIdentifier(0xFFFFFFFF, True))
 
 
 def test_raw_frame_equality():
