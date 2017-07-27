@@ -109,3 +109,31 @@ def test_stream_session_requires_baud_rate(nixnet_out_interface):
 
         # Starting the stream session does not error because the baud_rate is set
         output_session.start()
+
+
+@pytest.mark.integration
+def test_sleep_transition(nixnet_in_interface):
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        assert not input_session.can_comm.sleep
+
+        with pytest.raises(errors.XnetError) as excinfo:
+            input_session.intf.can_tcvr_state = constants.CanTcvrState.SLEEP
+        assert excinfo.value.error_type == constants.Err.SESSION_NOT_STARTED
+        assert not input_session.can_comm.sleep
+
+        input_session.start()
+        assert not input_session.can_comm.sleep
+
+        input_session.intf.can_tcvr_state = constants.CanTcvrState.SLEEP
+        assert input_session.can_comm.sleep
+
+        input_session.intf.can_tcvr_state = constants.CanTcvrState.NORMAL
+        assert not input_session.can_comm.sleep

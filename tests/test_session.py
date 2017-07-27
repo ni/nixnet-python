@@ -77,6 +77,7 @@ def test_session_properties(nixnet_out_interface):
             frame_name) as output_session:
         print(output_session.time_current)
         assert output_session.state == constants.SessionInfoState.STOPPED
+
         print(output_session.can_comm)
 
         assert output_session.database_name == database_name
@@ -287,3 +288,118 @@ def test_flush_output_queue(nixnet_in_interface, nixnet_out_interface):
             assert len(expected_frames) == len(actual_frames)
             for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
                 assert_can_frame(i, expected, actual)
+
+
+@pytest.mark.integration
+def test_wait_for_intf_communicating(nixnet_in_interface):
+    """Verifies wait_for_intf_communicating does not catastrophically fail.
+
+    Considering the wait time is so short, it'd be hard to verify it,
+    especially in a reproducible way.
+
+    Assumes test_frames.test_queued_loopback works.
+    """
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        input_session.start()
+        input_session.wait_for_intf_communicating()
+
+        expected_frames = []
+        actual_frames = list(input_session.frames.read(1))
+        assert len(expected_frames) == len(actual_frames)
+        for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
+            assert_can_frame(i, expected, actual)
+
+
+@pytest.mark.integration
+def test_wait_for_transmit_complete(nixnet_in_interface, nixnet_out_interface):
+    """Verifies wait_for_transmit_complete does not fail catastrophically.
+
+    We can at least see how long it takes us to wait.  Longer term, we should
+    switch the test to start waiting and then call ``input_session.start`` and
+    ensure it unblocks after that call.
+
+    To see the wait time, run py.test with ``-s``_.
+
+    Assumes test_frames.test_queued_loopback works.
+    """
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        with nixnet.FrameOutQueuedSession(
+                nixnet_out_interface,
+                database_name,
+                cluster_name,
+                frame_name) as output_session:
+            output_session.auto_start = False
+            input_session.start()
+
+            expected_frames = [
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x01\x02\x03\x04'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x05\x06\x08\x09'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x01\x02\x03\x04'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x05\x06\x08\x09'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x01\x02\x03\x04'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x05\x06\x08\x09'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x01\x02\x03\x04'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x05\x06\x08\x09'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x01\x02\x03\x04'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x05\x06\x08\x09'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x01\x02\x03\x04'),
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x05\x06\x08\x09')]
+
+            output_session.start()
+            initial = time.time()
+            output_session.frames.write(expected_frames)
+            written = time.time()
+            output_session.wait_for_transmit_complete(10)
+            finished = time.time()
+
+            print("Write took {} s".format(written - initial))
+            print("Wait took {} s".format(finished - written))
+
+
+@pytest.mark.integration
+def test_wait_for_intf_remote_wakeup(nixnet_in_interface, nixnet_out_interface):
+    """Verifies wait_for_intf_remote_wakeup does not fail catastrophically.
+
+    We can at least see how long it takes us to wait.  Longer term, we should
+    switch the test to start waiting and then call ``input_session.start`` and
+    ensure it unblocks after that call.
+
+    To see the wait time, run py.test with ``-s``_.
+
+    Assumes test_frames.test_queued_loopback works.
+    """
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        input_session.start()
+        input_session.intf.can_tcvr_state = constants.CanTcvrState.SLEEP
+        assert input_session.can_comm.sleep
+
+        with pytest.raises(errors.XnetError) as excinfo:
+            input_session.wait_for_intf_remote_wakeup(5)
+        assert excinfo.value.error_type == constants.Err.EVENT_TIMEOUT
+
+        # Add a successful wait_for_intf_remote_wakeup (frame written to
+        # output_session causes the input_session to wake up).
