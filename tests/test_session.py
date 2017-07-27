@@ -200,3 +200,90 @@ def test_start_explicit(nixnet_in_interface, nixnet_out_interface):
             assert len(expected_frames) == len(actual_frames)
             for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
                 assert_can_frame(i, expected, actual)
+
+
+@pytest.mark.integration
+def test_flush_baseline(nixnet_in_interface, nixnet_out_interface):
+    """Demonstrate that the non-flush version of the code works.
+
+    Assumes test_frames.test_queued_loopback works.
+    """
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        with nixnet.FrameOutQueuedSession(
+                nixnet_out_interface,
+                database_name,
+                cluster_name,
+                frame_name) as output_session:
+            output_session.auto_start = False
+            input_session.start()
+
+            dropped_frames = [
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x01\x02\x03\x04')]
+            output_session.frames.write(dropped_frames)
+
+            expected_frames = [
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x05\x06\x08\x09')]
+            output_session.frames.write(expected_frames)
+
+            expected_frames = dropped_frames + expected_frames
+
+            output_session.start()
+            # Wait 1 s and then read the received values.
+            # They should be the same as the ones sent.
+            time.sleep(1)
+
+            actual_frames = list(input_session.frames.read(2))
+            assert len(expected_frames) == len(actual_frames)
+            for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
+                assert_can_frame(i, expected, actual)
+
+
+@pytest.mark.integration
+def test_flush_output_queue(nixnet_in_interface, nixnet_out_interface):
+    """Verifies that `flush` drops frames in the output queue
+
+    Assumes test_frames.test_queued_loopback works.
+    """
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        with nixnet.FrameOutQueuedSession(
+                nixnet_out_interface,
+                database_name,
+                cluster_name,
+                frame_name) as output_session:
+            output_session.auto_start = False
+            input_session.start()
+
+            dropped_frames = [
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x01\x02\x03\x04')]
+            output_session.frames.write(dropped_frames)
+            output_session.flush()
+
+            expected_frames = [
+                types.CanFrame(66, constants.FrameType.CAN_DATA, b'\x05\x06\x08\x09')]
+            output_session.frames.write(expected_frames)
+
+            output_session.start()
+            # Wait 1 s and then read the received values.
+            # They should be the same as the ones sent.
+            time.sleep(1)
+
+            actual_frames = list(input_session.frames.read(2))
+            assert len(expected_frames) == len(actual_frames)
+            for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
+                assert_can_frame(i, expected, actual)
