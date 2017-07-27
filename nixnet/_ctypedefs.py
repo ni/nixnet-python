@@ -27,19 +27,11 @@ class bool8(ctypes.c_ubyte):  # NOQA: N801
 
     BYTES = 1
 
-    @classmethod
-    def from_param(cls, param):
-        return ctypes.c_ubyte(1) if bool(param) else ctypes.c_ubyte(0)
-
 
 class bool32(ctypes.c_uint):  # NOQA: N801
     """32-bit boolean C-type."""
 
     BYTES = 4
-
-    @classmethod
-    def from_param(cls, param):
-        return ctypes.c_uint(1) if bool(param) else ctypes.c_uint(0)
 
 
 class byte(ctypes.c_char):  # NOQA: N801
