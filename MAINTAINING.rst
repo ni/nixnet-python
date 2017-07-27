@@ -7,7 +7,6 @@ Cutting a release
 Update the version
 
 #. ``nixnet/VERSION``
-#. ``docs/conf.py``'s ``version`` and ``release`` fields
 #. Create release notes (``clog-cli`` can help)
 #. Include release notes in commit messaage
 #. Publish a PR
