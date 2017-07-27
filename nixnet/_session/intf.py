@@ -135,7 +135,7 @@ class Interface(object):
         CAN arbitration IDs or LIN unprotected IDs, you can use
         Interface:Output Stream List By ID instead of this property.
 
-        :: note: Only CAN and LIN interfaces currently support this property.
+        .. note:: Only CAN and LIN interfaces currently support this property.
         '''
         for ref in _props.get_session_intf_out_strm_list(self._handle):
             yield _frame.Frame(ref)
@@ -187,7 +187,7 @@ class Interface(object):
 
         See also :any:`Interface.out_strm_list`.
 
-        .. note: Only CAN and LIN interfaces currently support this property.
+        .. note:: Only CAN and LIN interfaces currently support this property.
         '''
         return constants.OutStrmTimng(_props.get_session_intf_out_strm_timng(self._handle))
 
@@ -255,9 +255,9 @@ class Interface(object):
         transmit at the same time. NI-XNET stores the frames in an internal
         queue and transmits them onto the CAN bus when the bus is idle.
 
-        .. note: You can modify this property only when the interface is
+        .. note:: You can modify this property only when the interface is
            stopped.
-        .. note: Setting this property causes the internal queue to be flushed.
+        .. note:: Setting this property causes the internal queue to be flushed.
            If you start a session, queue frames, and then stop the session and
            change this mode, some frames may be lost. Set this property to the
            desired value once; do not constantly change modes.
@@ -287,9 +287,9 @@ class Interface(object):
         frame is not transmitted successfully, no further transmissions are
         attempted.
 
-        .. note: You can modify this property only when the interface is
+        .. note:: You can modify this property only when the interface is
            stopped.
-        .. note: Setting this property causes the internal queue to be flushed.
+        .. note:: Setting this property causes the internal queue to be flushed.
            If you start a session, queue frames, and then stop the session and
            change this mode, some frames may be lost. Set this property to the
            desired value once; do not constantly change modes.
@@ -312,9 +312,9 @@ class Interface(object):
         different termination requirements, and the Off and On values have
         different meanings, see :any:`nixnet._enums.CanTerm`.
 
-        .. note: You can modify this property only when the interface is
+        .. note:: You can modify this property only when the interface is
            stopped.
-        .. note: This property does not take effect until the interface is
+        .. note:: This property does not take effect until the interface is
            started.
         '''
         return constants.CanTerm(_props.get_session_intf_can_term(self._handle))
@@ -418,13 +418,13 @@ class Interface(object):
         The Transmit I/O mode may not exceed the mode set by the XNET Cluster
         CAN:I/O Mode property.
 
-        .. note: This property is not supported in CAN FD+BRS ISO mode. If you
+        .. note:: This property is not supported in CAN FD+BRS ISO mode. If you
            are using ISO CAN FD mode, you define the transmit I/O mode in the
            database with the I/O Mode property of the frame. (When a database
            is not used (for example, in frame stream mode), define the transmit
            I/O mode with the frame type field of the frame data.) Note that ISO
            CAN FD mode is the default mode for CAN FD in NI-XNET.
-        .. note: This property affects only the transmission of frames. Even if
+        .. note:: This property affects only the transmission of frames. Even if
            you set the transmit I/O mode to CAN, the interface still can
            receive frames in FD modes (if the XNET Cluster CAN:I/O Mode
            property is configured in an FD mode).

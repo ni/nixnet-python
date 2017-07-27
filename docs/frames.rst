@@ -1,5 +1,5 @@
-nixnet.frames
-=============
+nixnet.session.frames
+=====================
 
 .. automodule:: nixnet._session.frames
     :members:
