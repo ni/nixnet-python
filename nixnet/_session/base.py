@@ -380,7 +380,6 @@ class SessionBase(object):
         bitfield, _ = _funcs.nx_read_state(self._handle, constants.ReadState.CAN_COMM, _ctypedefs.u32)
         return _utils.parse_can_comm_bitfield(bitfield)
 
-    @property
     def check_fault(self):
         # type: () -> None
         """Check for an asynchronous fault.

@@ -33,9 +33,19 @@ def test_intf_container(nixnet_in_interface):
             database_name,
             cluster_name,
             frame_name) as input_session:
-        assert str(input_session.intf) == nixnet_in_interface
+        assert input_session.intf == input_session.intf
         assert input_session.intf == nixnet_in_interface
+        assert not (input_session.intf == "<random>")
+        assert not (input_session.intf == 5)
+
+        assert not (input_session.intf != input_session.intf)
+        assert not (input_session.intf != nixnet_in_interface)
         assert input_session.intf != "<random>"
+        assert input_session.intf != 5
+
+        assert str(input_session.intf) == nixnet_in_interface
+
+        print(input_session.intf)
 
 
 @pytest.mark.integration

@@ -2,6 +2,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import mock  # type: ignore
+
 import pytest  # type: ignore
 
 import nixnet
@@ -23,6 +25,18 @@ def nixnet_out_interface(request):
     return interface
 
 
+def raise_code(code):
+    raise errors.XnetError("", code)
+
+
+@mock.patch('nixnet._errors.check_for_error', raise_code)
+def test_flatten_items_invalid():
+    with pytest.raises(errors.XnetError):
+        _utils.flatten_items('A,B')
+    with pytest.raises(errors.XnetError):
+        _utils.flatten_items(5)
+
+
 @pytest.mark.integration
 def test_session_container(nixnet_in_interface, nixnet_out_interface):
     with nixnet.FrameInStreamSession(nixnet_in_interface) as input_session:
@@ -35,7 +49,7 @@ def test_session_container(nixnet_in_interface, nixnet_out_interface):
             assert input_session != output_session
             assert input_session != 1
 
-        set(input_session)  # Testing `__hash__`
+        set([input_session])  # Testing `__hash__`
 
         print(repr(input_session))
 
