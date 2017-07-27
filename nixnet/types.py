@@ -300,7 +300,7 @@ class CanFrame(Frame):
         "timestamp",
         "payload"]
 
-    _FRAME_ID_MASK = 0x000003FF
+    _FRAME_ID_MASK = 0x000007FF
     _EXTENDED_FRAME_ID_MASK = 0x1FFFFFFF
 
     def __init__(self, identifier, type, payload=b""):
