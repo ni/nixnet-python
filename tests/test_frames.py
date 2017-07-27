@@ -4,11 +4,14 @@ from __future__ import print_function
 
 import time
 
+import mock  # type: ignore
+
 import pytest  # type: ignore
 
 import nixnet
 from nixnet import _frames
 from nixnet import constants
+from nixnet import errors
 from nixnet import types
 
 
@@ -22,6 +25,10 @@ def nixnet_in_interface(request):
 def nixnet_out_interface(request):
     interface = request.config.getoption("--nixnet-out-interface")
     return interface
+
+
+def raise_code(code):
+    raise errors.XnetError("", code)
 
 
 def test_iterate_frames_with_empty_payload():
@@ -62,17 +69,103 @@ def test_iterate_frames_with_multiple_frames():
     assert base_frame == base_frame_2
 
 
+@mock.patch('nixnet._errors.check_for_error', raise_code)
+def test_iterate_frames_corrupted_frame():
+    empty_bytes = b'\x01\x00\x00\x00\x00\x00\x00'
+    with pytest.raises(errors.XnetError):
+        list(_frames.iterate_frames(empty_bytes))
+
+
+def test_can_identifier_equality():
+    assert types.CanIdentifier(130) == types.CanIdentifier(130)
+    assert types.CanIdentifier(130, True) == types.CanIdentifier(130, True)
+    assert not (types.CanIdentifier(130) == types.CanIdentifier(13))
+    assert not (types.CanIdentifier(130) == types.CanIdentifier(130, True))
+
+    assert not (types.CanIdentifier(130) != types.CanIdentifier(130))
+    assert not (types.CanIdentifier(130, True) != types.CanIdentifier(130, True))
+    assert types.CanIdentifier(130) != types.CanIdentifier(13)
+    assert types.CanIdentifier(130) != types.CanIdentifier(130, True)
+
+
+@mock.patch('nixnet._errors.check_for_error', raise_code)
+def test_can_identifier_overflow():
+    valid_extended_identifier = 0xFFFF
+    int(types.CanIdentifier(valid_extended_identifier, extended=True))
+    with pytest.raises(errors.XnetError):
+        int(types.CanIdentifier(valid_extended_identifier))
+
+
+@mock.patch('nixnet._errors.check_for_error', raise_code)
+def test_can_identifier_extended_overflow():
+    with pytest.raises(errors.XnetError):
+        int(types.CanIdentifier(0xFFFFFFFF))
+
+
+def test_raw_frame_equality():
+    empty_frame = types.RawFrame(1, 2, constants.FrameType.CAN_DATA, 4, 5, b'')
+    base_frame = types.RawFrame(1, 2, constants.FrameType.CAN_DATA, 4, 5, b'\x01')
+
+    assert empty_frame == empty_frame
+    assert not (empty_frame == base_frame)
+    assert not (empty_frame == 5)
+
+    assert not (empty_frame != empty_frame)
+    assert empty_frame != base_frame
+    assert empty_frame != 5
+
+
+def test_raw_frame_conversion():
+    base_frame = types.RawFrame(1, 2, constants.FrameType.CAN_DATA, 4, 5, b'\x01')
+    assert base_frame == base_frame, "Pre-requisite failed"
+
+    assert base_frame == types.RawFrame.from_raw(base_frame)
+    assert base_frame == base_frame.to_raw()
+
+
+def test_can_frame_equality():
+    empty_frame = types.CanFrame(0, constants.FrameType.CAN_DATA, b'')
+    base_frame = types.CanFrame(0, constants.FrameType.CAN_DATA, b'\x01')
+
+    assert empty_frame == empty_frame
+    assert not (empty_frame == base_frame)
+    assert not (empty_frame == 5)
+
+    assert not (empty_frame != empty_frame)
+    assert empty_frame != base_frame
+    assert empty_frame != 5
+
+
 def test_serialize_frame_with_empty_payload():
     empty_frame = types.RawFrame(1, 2, constants.FrameType.CAN_DATA, 4, 5, b'')
-    (bytes, ) = list(_frames.serialize_frame(empty_frame))
-    assert bytes == b'\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x04\x05\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+    (base, ) = list(_frames.serialize_frame(empty_frame))
+    assert base[0:16] == b'\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x04\x05\x00'
+    assert base[16:] == b'\x00\x00\x00\x00\x00\x00\x00\x00'
 
 
 def test_serialize_frame_with_base_payload():
     payload = b'\x01\x02\x03\x04\x05\x06\x07\x08'
     base_frame = types.RawFrame(1, 2, constants.FrameType.CAN_DATA, 4, 5, payload)
-    (bytes, ) = list(_frames.serialize_frame(base_frame))
-    assert bytes == b'\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x04\x05\x08\x01\x02\x03\x04\x05\x06\x07\x08'
+    (base, ) = list(_frames.serialize_frame(base_frame))
+    assert base[0:16] == b'\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x04\x05\x08'
+    assert base[16:] == b'\x01\x02\x03\x04\x05\x06\x07\x08'
+
+
+def test_serialize_frame_with_payload_unit():
+    payload = b'\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B'
+    base_frame = types.RawFrame(1, 2, constants.FrameType.CAN_DATA, 4, 5, payload)
+    (base, payload) = list(_frames.serialize_frame(base_frame))
+    assert base[0:16] == b'\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x04\x05\x0b'
+    assert base[16:] == b'\x01\x02\x03\x04\x05\x06\x07\x08'
+    assert payload == b'\x09\x0A\x0B\x00\x00\x00\x00\x00'
+
+
+@mock.patch('nixnet._errors.check_for_error', raise_code)
+def test_serialize_frame_with_excessive_payload():
+    payload = 0xFF * b'\x01\x02\x03\x04\x05\x06\x07\x08'
+    base_frame = types.RawFrame(1, 2, constants.FrameType.CAN_DATA, 4, 5, payload)
+    with pytest.raises(errors.XnetError):
+        list(_frames.serialize_frame(base_frame))
 
 
 def assert_can_frame(index, sent, received):
@@ -183,7 +276,7 @@ def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_frames_container(nixnet_in_interface):
+def test_session_frames_container(nixnet_in_interface):
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     frame_name = 'CANEventFrame1'
@@ -193,8 +286,18 @@ def test_frames_container(nixnet_in_interface):
             database_name,
             cluster_name,
             frame_name) as input_session:
+        assert input_session.frames == input_session.frames
+        assert not (input_session.frames == 5)
+
+        assert not (input_session.frames != input_session.frames)
+        assert input_session.frames != 5
+
+        print(repr(input_session.frames))
+
         assert frame_name in input_session.frames
         assert 0 in input_session.frames
+        with pytest.raises(TypeError):
+            (1, 2) in input_session.frames
 
         assert len(input_session.frames) == 1
         frames = list(input_session.frames)
@@ -210,15 +313,19 @@ def test_frames_container(nixnet_in_interface):
             input_session.frames[1]
         with pytest.raises(KeyError):
             input_session.frames["<random>"]
+        with pytest.raises(TypeError):
+            input_session.frames[(1, 2)]
 
         assert frame == input_session.frames.get(0)
         assert frame == input_session.frames.get(frame_name)
         assert input_session.frames.get(1) is None
         assert input_session.frames.get("<random>") is None
+        with pytest.raises(TypeError):
+            input_session.frames.get((1, 2))
 
 
 @pytest.mark.integration
-def test_frames_properties(nixnet_out_interface):
+def test_session_frames_properties(nixnet_out_interface):
     """Verify Frames properties.
 
     These are pretty transient and can't easily be verified against known good
@@ -235,3 +342,27 @@ def test_frames_properties(nixnet_out_interface):
             cluster_name,
             frame_name) as output_session:
         print(output_session.frames.payld_len_max)
+
+
+@pytest.mark.integration
+def test_session_frame_container(nixnet_in_interface):
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    frame_name = 'CANEventFrame1'
+
+    with nixnet.FrameInQueuedSession(
+            nixnet_in_interface,
+            database_name,
+            cluster_name,
+            frame_name) as input_session:
+        frames = input_session.frames
+        assert len(frames) == 1, "Pre-requisite failed"
+        frame = frames[0]
+
+        assert frame == frame
+        assert not (frame == 5)
+
+        assert not (frame != frame)
+        assert frame != 5
+
+        print(repr(frame))

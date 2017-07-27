@@ -333,6 +333,10 @@ class CanFrame(Frame):
 
         >>> CanFrame(CanIdentifier(1, True), constants.FrameType.CAN_DATA).to_raw()
         RawFrame(timestamp=0x0, identifier=0x20000001, type=FrameType.CAN_DATA, flags=0x0, info=0x0, payload=...)
+        >>> c = CanFrame(CanIdentifier(1, True), constants.FrameType.CAN_DATA)
+        >>> c.echo = True
+        >>> c.to_raw()
+        RawFrame(timestamp=0x0, identifier=0x20000001, type=FrameType.CAN_DATA, flags=0x80, info=0x0, payload=...)
         """
         identifier = int(self.identifier)
         flags = 0
