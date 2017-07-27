@@ -650,23 +650,6 @@ def read_signal_xy(
     raise NotImplementedError("Placeholder")
 
 
-def read_state(
-        session_ref,
-        state_id,
-        state_size,
-        state_value,
-        fault):
-    raise NotImplementedError("Placeholder")
-
-
-def write_state(
-        session_ref,
-        state_id,
-        state_size,
-        state_value):
-    raise NotImplementedError("Placeholder")
-
-
 def write_signal_waveform(
         session_ref,
         timeout,
