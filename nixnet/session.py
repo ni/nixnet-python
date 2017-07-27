@@ -28,8 +28,7 @@ class FrameInStreamSession(base.SessionBase):
     """Frame Input Stream session.
 
     This session reads all frames received from the network using a single
-    stream. It typically is used for analyzing and/or logging all frame traffic
-    in the network.
+    stream.
 
     The input data is returned as a list of frames. Because all frames are
     returned, your application must evaluate identification in each frame (such
@@ -52,6 +51,9 @@ class FrameInStreamSession(base.SessionBase):
     When used with a FlexRay interface, frames from both channels are returned.
     For example, if a frame is received in a static slot on both channel A and
     channel B, two frames are returned from the read function.
+
+    .. note:: Typical use case: Analyzing and/or logging all frame traffic in
+       the network.
     """
 
     def __init__(
@@ -104,8 +106,6 @@ class FrameOutStreamSession(base.SessionBase):
     each of which transmits as soon as possible. Frames transmit sequentially
     (one after another).
 
-    This session is not supported for FlexRay.
-
     Like Frame Input Stream sessions, you can create more than one Frame Output
     Stream session for a given interface.
 
@@ -127,6 +127,8 @@ class FrameOutStreamSession(base.SessionBase):
     frame for transmit is defined in the database (in-memory or otherwise), it
     is transmitted using its database checksum type. If the frame for transmit
     is not defined in the database, it is transmitted using enhanced checksum.
+
+    This session is not supported for FlexRay.
 
     The frame values for this session are stored in a queue, such that every value
     provided is transmitted.
@@ -317,9 +319,7 @@ class FrameOutQueuedSession(base.SessionBase):
 class FrameInSinglePointSession(base.SessionBase):
     """Frame Input Single-Point session.
 
-    This session reads the most recent value received for each frame. It
-    typically is used for control or simulation applications that require lower
-    level access to frames (not signals).
+    This session reads the most recent value received for each frame.
 
     This session does not use queues to store each received frame. If the
     interface receives two frames prior to calling the read frame function, that
@@ -327,6 +327,9 @@ class FrameInSinglePointSession(base.SessionBase):
 
     The input data is returned as a list of frames, one for each frame
     specified for the session.
+
+    .. note:: Typical use case: Control or simulation applications that require
+       lower level access to frames (not signals).
     """
 
     def __init__(
@@ -384,9 +387,7 @@ class FrameInSinglePointSession(base.SessionBase):
 class FrameOutSinglePointSession(base.SessionBase):
     """Frame Output Single-Point session.
 
-    This session writes frame values for the next transmit. It typically is used
-    for control or simulation applications that require lower level access to
-    frames (not signals).
+    This session writes frame values for the next transmit.
 
     This session does not use queues to store frame values. If the write frame
     function is called twice before the next transmit, the transmitted frame
@@ -405,6 +406,9 @@ class FrameOutSinglePointSession(base.SessionBase):
     than the Payload Length configured in the database, the queue is flushed and
     no frames transmit. For other interfaces, transmitting a number of payload
     bytes different than the frame payload may cause unexpected results on the bus.
+
+    .. note:: Typical use case: Control or simulation applications that require lower level access
+       to frames (not signals).
     """
     def __init__(
             self,
@@ -461,9 +465,7 @@ class FrameOutSinglePointSession(base.SessionBase):
 class SignalInSinglePointSession(base.SessionBase):
     """Signal Input Single-Point session.
 
-    This session reads the most recent value received for each signal. It
-    typically is used for control or simulation applications, such as Hardware
-    In the Loop (HIL).
+    This session reads the most recent value received for each signal.
 
     This session does not use queues to store each received frame. If the
     interface receives two frames prior to calling
@@ -483,6 +485,9 @@ class SignalInSinglePointSession(base.SessionBase):
     name :trigger:.<frame name>.<signal name>. This signal returns 1.0 only if a
     frame with appropriate set multiplexer bit has been received since the last
     Read or Start.
+
+    .. note:: Typical use case: Control or simulation applications, such as
+       Hardware In the Loop (HIL).
     """
 
     def __init__(
@@ -545,9 +550,7 @@ class SignalInSinglePointSession(base.SessionBase):
 class SignalOutSinglePointSession(base.SessionBase):
     """Signal Out Single-Point session.
 
-    This session writes signal values for the next frame transmit. It typically
-    is used for control or simulation applications, such as Hardware In the Loop
-    (HIL).
+    This session writes signal values for the next frame transmit.
 
     This session does not use queues to store signal values. If
     :any:`nixnet._session.signals.SinglePointOutSignals.write` is called twice
@@ -561,6 +564,9 @@ class SignalOutSinglePointSession(base.SessionBase):
     list, you can write a value of 0.0 to suppress writing of that frame, or any
     value not equal to 0.0 to write the frame. You can specify multiple trigger
     signals for different frames in the same session.
+
+    .. note:: Typical use case: Control or simulation applications, such as
+       Hardware In the Loop (HIL).
     """
 
     def __init__(
