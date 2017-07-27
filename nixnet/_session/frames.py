@@ -355,9 +355,9 @@ class Frame(collection.Item):
         This function is useful for testing of ECU behavior when a cyclic frame
         is expected, but is missing for N cycles.
 
-        .. note: Only CAN interfaces currently support this function.
+        .. note:: Only CAN interfaces currently support this function.
 
-        .. note: This property is valid only for output sessions and frames
+        .. note:: This property is valid only for output sessions and frames
             with cyclic timing (that is, not event-based frames).
 
         Args:
@@ -386,7 +386,7 @@ class Frame(collection.Item):
         This function is useful for testing ECU behavior when a corrupted
         checksum is transmitted.
 
-        .. note: This function is valid only for output sessions.
+        .. note:: This function is valid only for output sessions.
 
         Args:
             n(int): Number of checksums to be corrupted.
@@ -405,7 +405,7 @@ class Frame(collection.Item):
         a node with the defined address. All other frames with the same PGN but
         transmitted by other nodes are ignored.
 
-        .. note: You can use this function in input sessions only.
+        .. note:: You can use this function in input sessions only.
 
         Args:
             address(str or int): Decimal value of the address. Leave blank to
