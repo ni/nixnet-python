@@ -25,6 +25,26 @@ def nixnet_out_interface(request):
 
 
 @pytest.mark.integration
+def test_system_container():
+    with system.System() as sys_one:
+        with system.System() as sys_two:
+            assert sys_one == sys_one
+            assert not (sys_one == sys_two)
+            assert not (sys_one == 1)
+
+            assert not (sys_one != sys_one)
+            assert sys_one != sys_two
+            assert sys_one != 1
+
+        set([sys_one])  # Testing `__hash__`
+
+        print(repr(sys_one))
+
+    with pytest.warns(errors.XnetResourceWarning):
+        sys_one.close()
+
+
+@pytest.mark.integration
 def test_system_properties():
     """Verify System properties.
 
@@ -36,9 +56,13 @@ def test_system_properties():
         print(sys.ver)
         print(sys.cdaq_pkt_time)
 
+        old = sys.cdaq_pkt_time
+        sys.cdaq_pkt_time = old + 1
+        sys.cdaq_pkt_time = old
+
 
 @pytest.mark.integration
-def test_system_intf_refs_all_superset(nixnet_in_interface, nixnet_out_interface):
+def test_system_intf_refs_superset(nixnet_in_interface, nixnet_out_interface):
     with system.System() as sys:
         intfs = set(sys.intf_refs_all)
         can_intfs = set(sys.intf_refs_can)
@@ -48,12 +72,31 @@ def test_system_intf_refs_all_superset(nixnet_in_interface, nixnet_out_interface
 
 
 @pytest.mark.integration
+def test_system_intf_refs_all_superset(nixnet_in_interface, nixnet_out_interface):
+    with system.System() as sys:
+        intfs_all = set(sys.intf_refs_all)
+        intfs = set(sys.intf_refs)
+        assert intfs_all.issuperset(intfs)
+
+
+@pytest.mark.integration
 def test_device_container():
     with system.System() as sys:
         devs = list(sys.dev_refs)
         assert 0 < len(devs), "Pre-requisite failed"
         dev = devs[0]
+
         assert dev == str(dev)
+        assert dev == dev
+        assert not (dev == 100)
+
+        assert not (dev != dev)
+        assert dev != "<Invalid>"
+        assert dev != 100
+
+        set([dev])  # Testing `__hash__`
+
+        print(repr(dev))
 
 
 @pytest.mark.integration
@@ -77,6 +120,10 @@ def test_device_properties(nixnet_in_interface):
         else:
             raise RuntimeError("Pre-requisite failed: can't find device for interface")
 
+        intf_refs_all = set(dev.intf_refs_all)
+        intf_refs = set(dev.intf_refs)
+        assert intf_refs_all.issuperset(intf_refs)
+
         print(dev.form_fac)
         print(dev.num_ports)
         print(dev.product_num)
@@ -88,13 +135,25 @@ def test_device_properties(nixnet_in_interface):
 @pytest.mark.integration
 def test_intf_container(nixnet_in_interface):
     with system.System() as sys:
-        intfs = set(sys.intf_refs_all)
-
+        intfs = list(sys.intf_refs_all)
         in_intfs = [intf for intf in intfs if intf == nixnet_in_interface]
         assert len(in_intfs) == 1
         in_intf = in_intfs[0]
 
         assert str(in_intf) == nixnet_in_interface
+
+        assert in_intf == nixnet_in_interface
+        assert in_intf == in_intf
+        assert not (in_intf == 100)
+
+        assert not (in_intf != nixnet_in_interface)
+        assert not (in_intf != in_intf)
+        assert in_intf != "<Invalid>"
+        assert in_intf != 100
+
+        set([in_intf])  # Testing `__hash__`
+
+        print(repr(in_intf))
 
 
 @pytest.mark.integration
@@ -111,7 +170,7 @@ def test_intf_blink(nixnet_in_interface):
     by the developer.
     """
     with system.System() as sys:
-        intfs = set(sys.intf_refs_all)
+        intfs = list(sys.intf_refs_all)
         in_intfs = [intf for intf in intfs if intf == nixnet_in_interface]
         assert len(in_intfs) == 1, "Pre-requisite failed"
         in_intf = in_intfs[0]
@@ -143,7 +202,7 @@ def test_intf_properties(nixnet_in_interface):
     with ``-s``_.
     """
     with system.System() as sys:
-        intfs = set(sys.intf_refs_all)
+        intfs = list(sys.intf_refs_all)
         in_intfs = [intf for intf in intfs if intf == nixnet_in_interface]
         assert len(in_intfs) == 1, "Pre-requisite failed"
         in_intf = in_intfs[0]
@@ -152,6 +211,7 @@ def test_intf_properties(nixnet_in_interface):
         print(in_intf.port_num)
         print(in_intf.protocol)
         print(in_intf.can_term_cap)
+        print(in_intf.can_tcvr_cap)
         print(in_intf.dongle_state)
         print(in_intf.dongle_id)
         if in_intf.dongle_id not in [constants.DongleId.DONGLE_LESS, constants.DongleId.UNKNOWN]:
