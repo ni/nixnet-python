@@ -81,11 +81,13 @@ def test_can_identifier_equality():
     assert types.CanIdentifier(130, True) == types.CanIdentifier(130, True)
     assert not (types.CanIdentifier(130) == types.CanIdentifier(13))
     assert not (types.CanIdentifier(130) == types.CanIdentifier(130, True))
+    assert not (types.CanIdentifier(130) == "<invalid>")
 
     assert not (types.CanIdentifier(130) != types.CanIdentifier(130))
     assert not (types.CanIdentifier(130, True) != types.CanIdentifier(130, True))
     assert types.CanIdentifier(130) != types.CanIdentifier(13)
     assert types.CanIdentifier(130) != types.CanIdentifier(130, True)
+    assert types.CanIdentifier(130) != "<invalid>"
 
 
 @mock.patch('nixnet._errors.check_for_error', raise_code)
@@ -99,7 +101,7 @@ def test_can_identifier_overflow():
 @mock.patch('nixnet._errors.check_for_error', raise_code)
 def test_can_identifier_extended_overflow():
     with pytest.raises(errors.XnetError):
-        int(types.CanIdentifier(0xFFFFFFFF))
+        int(types.CanIdentifier(0xFFFFFFFF, True))
 
 
 def test_raw_frame_equality():

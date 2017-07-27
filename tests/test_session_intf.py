@@ -45,7 +45,7 @@ def test_intf_container(nixnet_in_interface):
 
         assert str(input_session.intf) == nixnet_in_interface
 
-        print(input_session.intf)
+        print(repr(input_session.intf))
 
 
 @pytest.mark.integration
