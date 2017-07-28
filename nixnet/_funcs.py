@@ -138,6 +138,40 @@ def nx_read_signal_single_point(
     return timestamp_buffer_ctypes, value_buffer_ctypes
 
 
+def nx_read_signal_waveform(
+        session_ref,  # type: int
+        timeout,  # type: float
+        number_of_signals,  # type: int
+        number_of_values,  # type: int
+):
+    # type: (...) -> typing.Tuple[int, float, typing.List[_ctypedefs.f64], int]
+    total_number_of_values = number_of_values * number_of_signals
+
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
+    timeout_ctypes = _ctypedefs.f64(timeout)
+    start_time_ctypes = _ctypedefs.nxTimestamp_t()
+    delta_time_ctypes = _ctypedefs.f64()
+    value_buffer_ctypes = (_ctypedefs.f64 * total_number_of_values)()  # type: ignore
+    size_of_value_buffer_ctypes = _ctypedefs.u32(
+        _ctypedefs.f64.BYTES * total_number_of_values)
+    number_of_values_returned_ctypes = _ctypedefs.u32()
+    result = _cfuncs.lib.nx_read_signal_waveform(
+        session_ref_ctypes,
+        timeout_ctypes,
+        ctypes.pointer(start_time_ctypes),
+        ctypes.pointer(delta_time_ctypes),
+        value_buffer_ctypes,
+        size_of_value_buffer_ctypes,
+        ctypes.pointer(number_of_values_returned_ctypes),
+    )
+    _errors.check_for_error(result.value)
+    return (
+        start_time_ctypes.value,
+        delta_time_ctypes.value,
+        value_buffer_ctypes,
+        number_of_values_returned_ctypes.value)
+
+
 def nx_read_state(
     session_ref,  # type: int
     state_id,  # type: _enums.ReadState

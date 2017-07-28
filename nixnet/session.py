@@ -21,7 +21,9 @@ __all__ = [
     "FrameInSinglePointSession",
     "FrameOutSinglePointSession",
     "SignalInSinglePointSession",
-    "SignalOutSinglePointSession"]
+    "SignalOutSinglePointSession",
+    "SignalInWaveformSession",
+    "SignalOutWaveformSession"]
 
 
 class FrameInStreamSession(base.SessionBase):
@@ -626,22 +628,151 @@ class SignalOutSinglePointSession(base.SessionBase):
         return self._signals
 
 
+class SignalInWaveformSession(base.SessionBase):
+    """Signal Input Waveform session.
+
+    Using the time when the signal frame is received, this session resamples the
+    signal data to a waveform with a fixed sample rate. This session typically is
+    used for synchronizing XNET data with DAQmx analog/digital input channels.
+    """
+
+    def __init__(
+            self,
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            signals,  # type: typing.Union[typing.Text, typing.List[typing.Text]]
+    ):
+        # type: (...) -> None
+        """Create a Signal Input Waveform session.
+
+        This function creates a Signal Input Waveform session using the named
+        references to database objects.
+
+        Args:
+            interface_name(str): XNET Interface name to use for
+                this session.
+            database_name(str): XNET database name to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name(str): XNET cluster name to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the ``signals`` parameter.
+            signals(list of str): Strings describing signals for the session. The
+                list syntax is as follows:
+
+                ``signals`` contains one or more XNET Signal names. Each name must
+                be one of the following options, whichever uniquely
+                identifies a signal within the database given:
+
+                    - ``<Signal>``
+                    - ``<Frame>.<Signal>``
+                    - ``<Cluster>.<Frame>.<Signal>``
+                    - ``<PDU>.<Signal>``
+                    - ``<Cluster>.<PDU>.<Signal>``
+
+                ``signals`` may also contain one or more trigger signals. For
+                information about trigger signals, refer to Signal Output
+                Waveform Mode or Signal Input Waveform Mode.
+        """
+        flattened_list = _utils.flatten_items(signals)
+        base.SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface_name,
+            constants.CreateSessionMode.SIGNAL_IN_WAVEFORM)
+        self._signals = session_signals.WaveformInSignals(self._handle)
+
+    @property
+    def signals(self):
+        # type: () -> session_signals.WaveformInSignals
+        """:any:`nixnet._session.signals.WaveformInSignals`: Operate on session's signals"""
+        return self._signals
+
+
+class SignalOutWaveformSession(base.SessionBase):
+    """Signal Out Waveform session.
+
+    Using the time when the signal frame is transmitted according to the
+    database, this session resamples the signal data from a waveform with a fixed
+    sample rate. This session typically is used for synchronizing XNET data with
+    DAQmx analog/digital output channels.
+
+    The resampling translates from the waveform timing to each frame's transmit
+    timing. When the time for the frame to transmit occurs, it uses the most
+    recent signal values in the waveform that correspond to that time.
+
+    The frames for this session are stored in queues.
+
+    This session is not supported for a LIN interface operating as slave. For more
+    information, refer to LIN Frame Timing and Session Mode.
+    """
+
+    def __init__(
+            self,
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            signals,  # type: typing.Union[typing.Text, typing.List[typing.Text]]
+    ):
+        # type: (...) -> None
+        """Create a Signal Output Waveform session.
+
+        This function creates a Signal Output Waveform session using the named
+        references to database objects.
+
+        Args:
+            interface_name(str): XNET Interface name to use for
+                this session.
+            database_name(str): XNET database name to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name(str): XNET cluster name to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the ``signals`` parameter.
+            signals(list of str): Strings describing signals for the session. The
+                list syntax is as follows:
+
+                ``signals`` contains one or more XNET Signal names. Each name must
+                be one of the following options, whichever uniquely
+                identifies a signal within the database given:
+
+                    - ``<Signal>``
+                    - ``<Frame>.<Signal>``
+                    - ``<Cluster>.<Frame>.<Signal>``
+                    - ``<PDU>.<Signal>``
+                    - ``<Cluster>.<PDU>.<Signal>``
+
+                ``signals`` may also contain one or more trigger signals. For
+                information about trigger signals, refer to Signal Output
+                Waveform Mode or Signal Output Waveform Mode.
+        """
+        flattened_list = _utils.flatten_items(signals)
+        base.SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface_name,
+            constants.CreateSessionMode.SIGNAL_OUT_WAVEFORM)
+        self._signals = session_signals.WaveformOutSignals(self._handle)
+
+    @property
+    def signals(self):
+        # type: () -> session_signals.WaveformOutSignals
+        """:any:`nixnet._session.signals.WaveformInSignals`: Operate on session's signals"""
+        return self._signals
+
+
 def create_session_by_ref(
         database_refs,
         interface_name,
         mode):
     return _funcs.nx_create_session_by_ref(database_refs, interface_name, mode)
-
-
-def read_signal_waveform(
-        session_ref,
-        timeout,
-        start_time,
-        delta_time,
-        value_buffer,
-        size_of_value_buffer,
-        number_of_values_returned):
-    raise NotImplementedError("Placeholder")
 
 
 def read_signal_xy(
@@ -654,13 +785,6 @@ def read_signal_xy(
         num_pairs_buffer,
         size_of_num_pairs_buffer):
     raise NotImplementedError("Placeholder")
-
-
-def write_signal_waveform(
-        session_ref,
-        timeout,
-        value_buffer):
-    _funcs.nx_write_signal_waveform(session_ref, timeout, value_buffer)
 
 
 def write_signal_xy(
