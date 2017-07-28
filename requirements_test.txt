@@ -12,19 +12,19 @@ check-manifest==0.35
 colorama==0.3.9           # via pytest, sphinx
 coverage==4.4.1
 docutils==0.13.1
-flake8==2.5.5             # via hacking
+flake8==3.4.1             # via hacking
 hacking==0.13.0
 idna==2.5                 # via requests
 imagesize==0.7.1          # via sphinx
 jinja2==2.9.6             # via sphinx
 markupsafe==1.0           # via jinja2
-mccabe==0.2.1             # via flake8, hacking
+mccabe==0.6.1             # via flake8, hacking
 mock==2.0.0
 pbr==3.1.1                # via hacking, mock
 pep8-naming==0.4.1
-pep8==1.5.7               # via flake8, hacking
+pep8==1.7.0               # via flake8, hacking
 py==1.4.34                # via pytest
-pyflakes==0.8.1           # via flake8, hacking
+pyflakes==1.5.0           # via flake8, hacking
 pygments==2.2.0
 pytest-cov==2.5.1
 pytest==3.1.3
