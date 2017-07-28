@@ -27,6 +27,9 @@ Author       National Instruments
     :target: https://coveralls.io/github/ni/nixnet-python?branch=master
     :alt: Unit-test Coverage
 
+.. image:: https://pyup.io/repos/github/ni/nixnet-python/shield.svg
+     :target: https://pyup.io/repos/github/ni/nixnet-python/
+     :alt: Updates
 
 .. code-block:: python
 
