@@ -355,7 +355,7 @@ class FrameInSinglePointSession(base.SessionBase):
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
                 blank, the cluster is extracted from the ``frames`` parameter.
-            frames(list): Strings describing frames for the session. The
+            frames(list of str): Strings describing frames for the session. The
                 list syntax is as follows:
 
                 List contains one or more XNET Frame or PDU names. Each name
@@ -433,7 +433,7 @@ class FrameOutSinglePointSession(base.SessionBase):
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
                 blank, the cluster is extracted from the ``frames`` parameter.
-            frames(list): Strings describing frames for the session. The
+            frames(list of str): Strings describing frames for the session. The
                 list syntax is as follows:
 
                 List contains one or more XNET Frame or PDU names. Each name
@@ -513,7 +513,7 @@ class SignalInSinglePointSession(base.SessionBase):
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
                 blank, the cluster is extracted from the ``signals`` parameter.
-            signals(list): Strings describing signals for the session. The
+            signals(list of str): Strings describing signals for the session. The
                 list syntax is as follows:
 
                 ``signals`` contains one or more XNET Signal names. Each name must
@@ -592,7 +592,7 @@ class SignalOutSinglePointSession(base.SessionBase):
                 interface configuration. The name must specify a cluster from
                 the database given in the database_name parameter. If it is left
                 blank, the cluster is extracted from the ``signals`` parameter.
-            signals(list): Strings describing signals for the session. The
+            signals(list of str): Strings describing signals for the session. The
                 list syntax is as follows:
 
                 ``signals`` contains one or more XNET Signal names. Each name must
