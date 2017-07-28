@@ -1,0 +1,5 @@
+# mypy dependencies
+# These are split out because a mypy dependency needs to be compiled and there
+# aren't pre-compiled wheels for all combinations of python versions and
+# platforms.
+mypy
