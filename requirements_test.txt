@@ -1,0 +1,19 @@
+# Test dependencies
+pytest
+mock
+pytest-cov
+coverage
+
+# flake8 dependencies
+flake8 < 3.4
+hacking
+pep8-naming
+
+# docs dependencies
+sphinx
+sphinx-rtd-theme
+
+# pkg dependencies
+check-manifest
+docutils
+Pygments
