@@ -495,6 +495,66 @@ class LogTriggerFrame(Frame):
         return "LogTriggerFrame(0x{:x})".format(self.timestamp)
 
 
+class StartTriggerFrame(Frame):
+    """Timestamp of :any:`nixnet.session.FrameInStreamSession` start.
+
+    .. note:: This requires enabling
+       :any:`nixnet._session.intf.Interface.start_trig_to_in_strm`.
+
+    Attributes:
+        timestamp(int): Absolute time that the trigger occurred.
+    """
+
+    __slots__ = [
+        "timestamp"]
+
+    def __init__(self, timestamp):
+        # type: (int) -> None
+        self.timestamp = timestamp
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(5, 0, constants.FrameType.SPECIAL_START_TRIGGER, 0, 0, b'')
+        >>> StartTriggerFrame.from_raw(raw)
+        StartTriggerFrame(0x5)
+        """
+        return StartTriggerFrame(frame.timestamp)
+
+    def to_raw(self):
+        """Convert to RawFrame.
+
+        >>> StartTriggerFrame(250).to_raw()
+        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_START_TRIGGER, flags=0x0, info=0x0, payload=...)
+        """
+        identifier = 0
+        flags = 0
+        info = 0
+        payload = b''
+        return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
+
+    @property
+    def type(self):
+        return constants.FrameType.SPECIAL_START_TRIGGER
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(StartTriggerFrame, other)
+            return self.timestamp == other_frame.timestamp
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """StartTriggerFrame debug representation.
+
+        >>> StartTriggerFrame(250)
+        StartTriggerFrame(0xfa)
+        """
+        return "StartTriggerFrame(0x{:x})".format(self.timestamp)
+
+
 class XnetFrame(FrameFactory):
     """Create `Frame` based on `RawFrame` content."""
 
@@ -511,6 +571,7 @@ class XnetFrame(FrameFactory):
             constants.FrameType.CAN_REMOTE: CanFrame,
             constants.FrameType.SPECIAL_DELAY: DelayFrame,
             constants.FrameType.SPECIAL_LOG_TRIGGER: LogTriggerFrame,
+            constants.FrameType.SPECIAL_START_TRIGGER: StartTriggerFrame,
         }.get(frame.type)
         if frame_type is None:
             raise NotImplementedError("Unsupported frame type", frame.type)
