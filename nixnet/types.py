@@ -300,9 +300,6 @@ class CanFrame(Frame):
         "timestamp",
         "payload"]
 
-    _FRAME_ID_MASK = 0x000007FF
-    _EXTENDED_FRAME_ID_MASK = 0x1FFFFFFF
-
     def __init__(self, identifier, type, payload=b""):
         # type: (typing.Union[CanIdentifier, int], constants.FrameType, bytes) -> None
         if isinstance(identifier, int):
@@ -374,6 +371,66 @@ class CanFrame(Frame):
             self.timestamp)
 
 
+class DelayFrame(Frame):
+    """Delay hardware when DelayFrame is outputted.
+
+    .. note:: This requires
+       :any:`nixnet._session.intf.Interface.out_strm_timng` to be in replay mode.
+
+    Attributes:
+        offset(int): Time to delay in milliseconds.
+    """
+
+    __slots__ = [
+        "offset"]
+
+    def __init__(self, offset):
+        # type: (int) -> None
+        self.offset = offset
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(5, 0, constants.FrameType.SPECIAL_DELAY, 0, 0, b'')
+        >>> DelayFrame.from_raw(raw)
+        DelayFrame(5)
+        """
+        return DelayFrame(frame.timestamp)
+
+    def to_raw(self):
+        """Convert to RawFrame.
+
+        >>> DelayFrame(250).to_raw()
+        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_DELAY, flags=0x0, info=0x0, payload=...)
+        """
+        identifier = 0
+        flags = 0
+        info = 0
+        payload = b''
+        return RawFrame(self.offset, identifier, self.type, flags, info, payload)
+
+    @property
+    def type(self):
+        return constants.FrameType.SPECIAL_DELAY
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(DelayFrame, other)
+            return self.offset == other_frame.offset
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """DelayFrame debug representation.
+
+        >>> DelayFrame(250)
+        DelayFrame(250)
+        """
+        return "DelayFrame({})".format(self.offset)
+
+
 class XnetFrame(FrameFactory):
     """Create `Frame` based on `RawFrame` content."""
 
@@ -388,6 +445,7 @@ class XnetFrame(FrameFactory):
             constants.FrameType.CANFD_DATA: CanFrame,
             constants.FrameType.CANFDBRS_DATA: CanFrame,
             constants.FrameType.CAN_REMOTE: CanFrame,
+            constants.FrameType.SPECIAL_DELAY: DelayFrame,
         }.get(frame.type)
         if frame_type is None:
             raise NotImplementedError("Unsupported frame type", frame.type)
