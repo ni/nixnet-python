@@ -371,6 +371,107 @@ class CanFrame(Frame):
             self.timestamp)
 
 
+class CanBusErrorFrame(Frame):
+    """Error detected on hardware bus of a :any:`nixnet.session.FrameInStreamSession`.
+
+    .. note:: This requires enabling
+       :any:`nixnet._session.intf.Interface.bus_err_to_in_strm`.
+
+    Attributes:
+        timestamp(int): Absolute time when the bus error occurred.
+        state (:any:`nixnet._enums.CanCommState`): Communication State
+        tcvr_err (bool): Transceiver Error.
+        bus_err (:any:`nixnet._enums.CanLastErr`): Last Error.
+        tx_err_count (int): Transmit Error Counter.
+        rx_err_count (int): Receive Error Counter.
+    """
+
+    __slots__ = [
+        "timestamp",
+        "state",
+        "tcvr_err",
+        "bus_err",
+        "tx_err_count",
+        "rx_err_count"]
+
+    def __init__(self, timestamp, state, tcvr_err, bus_err, tx_err_count, rx_err_count):
+        # type: (int, constants.CanCommState, bool, constants.CanLastErr, int, int) -> None
+        self.timestamp = timestamp
+        self.state = state
+        self.tcvr_err = tcvr_err
+        self.bus_err = bus_err
+        self.tx_err_count = tx_err_count
+        self.rx_err_count = rx_err_count
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(0x64, 0x0, constants.FrameType.CAN_BUS_ERROR, 0, 0, b'\\x00\\x01\\x02\\x03\\x04')
+        >>> CanBusErrorFrame.from_raw(raw)
+        CanBusErrorFrame(0x64, CanCommState.ERROR_ACTIVE, True, CanLastErr.STUFF, 3, 4)
+        """
+        timestamp = frame.timestamp
+        state = constants.CanCommState(six.indexbytes(frame.payload, 0))
+        tcvr_err = six.indexbytes(frame.payload, 1) != 0
+        bus_err = constants.CanLastErr(six.indexbytes(frame.payload, 1))
+        tx_err_count = six.indexbytes(frame.payload, 3)
+        rx_err_count = six.indexbytes(frame.payload, 4)
+        return CanBusErrorFrame(timestamp, state, tcvr_err, bus_err, tx_err_count, rx_err_count)
+
+    def to_raw(self):
+        """Convert to RawFrame.
+
+        >>> CanBusErrorFrame(100, constants.CanCommState.BUS_OFF, True, constants.CanLastErr.STUFF, 1, 2).to_raw()
+        RawFrame(timestamp=0x64, identifier=0x0, type=FrameType.CAN_BUS_ERROR, flags=0x0, info=0x0, payload=...)
+        """
+        identifier = 0
+        flags = 0
+        info = 0
+
+        payload_data = [
+            self.state.value,
+            1 if self.tcvr_err else 0,
+            self.bus_err.value,
+            self.tx_err_count,
+            self.rx_err_count,
+        ]
+        payload = bytes(payload_data)
+        return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
+
+    @property
+    def type(self):
+        return constants.FrameType.CAN_BUS_ERROR
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(CanBusErrorFrame, other)
+            return all((
+                self.timestamp == other_frame.timestamp,
+                self.state == other_frame.state,
+                self.tcvr_err == other_frame.tcvr_err,
+                self.bus_err == other_frame.bus_err,
+                self.tx_err_count == other_frame.tx_err_count,
+                self.rx_err_count == other_frame.rx_err_count))
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """StartTriggerFrame debug representation.
+
+        >>> StartTriggerFrame(250)
+        StartTriggerFrame(0xfa)
+        """
+        return "CanBusErrorFrame(0x{:x}, {}, {}, {}, {}, {})".format(
+            self.timestamp,
+            self.state,
+            self.tcvr_err,
+            self.bus_err,
+            self.tx_err_count,
+            self.rx_err_count)
+
+
 class DelayFrame(Frame):
     """Delay hardware when DelayFrame is outputted.
 
@@ -569,6 +670,7 @@ class XnetFrame(FrameFactory):
             constants.FrameType.CANFD_DATA: CanFrame,
             constants.FrameType.CANFDBRS_DATA: CanFrame,
             constants.FrameType.CAN_REMOTE: CanFrame,
+            constants.FrameType.CAN_BUS_ERROR: CanBusErrorFrame,
             constants.FrameType.SPECIAL_DELAY: DelayFrame,
             constants.FrameType.SPECIAL_LOG_TRIGGER: LogTriggerFrame,
             constants.FrameType.SPECIAL_START_TRIGGER: StartTriggerFrame,
