@@ -57,10 +57,12 @@ To run the tests::
 
 Examples for debugging failures::
 
-  $ # Only run tests with test_frames in the name; under python3
-  $ tox py3-test -- -k test_frames
+  $ # Only run python3 unit tests
+  $ tox -e py3-test
+  $ # Further filter those tests to all starting with test_frames
+  $ tox -e py3-test -- -k test_frames
   $ # Drop into PDB on first failure and quit when done
-  $ tox py3-test -- -x --pdb
+  $ tox -e py3-test -- -x --pdb
 
 Developer Certificate of Origin (DCO)
 -------------------------------------
