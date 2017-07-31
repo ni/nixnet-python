@@ -431,6 +431,70 @@ class DelayFrame(Frame):
         return "DelayFrame({})".format(self.offset)
 
 
+class LogTriggerFrame(Frame):
+    """Timestamp of when a trigger occurred.
+
+    This frame is generated on input sessions when a rising edge is detected on
+    an external connection.
+
+    .. note:: This requires using
+       :any:`nixnet._session.base.SessionBase.connect_terminals` to connect an
+       external connection to the internal ``LogTrigger`` terminal.
+
+    Attributes:
+        timestamp(int): Absolute time that the trigger occurred.
+    """
+
+    __slots__ = [
+        "timestamp"]
+
+    def __init__(self, timestamp):
+        # type: (int) -> None
+        self.timestamp = timestamp
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(5, 0, constants.FrameType.SPECIAL_LOG_TRIGGER, 0, 0, b'')
+        >>> LogTriggerFrame.from_raw(raw)
+        LogTriggerFrame(0x5)
+        """
+        return LogTriggerFrame(frame.timestamp)
+
+    def to_raw(self):
+        """Convert to RawFrame.
+
+        >>> LogTriggerFrame(250).to_raw()
+        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_LOG_TRIGGER, flags=0x0, info=0x0, payload=...)
+        """
+        identifier = 0
+        flags = 0
+        info = 0
+        payload = b''
+        return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
+
+    @property
+    def type(self):
+        return constants.FrameType.SPECIAL_LOG_TRIGGER
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(LogTriggerFrame, other)
+            return self.timestamp == other_frame.timestamp
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """LogTriggerFrame debug representation.
+
+        >>> LogTriggerFrame(250)
+        LogTriggerFrame(0xfa)
+        """
+        return "LogTriggerFrame(0x{:x})".format(self.timestamp)
+
+
 class XnetFrame(FrameFactory):
     """Create `Frame` based on `RawFrame` content."""
 
@@ -446,6 +510,7 @@ class XnetFrame(FrameFactory):
             constants.FrameType.CANFDBRS_DATA: CanFrame,
             constants.FrameType.CAN_REMOTE: CanFrame,
             constants.FrameType.SPECIAL_DELAY: DelayFrame,
+            constants.FrameType.SPECIAL_LOG_TRIGGER: LogTriggerFrame,
         }.get(frame.type)
         if frame_type is None:
             raise NotImplementedError("Unsupported frame type", frame.type)
