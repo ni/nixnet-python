@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import copy
 import mock  # type: ignore
 
 import pytest  # type: ignore
@@ -13,6 +14,7 @@ from nixnet_examples import can_frame_queued_io
 from nixnet_examples import can_frame_stream_io
 from nixnet_examples import can_signal_conversion
 from nixnet_examples import can_signal_single_point_io
+from nixnet_examples import can_signal_waveform_io
 
 
 MockXnetLibrary = mock.create_autospec(_cfuncs.XnetLibrary, spec_set=True, instance=True)
@@ -24,6 +26,8 @@ MockXnetLibrary.nx_write_frame.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_read_frame.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_write_signal_single_point.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_read_signal_single_point.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nx_write_signal_waveform.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nx_read_signal_waveform.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_convert_frames_to_signals_single_point.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_convert_signals_to_frames_single_point.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_stop.return_value = _ctypedefs.u32(0)
@@ -31,6 +35,9 @@ MockXnetLibrary.nx_clear.return_value = _ctypedefs.u32(0)
 
 
 def six_input(queue):
+    # Leave `input_values` alone for easier debugging
+    queue = copy.copy(queue)
+
     queue.reverse()
 
     def _six_input(prompt=""):
@@ -82,6 +89,21 @@ def test_can_frame_stream_empty_session(input_values):
 def test_can_signal_single_point_empty_session(input_values):
     with mock.patch('six.moves.input', six_input(input_values)):
         can_signal_single_point_io.main()
+
+
+@pytest.mark.parametrize("input_values", [
+    ['y', '1, 2', '3, 4', 'q'],
+    ['n', '1, 2', '3, 4', 'q'],
+    ['invalid', '1, 2', '3, 4', 'q'],
+    ['y', '1, 2', '3', 'q'],
+    ['y', 'invalid', '3, 4', 'q'],
+    ['y', '1, 2', '3, 4'] + 0x100 * [''] + ['q'],
+])
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
+@mock.patch('time.sleep', lambda time: None)
+def test_can_signal_waveform_empty_session(input_values):
+    with mock.patch('six.moves.input', six_input(input_values)):
+        can_signal_waveform_io.main()
 
 
 @pytest.mark.parametrize("input_values", [
