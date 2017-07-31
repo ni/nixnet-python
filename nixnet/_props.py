@@ -2094,28 +2094,6 @@ def get_system_ver_update(
     )
 
 
-def get_system_cdaq_pkt_time(
-    ref,  # type: int
-):
-    # type: (...) -> float
-    return _cprops.get_session_f64(
-        ref,
-        _cconsts.NX_PROP_SYS_CDAQ_PKT_TIME,
-    )
-
-
-def set_system_cdaq_pkt_time(
-    ref,  # type: int
-    value,  # type: float
-):
-    # type: (...) -> None
-    _cprops.set_session_f64(
-        ref,
-        _cconsts.NX_PROP_SYS_CDAQ_PKT_TIME,
-        value,
-    )
-
-
 def get_system_intf_refs_all(
     ref,  # type: int
 ):

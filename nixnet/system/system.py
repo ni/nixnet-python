@@ -133,16 +133,6 @@ class System(object):
         return _props.get_system_ver_update(self._handle)
 
     @property
-    def cdaq_pkt_time(self):
-        # type: () -> float
-        return _props.get_system_cdaq_pkt_time(self._handle)
-
-    @cdaq_pkt_time.setter
-    def cdaq_pkt_time(self, value):
-        # type: (float) -> None
-        _props.set_system_cdaq_pkt_time(self._handle, value)
-
-    @property
     def intf_refs_all(self):
         # type: () -> typing.Iterable[_interface.Interface]
         for ref in _props.get_system_intf_refs_all(self._handle):

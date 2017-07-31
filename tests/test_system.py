@@ -54,11 +54,6 @@ def test_system_properties():
     """
     with system.System() as sys:
         print(sys.ver)
-        print(sys.cdaq_pkt_time)
-
-        old = sys.cdaq_pkt_time
-        sys.cdaq_pkt_time = old + 1
-        sys.cdaq_pkt_time = old
 
 
 @pytest.mark.integration
