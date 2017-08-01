@@ -53,7 +53,7 @@ def main():
                 payload_list = [int(x.strip()) for x in user_value.split(",")]
             except ValueError:
                 payload_list = [2, 4, 8, 16]
-                print('Unrecognized input ({}). Setting data buffer to {}', user_value, payload_list)
+                print('Unrecognized input ({}). Setting data buffer to {}'.format(user_value, payload_list))
 
             id = types.CanIdentifier(0)
             payload = bytearray(payload_list)
@@ -66,7 +66,7 @@ def main():
 
                 frame.payload = payload
                 output_session.frames.write([frame])
-                print('Sent frame with ID %s payload: %s' % (id, payload))
+                print('Sent frame with ID {} payload: {}'.format(id, payload))
 
                 # Wait 1 s and then read the received values.
                 # They should be the same as the ones sent.
