@@ -11,6 +11,7 @@ from nixnet import _ctypedefs
 
 from nixnet_examples import can_frame_queued_io
 from nixnet_examples import can_frame_stream_io
+from nixnet_examples import can_signal_conversion
 from nixnet_examples import can_signal_single_point_io
 
 
@@ -23,6 +24,8 @@ MockXnetLibrary.nx_write_frame.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_read_frame.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_write_signal_single_point.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_read_signal_single_point.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nx_convert_frames_to_signals_single_point.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nx_convert_signals_to_frames_single_point.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_stop.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_clear.return_value = _ctypedefs.u32(0)
 
@@ -79,3 +82,15 @@ def test_can_frame_stream_empty_session(input_values):
 def test_can_signal_single_point_empty_session(input_values):
     with mock.patch('six.moves.input', six_input(input_values)):
         can_signal_single_point_io.main()
+
+
+@pytest.mark.parametrize("input_values", [
+    ['1, 2'],
+    ['1'],
+    ['<invalid>'],
+])
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
+@mock.patch('time.sleep', lambda time: None)
+def test_can_signal_conversion_empty_session(input_values):
+    with mock.patch('six.moves.input', six_input(input_values)):
+        can_signal_conversion.main()

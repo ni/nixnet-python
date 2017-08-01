@@ -670,24 +670,3 @@ def write_signal_xy(
         timestamp_buffer,
         num_pairs_buffer):
     _funcs.nx_write_signal_xy(session_ref, timeout, value_buffer, timestamp_buffer, num_pairs_buffer)
-
-
-def convert_frames_to_signals_single_point(
-        session_ref,
-        frame_buffer,
-        number_of_bytes_for_frames,
-        value_buffer,
-        size_of_value_buffer,
-        timestamp_buffer,
-        size_of_timestamp_buffer):
-    raise NotImplementedError("Placeholder")
-
-
-def convert_signals_to_frames_single_point(
-        session_ref,
-        value_buffer,
-        size_of_value_buffer,
-        buffer,
-        size_of_buffer,
-        number_of_bytes_returned):
-    raise NotImplementedError("Placeholder")

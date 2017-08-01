@@ -13,6 +13,7 @@ NI-XNET Python Documentation
    :caption: API Reference:
 
    session
+   convert
    constants
    types
    errors
