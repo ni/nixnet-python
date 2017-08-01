@@ -300,9 +300,6 @@ class CanFrame(Frame):
         "timestamp",
         "payload"]
 
-    _FRAME_ID_MASK = 0x000007FF
-    _EXTENDED_FRAME_ID_MASK = 0x1FFFFFFF
-
     def __init__(self, identifier, type, payload=b""):
         # type: (typing.Union[CanIdentifier, int], constants.FrameType, bytes) -> None
         if isinstance(identifier, int):
@@ -374,6 +371,291 @@ class CanFrame(Frame):
             self.timestamp)
 
 
+class CanBusErrorFrame(Frame):
+    """Error detected on hardware bus of a :any:`nixnet.session.FrameInStreamSession`.
+
+    .. note:: This requires enabling
+       :any:`nixnet._session.intf.Interface.bus_err_to_in_strm`.
+
+    Attributes:
+        timestamp(int): Absolute time when the bus error occurred.
+        state (:any:`nixnet._enums.CanCommState`): Communication State
+        tcvr_err (bool): Transceiver Error.
+        bus_err (:any:`nixnet._enums.CanLastErr`): Last Error.
+        tx_err_count (int): Transmit Error Counter.
+        rx_err_count (int): Receive Error Counter.
+    """
+
+    __slots__ = [
+        "timestamp",
+        "state",
+        "tcvr_err",
+        "bus_err",
+        "tx_err_count",
+        "rx_err_count"]
+
+    def __init__(self, timestamp, state, tcvr_err, bus_err, tx_err_count, rx_err_count):
+        # type: (int, constants.CanCommState, bool, constants.CanLastErr, int, int) -> None
+        self.timestamp = timestamp
+        self.state = state
+        self.tcvr_err = tcvr_err
+        self.bus_err = bus_err
+        self.tx_err_count = tx_err_count
+        self.rx_err_count = rx_err_count
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(0x64, 0x0, constants.FrameType.CAN_BUS_ERROR, 0, 0, b'\\x00\\x01\\x02\\x03\\x04')
+        >>> CanBusErrorFrame.from_raw(raw)
+        CanBusErrorFrame(0x64, CanCommState.ERROR_ACTIVE, True, CanLastErr.STUFF, 3, 4)
+        """
+        timestamp = frame.timestamp
+        state = constants.CanCommState(six.indexbytes(frame.payload, 0))
+        tcvr_err = six.indexbytes(frame.payload, 1) != 0
+        bus_err = constants.CanLastErr(six.indexbytes(frame.payload, 1))
+        tx_err_count = six.indexbytes(frame.payload, 3)
+        rx_err_count = six.indexbytes(frame.payload, 4)
+        return CanBusErrorFrame(timestamp, state, tcvr_err, bus_err, tx_err_count, rx_err_count)
+
+    def to_raw(self):
+        """Convert to RawFrame.
+
+        >>> CanBusErrorFrame(100, constants.CanCommState.BUS_OFF, True, constants.CanLastErr.STUFF, 1, 2).to_raw()
+        RawFrame(timestamp=0x64, identifier=0x0, type=FrameType.CAN_BUS_ERROR, flags=0x0, info=0x0, payload=...)
+        """
+        identifier = 0
+        flags = 0
+        info = 0
+
+        payload_data = [
+            self.state.value,
+            1 if self.tcvr_err else 0,
+            self.bus_err.value,
+            self.tx_err_count,
+            self.rx_err_count,
+        ]
+        payload = bytes(payload_data)
+        return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
+
+    @property
+    def type(self):
+        return constants.FrameType.CAN_BUS_ERROR
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(CanBusErrorFrame, other)
+            return all((
+                self.timestamp == other_frame.timestamp,
+                self.state == other_frame.state,
+                self.tcvr_err == other_frame.tcvr_err,
+                self.bus_err == other_frame.bus_err,
+                self.tx_err_count == other_frame.tx_err_count,
+                self.rx_err_count == other_frame.rx_err_count))
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """StartTriggerFrame debug representation.
+
+        >>> StartTriggerFrame(250)
+        StartTriggerFrame(0xfa)
+        """
+        return "CanBusErrorFrame(0x{:x}, {}, {}, {}, {}, {})".format(
+            self.timestamp,
+            self.state,
+            self.tcvr_err,
+            self.bus_err,
+            self.tx_err_count,
+            self.rx_err_count)
+
+
+class DelayFrame(Frame):
+    """Delay hardware when DelayFrame is outputted.
+
+    .. note:: This requires
+       :any:`nixnet._session.intf.Interface.out_strm_timng` to be in replay mode.
+
+    Attributes:
+        offset(int): Time to delay in milliseconds.
+    """
+
+    __slots__ = [
+        "offset"]
+
+    def __init__(self, offset):
+        # type: (int) -> None
+        self.offset = offset
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(5, 0, constants.FrameType.SPECIAL_DELAY, 0, 0, b'')
+        >>> DelayFrame.from_raw(raw)
+        DelayFrame(5)
+        """
+        return DelayFrame(frame.timestamp)
+
+    def to_raw(self):
+        """Convert to RawFrame.
+
+        >>> DelayFrame(250).to_raw()
+        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_DELAY, flags=0x0, info=0x0, payload=...)
+        """
+        identifier = 0
+        flags = 0
+        info = 0
+        payload = b''
+        return RawFrame(self.offset, identifier, self.type, flags, info, payload)
+
+    @property
+    def type(self):
+        return constants.FrameType.SPECIAL_DELAY
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(DelayFrame, other)
+            return self.offset == other_frame.offset
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """DelayFrame debug representation.
+
+        >>> DelayFrame(250)
+        DelayFrame(250)
+        """
+        return "DelayFrame({})".format(self.offset)
+
+
+class LogTriggerFrame(Frame):
+    """Timestamp of when a trigger occurred.
+
+    This frame is generated on input sessions when a rising edge is detected on
+    an external connection.
+
+    .. note:: This requires using
+       :any:`nixnet._session.base.SessionBase.connect_terminals` to connect an
+       external connection to the internal ``LogTrigger`` terminal.
+
+    Attributes:
+        timestamp(int): Absolute time that the trigger occurred.
+    """
+
+    __slots__ = [
+        "timestamp"]
+
+    def __init__(self, timestamp):
+        # type: (int) -> None
+        self.timestamp = timestamp
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(5, 0, constants.FrameType.SPECIAL_LOG_TRIGGER, 0, 0, b'')
+        >>> LogTriggerFrame.from_raw(raw)
+        LogTriggerFrame(0x5)
+        """
+        return LogTriggerFrame(frame.timestamp)
+
+    def to_raw(self):
+        """Convert to RawFrame.
+
+        >>> LogTriggerFrame(250).to_raw()
+        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_LOG_TRIGGER, flags=0x0, info=0x0, payload=...)
+        """
+        identifier = 0
+        flags = 0
+        info = 0
+        payload = b''
+        return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
+
+    @property
+    def type(self):
+        return constants.FrameType.SPECIAL_LOG_TRIGGER
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(LogTriggerFrame, other)
+            return self.timestamp == other_frame.timestamp
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """LogTriggerFrame debug representation.
+
+        >>> LogTriggerFrame(250)
+        LogTriggerFrame(0xfa)
+        """
+        return "LogTriggerFrame(0x{:x})".format(self.timestamp)
+
+
+class StartTriggerFrame(Frame):
+    """Timestamp of :any:`nixnet.session.FrameInStreamSession` start.
+
+    .. note:: This requires enabling
+       :any:`nixnet._session.intf.Interface.start_trig_to_in_strm`.
+
+    Attributes:
+        timestamp(int): Absolute time that the trigger occurred.
+    """
+
+    __slots__ = [
+        "timestamp"]
+
+    def __init__(self, timestamp):
+        # type: (int) -> None
+        self.timestamp = timestamp
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(5, 0, constants.FrameType.SPECIAL_START_TRIGGER, 0, 0, b'')
+        >>> StartTriggerFrame.from_raw(raw)
+        StartTriggerFrame(0x5)
+        """
+        return StartTriggerFrame(frame.timestamp)
+
+    def to_raw(self):
+        """Convert to RawFrame.
+
+        >>> StartTriggerFrame(250).to_raw()
+        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_START_TRIGGER, flags=0x0, info=0x0, payload=...)
+        """
+        identifier = 0
+        flags = 0
+        info = 0
+        payload = b''
+        return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
+
+    @property
+    def type(self):
+        return constants.FrameType.SPECIAL_START_TRIGGER
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(StartTriggerFrame, other)
+            return self.timestamp == other_frame.timestamp
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """StartTriggerFrame debug representation.
+
+        >>> StartTriggerFrame(250)
+        StartTriggerFrame(0xfa)
+        """
+        return "StartTriggerFrame(0x{:x})".format(self.timestamp)
+
+
 class XnetFrame(FrameFactory):
     """Create `Frame` based on `RawFrame` content."""
 
@@ -388,6 +670,10 @@ class XnetFrame(FrameFactory):
             constants.FrameType.CANFD_DATA: CanFrame,
             constants.FrameType.CANFDBRS_DATA: CanFrame,
             constants.FrameType.CAN_REMOTE: CanFrame,
+            constants.FrameType.CAN_BUS_ERROR: CanBusErrorFrame,
+            constants.FrameType.SPECIAL_DELAY: DelayFrame,
+            constants.FrameType.SPECIAL_LOG_TRIGGER: LogTriggerFrame,
+            constants.FrameType.SPECIAL_START_TRIGGER: StartTriggerFrame,
         }.get(frame.type)
         if frame_type is None:
             raise NotImplementedError("Unsupported frame type", frame.type)
