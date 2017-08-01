@@ -63,11 +63,11 @@ def main():
                 value_buffer = [float(x.strip()) for x in user_value.split(",")]
             except ValueError:
                 value_buffer = [24.5343, 77.0129]
-                print('Unrecognized input ({}). Setting data buffer to {}', user_value, value_buffer)
+                print('Unrecognized input ({}). Setting data buffer to {}'.format(user_value, value_buffer))
 
             if len(value_buffer) != len(input_signals):
                 value_buffer = [24.5343, 77.0129]
-                print('Invalid number of signal values entered. Setting data buffer to {}', value_buffer)
+                print('Invalid number of signal values entered. Setting data buffer to {}'.format(value_buffer))
 
             print('The same values should be received. Press q to quit')
             i = 0
@@ -75,7 +75,7 @@ def main():
                 for index, value in enumerate(value_buffer):
                     value_buffer[index] = value + i
                 output_session.signals.write(value_buffer)
-                print('Sent signal values: %s' % value_buffer)
+                print('Sent signal values: {}'.format(value_buffer))
 
                 # Wait 1 s and then read the received values.
                 # They should be the same as the ones sent.
@@ -84,7 +84,7 @@ def main():
                 signals = input_session.signals.read()
                 for timestamp, value in signals:
                     date = convert_timestamp(timestamp)
-                    print('Received signal with timepstamp %s and value %s' % (date, value))
+                    print('Received signal with timepstamp {} and value {}'.format(date, value))
 
                 i += 1
                 if max(value_buffer) + i > sys.float_info.max:
