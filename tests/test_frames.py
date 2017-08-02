@@ -138,6 +138,58 @@ def test_can_frame_equality():
     assert empty_frame != 5
 
 
+def test_can_bus_error_frame_equality():
+    frame = types.CanBusErrorFrame(100, constants.CanCommState.BUS_OFF, True, constants.CanLastErr.STUFF, 1, 2)
+    other_frame = types.CanBusErrorFrame(100, constants.CanCommState.BUS_OFF, True, constants.CanLastErr.STUFF, 1, 3)
+
+    assert frame == frame
+    assert not (frame == other_frame)
+    assert not (frame == 5)
+
+    assert not (frame != frame)
+    assert frame != other_frame
+    assert frame != 5
+
+
+def test_delay_frame_equality():
+    frame = types.DelayFrame(100)
+    other_frame = types.DelayFrame(120)
+
+    assert frame == frame
+    assert not (frame == other_frame)
+    assert not (frame == 5)
+
+    assert not (frame != frame)
+    assert frame != other_frame
+    assert frame != 5
+
+
+def test_log_trigger_frame_equality():
+    frame = types.LogTriggerFrame(100)
+    other_frame = types.LogTriggerFrame(120)
+
+    assert frame == frame
+    assert not (frame == other_frame)
+    assert not (frame == 5)
+
+    assert not (frame != frame)
+    assert frame != other_frame
+    assert frame != 5
+
+
+def test_start_trigger_frame_equality():
+    frame = types.StartTriggerFrame(100)
+    other_frame = types.StartTriggerFrame(120)
+
+    assert frame == frame
+    assert not (frame == other_frame)
+    assert not (frame == 5)
+
+    assert not (frame != frame)
+    assert frame != other_frame
+    assert frame != 5
+
+
 def test_serialize_frame_with_empty_payload():
     empty_frame = types.RawFrame(1, 2, constants.FrameType.CAN_DATA, 4, 5, b'')
     (base, ) = list(_frames.serialize_frame(empty_frame))
