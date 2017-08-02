@@ -712,3 +712,45 @@ def nxdb_undeploy(
         database_alias_ctypes,
     )
     _errors.check_for_error(result.value)
+
+
+def nxdb_get_database_list(
+    ip_address,  # type: typing.Text
+    size_of_alias_buffer,  # type: int
+    size_of_filepath_buffer,  # type: int
+):
+    # type: (...) -> typing.Tuple[typing.List[typing.Text], typing.List[typing.Text], int]
+    ip_address_ctypes = _ctypedefs.char_p(ip_address.encode('ascii'))
+    size_of_alias_buffer_ctypes = _ctypedefs.u32(size_of_alias_buffer)
+    size_of_filepath_buffer_ctypes = _ctypedefs.u32(size_of_filepath_buffer)
+    alias_buffer_ctypes = ctypes.create_string_buffer(size_of_alias_buffer)
+    filepath_buffer_ctypes = ctypes.create_string_buffer(size_of_filepath_buffer)
+    number_of_databases_ctypes = _ctypedefs.u32()
+    result = _cfuncs.lib.nxdb_get_database_list(
+        ip_address_ctypes,
+        size_of_alias_buffer_ctypes,
+        alias_buffer_ctypes,
+        size_of_filepath_buffer_ctypes,
+        filepath_buffer_ctypes,
+        number_of_databases_ctypes,
+    )
+    _errors.check_for_error(result.value)
+    alias_buffer = alias_buffer_ctypes.value.decode("ascii")
+    filepath_buffer = filepath_buffer_ctypes.value.decode("ascii")
+    return alias_buffer, filepath_buffer, number_of_databases_ctypes.value
+
+
+def nxdb_get_database_list_sizes(
+    ip_address,  # type: typing.Text
+):
+    # type: (...) -> typing.Tuple[int, int]
+    ip_address_ctypes = _ctypedefs.char_p(ip_address.encode('ascii'))
+    size_of_alias_buffer_ctypes = _ctypedefs.u32()
+    size_of_filepath_buffer_ctypes = _ctypedefs.u32()
+    result = _cfuncs.lib.nxdb_get_database_list_sizes(
+        ip_address_ctypes,
+        size_of_alias_buffer_ctypes,
+        size_of_filepath_buffer_ctypes,
+    )
+    _errors.check_for_error(result.value)
+    return size_of_alias_buffer_ctypes.value, size_of_filepath_buffer_ctypes.value

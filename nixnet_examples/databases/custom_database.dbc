@@ -1,0 +1,116 @@
+VERSION ""
+
+NS_ :
+  NS_DESC_
+  CM_
+  BA_DEF_
+  BA_
+  VAL_
+  CAT_DEF_
+  CAT_
+  FILTER
+  BA_DEF_DEF_
+  EV_DATA_
+  ENVVAR_DATA_
+  SGTYPE_
+  SGTYPE_VAL_
+  BA_DEF_SGTYPE_
+  BA_SGTYPE_
+  SIG_TYPE_REF_
+  VAL_TABLE_
+  SIG_GROUP_
+  SIG_VALTYPE_
+  SIGTYPE_VALTYPE_
+  BO_TX_BU_
+  BA_DEF_REL_
+  BA_REL_
+  BA_DEF_DEF_REL_
+  BU_SG_REL_
+  BU_EV_REL_
+  BU_BO_REL_
+  SG_MUL_VAL_
+
+BS_ :
+
+BU_ :
+
+BO_ 64 CANCyclicFrame1: 8 Vector__XXX
+  SG_ CANCyclicSignal1 : 0|32@1- (1,0) [0|10000] "" Vector__XXX
+  SG_ CANCyclicSignal2 : 32|32@1- (1,0) [0|10000] "" Vector__XXX
+
+BO_ 65 CANCyclicFrame2: 2 Vector__XXX
+  SG_ CANCyclicSignal3 : 0|8@1- (1,0) [0|255] "" Vector__XXX
+  SG_ CANCyclicSignal4 : 8|8@1- (1,0) [0|255] "" Vector__XXX
+
+BO_ 66 CANEventFrame1: 8 Vector__XXX
+  SG_ CANEventSignal1 : 0|32@1- (1,0) [0|10000] "" Vector__XXX
+  SG_ CANEventSignal2 : 32|32@1- (1,0) [0|10000] "" Vector__XXX
+
+BO_ 67 CANEventFrame2: 2 Vector__XXX
+  SG_ CANEventSignal3 : 0|8@1- (1,0) [0|255] "" Vector__XXX
+  SG_ CANEventSignal4 : 8|8@1- (1,0) [0|255] "" Vector__XXX
+
+BO_ 133 InstrumentPanel: 8 Vector__XXX
+  SG_ ABSWarning : 49|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ AirBagIndicator : 60|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ BrakeSystemWarning : 48|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ ChargingSystemWarning : 51|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ CruiseActiveIndicator : 59|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ FuelGauge : 32|8@1+ (0.40000000000000002,0) [0|100] "%" Vector__XXX
+  SG_ HighBeamIndicator : 58|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ LeftTurnSignalIndicator : 56|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ OilPressureWarning : 50|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ RightTurnSignalIndicator : 57|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ SeatBeltWarning : 52|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ ServiceEngineWarning : 53|1@1+ (1,0) [0|1] "" Vector__XXX
+  SG_ Speedometer : 0|16@1+ (0.0039060000000000002,0) [0|251] "km/h" Vector__XXX
+  SG_ Tachometer : 16|16@1+ (0.125,0) [0|8031.0000000000045] "rpm" Vector__XXX
+  SG_ TemperatureGauge : 40|8@1+ (0.40000000000000002,0) [0|100] "% C-to-H" Vector__XXX
+
+BO_ 82 TransmissionFluids: 6 Vector__XXX
+  SG_ ClutchPressure : 0|8@1+ (16,0) [0|4000] "kPa" Vector__XXX
+  SG_ TransmissionFilterPressure : 16|8@1+ (0.16,0) [0|40] "bar" Vector__XXX
+  SG_ TransmissionOilLevel : 8|8@1+ (0.40000000000000002,0) [0|100] "%" Vector__XXX
+  SG_ TransmissionOilPressure : 24|8@1+ (0.16,0) [0|40] "bar" Vector__XXX
+  SG_ TransmissionOilTemp : 32|16@1+ (0.03125,-273) [-273|1735] "°C" Vector__XXX
+
+CM_ "This is an example CAN cluster.  The CAN cluster defines what baudrate is used for all nodes on the network.";
+CM_ BO_ 64 "This is an example of a periodic frame, or cyclic frame.";
+CM_ BO_ 65 "This is an example of a periodic frame, or cyclic frame.  This frame has a faster transmit time than CANCyclicFrame1 and less data.";
+CM_ BO_ 66 "This is an example of an event frame.  You can still provide a \"Transmit Time\" which will be used for re-sampling for waveform sessions.";
+CM_ BO_ 67 "This is an example of an event frame.  You can still provide a \"Transmit Time\" which will be used for re-sampling for waveform sessions.";
+CM_ BO_ 133 "The InstrumentPanel is an example of a \"real\" CAN frame with actual signal values.";
+CM_ BO_ 82 "The TransmissionFluids is an example of a \"real\" CAN frame with actual signal values.";
+BA_DEF_ "DBName" STRING;
+BA_DEF_ "BusType" STRING;
+BA_DEF_ BO_ "VFrameFormat" ENUM "StandardCAN","ExtendedCAN","reserved","J1939PG","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","reserved","StandardCAN_FD","ExtendedCAN_FD";
+BA_DEF_ BO_ "GenMsgSendType" ENUM "Cyclic","Event","CyclicIfActive","SpontanWithDelay","CyclicAndSpontan","CyclicAndSpontanWithDelay";
+BA_DEF_ BO_ "GenMsgCycleTime" INT 0 0;
+BA_DEF_ BO_ "GenMsgDelayTime" INT 0 0;
+BA_DEF_ SG_ "GenSigStartValue" FLOAT 0 0;
+BA_DEF_DEF_ "DBName" "CAN_Cluster";
+BA_DEF_DEF_ "BusType" "CAN";
+BA_DEF_DEF_ "VFrameFormat" "StandardCAN";
+BA_DEF_DEF_ "GenMsgSendType" "Cyclic";
+BA_DEF_DEF_ "GenMsgCycleTime" 0;
+BA_DEF_DEF_ "GenMsgDelayTime" 0;
+BA_DEF_DEF_ "GenSigStartValue" 0;
+BA_ "VFrameFormat" BO_ 64 0;
+BA_ "GenMsgSendType" BO_ 64 0;
+BA_ "GenMsgCycleTime" BO_ 64 10;
+BA_ "VFrameFormat" BO_ 65 0;
+BA_ "GenMsgSendType" BO_ 65 0;
+BA_ "GenMsgCycleTime" BO_ 65 1;
+BA_ "VFrameFormat" BO_ 66 0;
+BA_ "GenMsgSendType" BO_ 66 3;
+BA_ "GenMsgDelayTime" BO_ 66 1;
+BA_ "VFrameFormat" BO_ 67 0;
+BA_ "GenMsgSendType" BO_ 67 3;
+BA_ "GenMsgDelayTime" BO_ 67 1;
+BA_ "VFrameFormat" BO_ 133 0;
+BA_ "GenMsgSendType" BO_ 133 3;
+BA_ "GenMsgDelayTime" BO_ 133 1000;
+BA_ "VFrameFormat" BO_ 82 0;
+BA_ "GenMsgSendType" BO_ 82 3;
+BA_ "GenMsgDelayTime" BO_ 82 1000;
+BA_ "GenSigStartValue" SG_ 82 TransmissionOilTemp 8736;

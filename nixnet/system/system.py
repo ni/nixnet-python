@@ -13,6 +13,7 @@ from nixnet import types
 
 from nixnet.system import _device
 from nixnet.system import _interface
+from nixnet.system import databases
 
 
 class System(object):
@@ -21,6 +22,7 @@ class System(object):
         # type: () -> None
         self._handle = None  # To satisfy `__del__` in case nx_system_open throws
         self._handle = _funcs.nx_system_open()
+        self._databases = databases.Databases(self._handle)
 
     def __del__(self):
         if self._handle is not None:
@@ -66,6 +68,11 @@ class System(object):
         _funcs.nx_system_close(self._handle)
 
         self._handle = None
+
+    @property
+    def databases(self):
+        """:any:`nixnet.system.databases.Databases`: Operate on systems's database's aliases"""
+        return self._databases
 
     @property
     def dev_refs(self):

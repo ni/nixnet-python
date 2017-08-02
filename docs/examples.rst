@@ -13,3 +13,4 @@ Examples
    examples/single_point_io
    examples/conversion
    examples/can_lin_diff
+   examples/programmatic_databases

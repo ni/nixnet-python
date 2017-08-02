@@ -23,18 +23,6 @@ def delete_object(db_object_ref):
     _funcs.nxdb_delete_object(db_object_ref)
 
 
-def add_alias64(
-        database_alias,
-        database_filepath,
-        default_baud_rate):
-    _funcs.nxdb_add_alias64(database_alias, database_filepath, default_baud_rate)
-
-
-def remove_alias(
-        database_alias):
-    _funcs.nxdb_remove_alias(database_alias)
-
-
 def deploy(
         ip_address,
         database_alias,
@@ -46,13 +34,3 @@ def undeploy(
         ip_address,
         database_alias):
     _funcs.nxdb_undeploy(ip_address, database_alias)
-
-
-def get_database_list(
-        ip_address,
-        size_of_alias_buffer,
-        alias_buffer,
-        size_of_filepath_buffer,
-        filepath_buffer,
-        number_of_databases):
-    raise NotImplementedError("Placeholder")

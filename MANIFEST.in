@@ -3,4 +3,5 @@ include LICENSE
 include nixnet/VERSION
 recursive-include nixnet *.py
 recursive-include nixnet_examples *.py
+include nixnet_examples/databases/custom_database.dbc
 recursive-include tests *.py
