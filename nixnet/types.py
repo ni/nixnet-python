@@ -458,10 +458,10 @@ class CanBusErrorFrame(Frame):
 
     def __repr__(self):
         # type: () -> typing.Text
-        """StartTriggerFrame debug representation.
+        """CanBusErrorFrame debug representation.
 
-        >>> StartTriggerFrame(250)
-        StartTriggerFrame(0xfa)
+        >>> CanBusErrorFrame(100, constants.CanCommState.BUS_OFF, True, constants.CanLastErr.STUFF, 1, 2)
+        CanBusErrorFrame(0x64, CanCommState.BUS_OFF, True, CanLastErr.STUFF, 1, 2)
         """
         return "CanBusErrorFrame(0x{:x}, {}, {}, {}, {}, {})".format(
             self.timestamp,
