@@ -52,7 +52,7 @@ class InFrames(Frames):
 
     def read_bytes(
             self,
-            num_bytes_to_read,
+            num_bytes,
             timeout=constants.TIMEOUT_NONE):
         # type: (int, float) -> bytes
         """Read data as a list of raw bytes (frame data).
@@ -60,14 +60,14 @@ class InFrames(Frames):
         The raw bytes encode one or more frames using the Raw Frame Format.
 
         Args:
-            num_bytes_to_read(int): The number of bytes to read.
+            num_bytes(int): The number of bytes to read.
             timeout(float): The time in seconds to wait for number to read
                 frame bytes to become available.
 
                 To avoid returning a partial frame, even when
-                'num_bytes_to_read' are available from the hardware, this
+                'num_bytes' are available from the hardware, this
                 read may return fewer bytes in buffer. For example, assume you
-                pass 'num_bytes_to_read' 70 bytes and 'timeout' of 10
+                pass 'num_bytes' 70 bytes and 'timeout' of 10
                 seconds. During the read, two frames are received, the first 24
                 bytes in size, and the second 56 bytes in size, for a total of
                 80 bytes. The read returns after the two frames are received,
@@ -78,48 +78,48 @@ class InFrames(Frames):
                 buffer.
 
                 If 'timeout' is positive, this function waits for
-                'num_bytes_to_read' frame bytes to be received, then
+                'num_bytes' frame bytes to be received, then
                 returns complete frames up to that number. If the bytes do not
                 arrive prior to the 'timeout', an error is returned.
 
                 If 'timeout' is 'constants.TIMEOUT_INFINITE', this
-                function waits indefinitely for 'num_bytes_to_read' frame bytes.
+                function waits indefinitely for 'num_bytes' frame bytes.
 
                 If 'timeout' is 'constants.TIMEOUT_NONE', this
                 function does not wait and immediately returns all available
-                frame bytes up to the limit 'num_bytes_to_read' specifies.
+                frame bytes up to the limit 'num_bytes' specifies.
 
         Returns:
             A list of raw bytes representing the data.
         """
-        buffer, number_of_bytes_returned = _funcs.nx_read_frame(self._handle, num_bytes_to_read, timeout)
+        buffer, number_of_bytes_returned = _funcs.nx_read_frame(self._handle, num_bytes, timeout)
         return buffer[0:number_of_bytes_returned]
 
     def read(
             self,
-            num_frames_to_read,
+            num_frames,
             timeout=constants.TIMEOUT_NONE,
             frame_type=types.XnetFrame):
         # type: (int, float, typing.Type[types.FrameFactory]) -> typing.Iterable[types.Frame]
         """Read raw CAN frames.
 
         Args:
-            num_frames_to_read(int): Number of raw CAN frames
+            num_frames(int): Number of raw CAN frames
                 to read.
             timeout(float): The time in seconds to wait for number to read
                 frame bytes to become available.
 
                 If 'timeout' is positive, this function waits for
-                'num_frames_to_read' frames to be received, then
+                'num_frames' frames to be received, then
                 returns complete frames up to that number. If the frames do not
                 arrive prior to the 'timeout', an error is returned.
 
                 If 'timeout' is 'constants.TIMEOUT_INFINITE', this function
-                waits indefinitely for 'num_frames_to_read' frames.
+                waits indefinitely for 'num_frames' frames.
 
                 If 'timeout' is 'constants.TIMEOUT_NONE', this function does not
                 wait and immediately returns all available frames up to the
-                limit 'num_frames_to_read' specifies.
+                limit 'num_frames' specifies.
             frame_type(:any:`nixnet.types.FrameFactory`): A factory for the
                 desired frame formats.
 
@@ -128,9 +128,9 @@ class InFrames(Frames):
         """
         from_raw = typing.cast(typing.Callable[[types.RawFrame], types.Frame], frame_type.from_raw)
         # NOTE: If the frame payload exceeds the base unit, this will return
-        # less than num_frames_to_read
-        num_bytes_to_read = num_frames_to_read * _frames.nxFrameFixed_t.size
-        buffer = self.read_bytes(num_bytes_to_read, timeout)
+        # less than num_frames
+        num_bytes = num_frames * _frames.nxFrameFixed_t.size
+        buffer = self.read_bytes(num_bytes, timeout)
         for frame in _frames.iterate_frames(buffer):
             yield from_raw(frame)
 
@@ -143,19 +143,19 @@ class SinglePointInFrames(Frames):
 
     def read_bytes(
             self,
-            num_bytes_to_read):
+            num_bytes):
         # type: (int) -> bytes
         """Read data as a list of raw bytes (frame data).
 
         Args:
-            num_bytes_to_read(int): Number of bytes to read.
+            num_bytes(int): Number of bytes to read.
 
         Returns:
             bytes: Raw bytes representing the data.
         """
         buffer, number_of_bytes_returned = _funcs.nx_read_frame(
             self._handle,
-            num_bytes_to_read,
+            num_bytes,
             constants.TIMEOUT_NONE)
         return buffer[0:number_of_bytes_returned]
 
@@ -174,10 +174,10 @@ class SinglePointInFrames(Frames):
         """
         from_raw = typing.cast(typing.Callable[[types.RawFrame], types.Frame], frame_type.from_raw)
         # NOTE: If the frame payload exceeds the base unit, this will return
-        # less than num_frames_to_read
-        num_frames_to_read = len(self)
-        num_bytes_to_read = num_frames_to_read * _frames.nxFrameFixed_t.size
-        buffer = self.read_bytes(num_bytes_to_read)
+        # less than num_frames
+        num_frames = len(self)
+        num_bytes = num_frames * _frames.nxFrameFixed_t.size
+        buffer = self.read_bytes(num_bytes)
         for frame in _frames.iterate_frames(buffer):
             yield from_raw(frame)
 

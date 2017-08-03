@@ -45,7 +45,7 @@ class SinglePointInSignals(Signals):
         """Read data from a Signal Input Single-Point session.
 
         Yields:
-            A tuple of timestamp (int) and signal values (float).
+            tuple of int and float: Timestamp and signal
         """
         num_signals = len(self)
         timestamps, values = _funcs.nx_read_signal_single_point(self._handle, num_signals)
@@ -61,14 +61,14 @@ class SinglePointOutSignals(Signals):
 
     def write(
             self,
-            value_buffer):
+            signals):
         # type: (typing.Iterable[float]) -> None
         """Write data to a Signal Output Single-Point session.
 
         Args:
-            value_buffer(list): A list of singal values (float).
+            signals(list of float): A list of signal values (float).
         """
-        _funcs.nx_write_signal_single_point(self._handle, list(value_buffer))
+        _funcs.nx_write_signal_single_point(self._handle, list(signals))
 
 
 class Signal(collection.Item):
