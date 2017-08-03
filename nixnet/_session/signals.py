@@ -4,6 +4,8 @@ from __future__ import print_function
 
 import typing  # NOQA: F401
 
+import six
+
 from nixnet import _funcs
 from nixnet import _props
 
@@ -49,7 +51,7 @@ class SinglePointInSignals(Signals):
         """
         num_signals = len(self)
         timestamps, values = _funcs.nx_read_signal_single_point(self._handle, num_signals)
-        for timestamp, value in zip(timestamps, values):
+        for timestamp, value in six.moves.zip(timestamps, values):
             yield timestamp.value, value.value
 
 
