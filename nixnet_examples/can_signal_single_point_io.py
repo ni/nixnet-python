@@ -84,7 +84,7 @@ def main():
                 signals = input_session.signals.read()
                 for timestamp, value in signals:
                     date = convert_timestamp(timestamp)
-                    print('Received signal with timepstamp {} and value {}'.format(date, value))
+                    print('Received signal with timestamp {} and value {}'.format(date, value))
 
                 i += 1
                 if max(value_buffer) + i > sys.float_info.max:
