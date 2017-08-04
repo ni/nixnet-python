@@ -459,7 +459,7 @@ class CanBusErrorFrame(Frame):
             self.tx_err_count,
             self.rx_err_count,
         ]
-        payload = bytes(payload_data)
+        payload = bytes(bytearray(payload_data))
         return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
 
     @property
