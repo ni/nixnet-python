@@ -231,7 +231,7 @@ class RawFrame(Frame):
         "info",
         "payload"]
 
-    def __init__(self, timestamp, identifier, type, flags, info, payload=b""):
+    def __init__(self, timestamp, identifier, type, flags=0, info=0, payload=b""):
         # type: (int, int, constants.FrameType, int, int, bytes) -> None
         self.timestamp = timestamp
         self.identifier = identifier
@@ -300,7 +300,7 @@ class CanFrame(Frame):
         "timestamp",
         "payload"]
 
-    def __init__(self, identifier, type, payload=b""):
+    def __init__(self, identifier, type=constants.FrameType.CAN_DATA, payload=b""):
         # type: (typing.Union[CanIdentifier, int], constants.FrameType, bytes) -> None
         if isinstance(identifier, int):
             self.identifier = CanIdentifier(identifier)
