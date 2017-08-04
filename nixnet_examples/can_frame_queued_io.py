@@ -2,16 +2,13 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import pprint
-import six
 import time
+
+import six
 
 import nixnet
 from nixnet import constants
 from nixnet import types
-
-
-pp = pprint.PrettyPrinter(indent=4)
 
 
 def main():
@@ -75,8 +72,8 @@ def main():
                 count = 1
                 frames = input_session.frames.read(count)
                 for frame in frames:
-                    print('Received frame: ')
-                    pp.pprint(frame)
+                    print('Received frame: {}'.format(frame))
+                    print('    payload={}'.format(list(six.iterbytes(frame.payload))))
 
                 i += 1
                 if max(payload) + i > 0xFF:

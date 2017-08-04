@@ -3,16 +3,13 @@ from __future__ import division
 from __future__ import print_function
 
 import datetime
-import pprint
-import six
 import sys
 import time
 
+import six
+
 import nixnet
 from nixnet import constants
-
-
-pp = pprint.PrettyPrinter(indent=4)
 
 
 def convert_timestamp(timestamp):

@@ -2,13 +2,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import pprint
 import six
 
 from nixnet import convert
-
-
-pp = pprint.PrettyPrinter(indent=4)
 
 
 def main():
@@ -35,12 +31,11 @@ def main():
         frames = session.convert_signals_to_frames(expected_signals)
         print('Frames:')
         for frame in frames:
-            print('    {}'.format(pp.pformat(frame)))
+            print('    {}'.format(frame))
+            print('        payload={}'.format(list(six.iterbytes(frame.payload))))
 
         converted_signals = session.convert_frames_to_signals(frames)
-        print('Signals:')
-        for expected, (_, converted) in zip(expected_signals, converted_signals):
-            print('    {} {}'.format(expected, converted))
+        print('Signals: {}'.format([v for (_, v) in converted_signals]))
 
 
 if __name__ == '__main__':
