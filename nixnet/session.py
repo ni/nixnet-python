@@ -312,7 +312,7 @@ class FrameOutQueuedSession(base.SessionBase):
     @property
     def frames(self):
         # type: () -> session_frames.OutFrames
-        """:any:`nixnet._session.frames.InFrames`: Operate on session's frames"""
+        """:any:`nixnet._session.frames.OutFrames`: Operate on session's frames"""
         return self._frames
 
 
