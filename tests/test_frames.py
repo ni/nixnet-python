@@ -35,7 +35,7 @@ def test_iterate_frames_with_empty_payload():
     payload = b'\x00\x00\x00\x00\x00\x00\x00\x00'
     empty_bytes = b'\x01\x00\x00\x00\x00\x00\x00\x00\x02\x00\x00\x00\x00\x04\x05\x00' + payload
     (empty_frame, ) = list(_frames.iterate_frames(empty_bytes))
-    assert repr(empty_frame) == 'RawFrame(timestamp=0x1, identifier=0x2, type=FrameType.CAN_DATA, flags=0x4, info=0x5, payload=...)'  # NOQA: E501
+    assert repr(empty_frame) == 'RawFrame(timestamp=0x1, identifier=0x2, type=FrameType.CAN_DATA, flags=0x4, info=0x5)'
     assert empty_frame.payload == b''
 
 
@@ -43,14 +43,14 @@ def test_iterate_frames_with_base_payload():
     payload = b'\x01\x02\x03\x04\x05\x06\x07\x08'
     base_bytes = b'\x06\x00\x00\x00\x00\x00\x00\x00\x07\x00\x00\x00\x00\x08\x09\x08' + payload
     (base_frame, ) = list(_frames.iterate_frames(base_bytes))
-    assert repr(base_frame) == 'RawFrame(timestamp=0x6, identifier=0x7, type=FrameType.CAN_DATA, flags=0x8, info=0x9, payload=...)'  # NOQA: E501
+    assert repr(base_frame) == 'RawFrame(timestamp=0x6, identifier=0x7, type=FrameType.CAN_DATA, flags=0x8, info=0x9, len(payload)=8)'  # NOQA: E501
     assert base_frame.payload == b'\x01\x02\x03\x04\x05\x06\x07\x08'
 
 
 def test_iterate_frames_with_partial_base_payload():
     frame_bytes = b'\xd8\xb7@B\xeb\xff\xd2\x01\x00\x00\x00\x00\x00\x00\x00\x04\x02\x04\x08\x10\x00\x00\x00\x00'
     (frame, ) = list(_frames.iterate_frames(frame_bytes))
-    assert repr(frame) == 'RawFrame(timestamp=0x1d2ffeb4240b7d8, identifier=0x0, type=FrameType.CAN_DATA, flags=0x0, info=0x0, payload=...)'  # NOQA: E501
+    assert repr(frame) == 'RawFrame(timestamp=0x1d2ffeb4240b7d8, identifier=0x0, type=FrameType.CAN_DATA, len(payload)=4)'  # NOQA: E501
     assert frame.payload == b'\x02\x04\x08\x10'
 
 
