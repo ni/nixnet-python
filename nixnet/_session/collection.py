@@ -12,7 +12,7 @@ from nixnet import _props
 
 
 @six.add_metaclass(abc.ABCMeta)
-class Collection(collections.Mapping):
+class Collection(collections.Sequence):
     """Collection of items in a session."""
 
     def __init__(self, handle):
@@ -42,7 +42,6 @@ class Collection(collections.Mapping):
             raise TypeError(index)
 
     def __getitem__(self, index):
-        # type: (typing.Union[int, typing.Text]) -> Item
         if isinstance(index, six.integer_types):
             name = self._list_cache[index]
         elif isinstance(index, six.string_types):
@@ -59,6 +58,12 @@ class Collection(collections.Mapping):
 
     def get(self, index, default=None):
         # type: (typing.Union[int, typing.Text], typing.Any) -> Item
+        """Access an item, returning ``default`` on failure.
+
+        Args:
+            index(str or int): Item name or index
+            default: Value to return when lookup fails
+        """
         if isinstance(index, six.integer_types):
             try:
                 name = self._list_cache[index]
