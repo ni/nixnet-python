@@ -231,7 +231,7 @@ class RawFrame(Frame):
         "info",
         "payload"]
 
-    def __init__(self, timestamp, identifier, type, flags, info, payload=b""):
+    def __init__(self, timestamp, identifier, type, flags=0, info=0, payload=b""):
         # type: (int, int, constants.FrameType, int, int, bytes) -> None
         self.timestamp = timestamp
         self.identifier = identifier
@@ -271,14 +271,24 @@ class RawFrame(Frame):
         """RawFrame debug representation.
 
         >>> RawFrame(1, 2, constants.FrameType.CAN_DATA, 3, 4)
-        RawFrame(timestamp=0x1, identifier=0x2, type=FrameType.CAN_DATA, flags=0x3, info=0x4, payload=...)
+        RawFrame(timestamp=0x1, identifier=0x2, type=FrameType.CAN_DATA, flags=0x3, info=0x4)
         """
-        return "RawFrame(timestamp=0x{:x}, identifier=0x{:x}, type={}, flags=0x{:x}, info=0x{:x}, payload=...)".format(
+        optional = []
+        if self.flags != 0:
+            optional.append('flags=0x{:x}'.format(self.flags))
+        if self.info != 0:
+            optional.append('info=0x{:x}'.format(self.info))
+        if self.payload:
+            optional.append('len(payload)={}'.format(len(self.payload)))
+        if optional:
+            optional_params = ', {}'.format(", ".join(optional))
+        else:
+            optional_params = ''
+        return "RawFrame(timestamp=0x{:x}, identifier=0x{:x}, type={}{})".format(
             self.timestamp,
             self.identifier,
             self.type,
-            self.flags,
-            self.info)
+            optional_params)
 
 
 class CanFrame(Frame):
@@ -300,7 +310,7 @@ class CanFrame(Frame):
         "timestamp",
         "payload"]
 
-    def __init__(self, identifier, type, payload=b""):
+    def __init__(self, identifier, type=constants.FrameType.CAN_DATA, payload=b""):
         # type: (typing.Union[CanIdentifier, int], constants.FrameType, bytes) -> None
         if isinstance(identifier, int):
             self.identifier = CanIdentifier(identifier)
@@ -317,7 +327,7 @@ class CanFrame(Frame):
 
         >>> raw = RawFrame(5, 0x20000001, constants.FrameType.CAN_DATA, _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO, 0, b'')
         >>> CanFrame.from_raw(raw)
-        CanFrame(CanIdentifier(0x1, extended=True), echo=True, type=FrameType.CAN_DATA, timestamp=0x5, payload=...)
+        CanFrame(CanIdentifier(0x1, extended=True), echo=True, timestamp=0x5)
         """
         identifier = CanIdentifier.from_raw(frame.identifier)
         can_frame = CanFrame(identifier, constants.FrameType(frame.type), frame.payload)
@@ -329,11 +339,11 @@ class CanFrame(Frame):
         """Convert to RawFrame.
 
         >>> CanFrame(CanIdentifier(1, True), constants.FrameType.CAN_DATA).to_raw()
-        RawFrame(timestamp=0x0, identifier=0x20000001, type=FrameType.CAN_DATA, flags=0x0, info=0x0, payload=...)
+        RawFrame(timestamp=0x0, identifier=0x20000001, type=FrameType.CAN_DATA)
         >>> c = CanFrame(CanIdentifier(1, True), constants.FrameType.CAN_DATA)
         >>> c.echo = True
         >>> c.to_raw()
-        RawFrame(timestamp=0x0, identifier=0x20000001, type=FrameType.CAN_DATA, flags=0x80, info=0x0, payload=...)
+        RawFrame(timestamp=0x0, identifier=0x20000001, type=FrameType.CAN_DATA, flags=0x80)
         """
         identifier = int(self.identifier)
         flags = 0
@@ -361,14 +371,27 @@ class CanFrame(Frame):
         # type: () -> typing.Text
         """CanFrame debug representation.
 
-        >>> CanFrame(1, constants.FrameType.CAN_DATA)
-        CanFrame(CanIdentifier(0x1), echo=False, type=FrameType.CAN_DATA, timestamp=0x0, payload=...)
+        >>> CanFrame(1)
+        CanFrame(CanIdentifier(0x1))
+        >>> CanFrame(1, constants.FrameType.CANFD_DATA, b'\x01')
+        CanFrame(CanIdentifier(0x1), type=FrameType.CANFD_DATA, len(payload)=1)
         """
-        return "CanFrame({}, echo={}, type={}, timestamp=0x{:x}, payload=...)".format(
+        optional = []
+        if self.echo:
+            optional.append('echo={}'.format(self.echo))
+        if self.type != constants.FrameType.CAN_DATA:
+            optional.append('type={}'.format(self.type))
+        if self.timestamp != 0:
+            optional.append('timestamp=0x{:x}'.format(self.timestamp))
+        if self.payload:
+            optional.append('len(payload)={}'.format(len(self.payload)))
+        if optional:
+            optional_params = ', {}'.format(", ".join(optional))
+        else:
+            optional_params = ''
+        return "CanFrame({}{})".format(
             self.identifier,
-            self.echo,
-            self.type,
-            self.timestamp)
+            optional_params)
 
 
 class CanBusErrorFrame(Frame):
@@ -423,7 +446,7 @@ class CanBusErrorFrame(Frame):
         """Convert to RawFrame.
 
         >>> CanBusErrorFrame(100, constants.CanCommState.BUS_OFF, True, constants.CanLastErr.STUFF, 1, 2).to_raw()
-        RawFrame(timestamp=0x64, identifier=0x0, type=FrameType.CAN_BUS_ERROR, flags=0x0, info=0x0, payload=...)
+        RawFrame(timestamp=0x64, identifier=0x0, type=FrameType.CAN_BUS_ERROR, len(payload)=5)
         """
         identifier = 0
         flags = 0
@@ -436,7 +459,7 @@ class CanBusErrorFrame(Frame):
             self.tx_err_count,
             self.rx_err_count,
         ]
-        payload = bytes(payload_data)
+        payload = bytes(bytearray(payload_data))
         return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
 
     @property
@@ -503,7 +526,7 @@ class DelayFrame(Frame):
         """Convert to RawFrame.
 
         >>> DelayFrame(250).to_raw()
-        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_DELAY, flags=0x0, info=0x0, payload=...)
+        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_DELAY)
         """
         identifier = 0
         flags = 0
@@ -567,7 +590,7 @@ class LogTriggerFrame(Frame):
         """Convert to RawFrame.
 
         >>> LogTriggerFrame(250).to_raw()
-        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_LOG_TRIGGER, flags=0x0, info=0x0, payload=...)
+        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_LOG_TRIGGER)
         """
         identifier = 0
         flags = 0
@@ -627,7 +650,7 @@ class StartTriggerFrame(Frame):
         """Convert to RawFrame.
 
         >>> StartTriggerFrame(250).to_raw()
-        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_START_TRIGGER, flags=0x0, info=0x0, payload=...)
+        RawFrame(timestamp=0xfa, identifier=0x0, type=FrameType.SPECIAL_START_TRIGGER)
         """
         identifier = 0
         flags = 0
