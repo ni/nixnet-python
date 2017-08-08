@@ -4,9 +4,9 @@
    contain the root `toctree` directive.
 
 NI-XNET Python Documentation
-=============================
+============================
 
-.. include:: README.rst
+.. include:: ../README.rst
 
 .. toctree::
    :maxdepth: 3

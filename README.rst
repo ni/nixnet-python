@@ -55,7 +55,6 @@ Now you should be able to move onto the `Examples <https://github.com/ni/nixnet-
 Resources
 =========
 
-- `Examples <https://github.com/ni/nixnet-python/tree/master/nixnet_examples>`_.
 - `Documentation <http://nixnet.readthedocs.io>`_.
 - `Source <https://github.com/ni/nixnet-python>`_.
 
