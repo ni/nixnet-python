@@ -1729,6 +1729,20 @@ class FlexRayTerm(enum.Enum):
 
 
 class LinSleep(enum.Enum):
+    '''LIN interface sleep/awake state
+
+    Values:
+        REMOTE_SLEEP:
+            Set interface to sleep locally and transmit sleep requests to
+            remote node.
+        REMOTE_WAKE:
+            Set interface to awake locally and transmit wakeup requests to
+            remote nodes.
+        LOCAL_SLEEP:
+            Set interface to sleep locally and not to interact with the network.
+        LOCAL_WAKE:
+            Set interface to awake locally and not to interact with the network.
+    '''
     REMOTE_SLEEP = _cconsts.NX_LIN_SLEEP_REMOTE_SLEEP
     REMOTE_WAKE = _cconsts.NX_LIN_SLEEP_REMOTE_WAKE
     LOCAL_SLEEP = _cconsts.NX_LIN_SLEEP_LOCAL_SLEEP
@@ -1736,6 +1750,7 @@ class LinSleep(enum.Enum):
 
 
 class LinTerm(enum.Enum):
+    '''LIN Termination'''
     OFF = _cconsts.NX_LIN_TERM_OFF
     ON = _cconsts.NX_LIN_TERM_ON
 

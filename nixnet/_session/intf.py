@@ -768,16 +768,33 @@ class Interface(object):
 
     @property
     def lin_break_length(self):
+        # type: () -> int
+        '''int: LIN Break Length
+
+        The length of the serial break used at the start of a frame header
+        (schedule entry). The value is specified in bit-times.
+
+        The valid range is 10-36 (inclusive). The default value is 13, which is
+        the value the LIN standard specifies.
+
+        At baud rates below 9600, the upper limit may be lower than 36 to avoid
+        violating hold times for the bus. For example, at 2400 baud, the valid
+        range is 10-14.
+
+        .. note:: This property is applicable only when the interface is the
+           master.
+        '''
         return _props.get_session_intf_lin_break_length(self._handle)
 
     @lin_break_length.setter
     def lin_break_length(self, value):
+        # type: (int) -> None
         _props.set_session_intf_lin_break_length(self._handle, value)
 
     @property
     def lin_master(self):
         # type: () -> bool
-        '''boolean: LIN Master?
+        '''bool: LIN Master?
 
         Specifies the NI-XNET LIN interface role on the network: master (true)
         or slave (false).
@@ -785,77 +802,210 @@ class Interface(object):
         In a LIN network (cluster), there always is a single ECU in the system
         called the master. The master transmits a schedule of frame headers.
         Each frame header is a remote request for a specific frame ID. For each
-        header, typically a single ECU in the network (slave) responds by transmitting
-        the requested ID payload. The master ECU can respond to a specific header
-        as well, and thus the master can transmit payload data for the slave
-        ECUs to receive.
+        header, typically a single ECU in the network (slave) responds by
+        transmitting the requested ID payload. The master ECU can respond to a
+        specific header as well, and thus the master can transmit payload data
+        for the slave ECUs to receive.
 
-        The default value for this property is false (slave). This means that by
-        default, the interface does not transmit frame headers onto the network.
-        When you use input sessions, you read frames that other ECUs transmit.
-        When you use output sessions, the NI-XNET interface waits for the remote
-        master to send a header for a frame in the output sessions, then the interface
-        responds with data for the requested frame.
+        The default value for this property is false (slave). This means that
+        by default, the interface does not transmit frame headers onto the
+        network. When you use input sessions, you read frames that other ECUs
+        transmit. When you use output sessions, the NI-XNET interface waits for
+        the remote master to send a header for a frame in the output sessions,
+        then the interface responds with data for the requested frame.
+
+        If you call the ``change_lin_sched`` function to request execution of a
+        schedule, that implicitly sets this property to true (master). You also
+        can set this property to true using, but no schedule is
+        active by default, so you still must call the ``change_lin_sched`` function at
+        some point to request a specific schedule.
+
+        Regardless of this property's value, you use can input and output
+        sessions. This property specifies which hardware transmits the
+        scheduled frame headers: NI-XNET (true) or a remote master ECU (false).
         '''
         return _props.get_session_intf_lin_master(self._handle)
 
     @lin_master.setter
     def lin_master(self, value):
+        # type: (bool) -> None
         _props.set_session_intf_lin_master(self._handle, value)
 
     @property
     def lin_sched_names(self):
+        # type: () -> typing.Iterable[typing.Text]
+        '''list of str: LIN Schedule Names
+
+        List of schedules for use when the NI-XNET LIN interface acts as a
+        master (``lin_master`` is true). When the interface is master, you can
+        pass the index of one of these schedules to the ``change_lin_sched``
+        function to request a schedule change.
+
+        This list of schedules is the same as ``Cluster.lin_schedules`` used to
+        configure the session.
+        '''
         return _props.get_session_intf_lin_sched_names(self._handle)
 
-    def set_lin_sleep(self, value):
-        _props.set_session_intf_lin_sleep(self._handle, value.value)
+    def set_lin_sleep(self, state):
+        # type: (constants.LinSleep) -> None
+        '''Set LIN Sleep State
+
+        Use the Sleep property to change the NI-XNET LIN interface sleep/awake
+        state and optionally to change remote node (ECU) sleep/awake states.
+
+        .. note:: Setting a new value is effectively a request, and the
+           function returns before the request is complete.  To detect the
+           current interface sleep/wake state, use
+           :any:`nixnet._session.base.SessionBase.lin_comm`.
+
+        Args:
+            state(:any:`nixnet._enums.LinSleep`): Desired state.
+        '''
+        _props.set_session_intf_lin_sleep(self._handle, state.value)
 
     @property
     def lin_term(self):
+        # type: () -> constants.LinTerm
+        ''':any:`nixnet._enums.LinTerm`: LIN Termination
+
+        The Termination property configures the NI-XNET interface LIN connector
+        (port) onboard termination. The enumeration is generic and supports two
+        values: Off (disabled) and On (enabled).
+
+        Per the LIN 2.1 standard, the Master ECU has a ~1 kOhm termination
+        resistor between Vbat and Vbus. Therefore, use this property only if
+        you are using your interface as the master and do not already have
+        external termination.
+
+        .. note:: You can modify this property only when the interface is
+           stopped.
+        .. note:: This property does not take effect until the interface is
+           started.
+        '''
         return constants.LinTerm(_props.get_session_intf_lin_term(self._handle))
 
     @lin_term.setter
     def lin_term(self, value):
+        # type: (constants.LinTerm) -> None
         _props.set_session_intf_lin_term(self._handle, value.value)
 
     @property
-    def lin_diag_p_2min(self):
-        return _props.get_session_intf_lin_diag_p_2min(self._handle)
+    def lin_diag_p2min(self):
+        # type: () -> float
+        '''float: LIN Diag P2min
 
-    @lin_diag_p_2min.setter
-    def lin_diag_p_2min(self, value):
-        _props.set_session_intf_lin_diag_p_2min(self._handle, value)
+        This is the minimum time in seconds between reception of the last frame
+        of the diagnostic request message and transmission of the response for
+        the first frame in the diagnostic response message by the slave.
+
+        .. note:: This property applies only to the interface as slave.
+        '''
+        return _props.get_session_intf_lin_diag_p2min(self._handle)
+
+    @lin_diag_p2min.setter
+    def lin_diag_p2min(self, value):
+        # type: (float) -> None
+        _props.set_session_intf_lin_diag_p2min(self._handle, value)
 
     @property
-    def lin_diag_s_tmin(self):
-        return _props.get_session_intf_lin_diag_s_tmin(self._handle)
+    def lin_diag_stmin(self):
+        # type: () -> float
+        '''float: LIN Diag STmin
 
-    @lin_diag_s_tmin.setter
-    def lin_diag_s_tmin(self, value):
-        _props.set_session_intf_lin_diag_s_tmin(self._handle, value)
+        master:
+            The minimum time in seconds the interface places between the end of
+            transmission of a frame in a diagnostic request message and the
+            start of transmission of the next frame in the diagnostic request
+            message.
+        slave:
+            The minimum time in seconds the interface places between the end of
+            transmission of a frame in a diagnostic response message and the
+            start of transmission of the response for the next frame in the
+            diagnostic response message.
+        '''
+        return _props.get_session_intf_lin_diag_stmin(self._handle)
+
+    @lin_diag_stmin.setter
+    def lin_diag_stmin(self, value):
+        # type: (float) -> None
+        _props.set_session_intf_lin_diag_stmin(self._handle, value)
 
     @property
     def lin_alw_start_wo_bus_pwr(self):
+        # type: () -> bool
+        '''bool: LIN Start Allowed without Bus Power?
+
+        Configures whether the LIN interface does not check for bus power
+        present at interface start, or checks and reports an error if bus power
+        is missing.
+
+        When this property is true, the LIN interface does not check for bus
+        power present at start, so no error is reported if the interface is
+        started without bus power.
+
+        When this property is false, the LIN interface checks for bus power
+        present at start, and an error is reported if the interface
+        is started without bus power.
+
+        .. note:: You can modify this property only when the interface is
+           stopped.
+        '''
         return _props.get_session_intf_lin_alw_start_wo_bus_pwr(self._handle)
 
     @lin_alw_start_wo_bus_pwr.setter
     def lin_alw_start_wo_bus_pwr(self, value):
+        # type: (bool) -> None
         _props.set_session_intf_lin_alw_start_wo_bus_pwr(self._handle, value)
 
     @property
-    def lino_str_slv_rsp_lst_by_nad(self):
-        return _props.get_session_intf_lino_str_slv_rsp_lst_by_nad(self._handle)
+    def lin_ostr_slv_rsp_lst_by_nad(self):
+        # type: () -> typing.Iterable[int]
+        '''list of int: LIN Output Stream Slave Response List By NAD
 
-    @lino_str_slv_rsp_lst_by_nad.setter
-    def lino_str_slv_rsp_lst_by_nad(self, value):
-        _props.set_session_intf_lino_str_slv_rsp_lst_by_nad(self._handle, value)
+        A list of NADs for use with the replay feature
+        (:any:`nixnet._session.intf.Interface.out_strm_timng` set to Replay
+        Exclusive or Replay Inclusive).
+
+        For LIN, the array of frames to replay might contain multiple slave
+        response frames, each with the same slave response identifier, but each
+        having been transmitted by a different slave (per the NAD value in the
+        data payload). This means that processing slave response frames for
+        replay requires two levels of filtering. First, you can include or
+        exclude the slave response frame or ID for replay using
+        Interface:Output Stream List or Interface:Output Stream List By ID. If
+        you do not include the slave response frame or ID for replay, no slave
+        responses are transmitted. If you do include the slave response frame
+        or ID for replay, you can use the Output Stream Slave Response List by
+        NAD property to filter which slave responses (per the NAD values in the
+        array) are transmitted. This property is always inclusive, regardless
+        of the replay mode (inclusive or exclusive). If the NAD is in the list
+        and the response frame or ID has been enabled for replay, any slave
+        response for that NAD is transmitted. If the NAD is not in the list, no
+        slave response for that NAD is transmitted.
+        '''
+        return _props.get_session_intf_lin_ostr_slv_rsp_lst_by_nad(self._handle)
+
+    @lin_ostr_slv_rsp_lst_by_nad.setter
+    def lin_ostr_slv_rsp_lst_by_nad(self, value):
+        # type: (typing.List[int]) -> None
+        _props.set_session_intf_lin_ostr_slv_rsp_lst_by_nad(self._handle, value)
 
     @property
     def lin_no_response_to_in_strm(self):
+        # type: () -> bool
+        '''bool: LIN No Response Frames to Input Stream?
+
+        Configure the hardware to place a LIN no response frame into the
+        Stream Input queue after it is generated. A no response frame is
+        generated when the hardware detects a header with no response. For more
+        information about the no response frame, see
+        ``nixnet.types.NoResponseFrame``.
+        '''
         return _props.get_session_intf_lin_no_response_to_in_strm(self._handle)
 
     @lin_no_response_to_in_strm.setter
     def lin_no_response_to_in_strm(self, value):
+        # type: (bool) -> None
         _props.set_session_intf_lin_no_response_to_in_strm(self._handle, value)
 
     @property
