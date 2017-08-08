@@ -16,6 +16,7 @@ from nixnet import constants
 __all__ = [
     'DriverVersion',
     'CanComm',
+    'LinComm',
     'CanIdentifier',
     'FrameFactory',
     'Frame',
@@ -75,6 +76,63 @@ class CanComm(CanComm_):
             increases when a certain ratio of frames (roughly 1/8) encounter
             errors.
     """
+
+    pass
+
+
+LinComm_ = collections.namedtuple(
+    'LinComm_',
+    ['sleep', 'state', 'last_err', 'last_err_received', 'last_err_expected', 'last_err_id', 'tcvr_rdy', 'sched_index'])
+
+
+class LinComm(LinComm_):
+    """CAN Communication State.
+
+    Attributes:
+        sleep (bool): Sleep.
+            Indicates whether the transceiver and communication
+            controller are in their sleep state. False indicates normal
+            operation (awake), and true indicates sleep.
+        state (:any:`nixnet._enums.LinCommState`): Communication State
+        last_err (:any:`nixnet._enums.LinLastErrCode`): Last Error.
+            Last error specifies the status of the last attempt to receive or
+            transmit a frame
+        last_err_received (int): Returns the value received from the network
+            when last error occurred.
+
+            When ``last_err`` is ``READBACK``, this is the value read back.
+
+            When ``last_err`` is ``CHECKSUM``, this is the received checksum.
+        last_err_expected (int): Returns the value that the LIN interface
+            expected to see (instead of last received).
+
+            When ``last_err`` is ``READBACK``, this is the value transmitted.
+
+            When ``last_err`` is ``CHECKSUM``, this is the calculated checksum.
+        last_err_id (int): Returns the frame identifier in which the last error
+            occurred.
+
+            This is not applicable when ``last_err`` is ``NONE`` or ``UNKNOWN_ID``.
+        tcvr_rdy (bool): Indicates whether the LIN transceiver is powered from
+            the bus.
+
+            True indicates the bus power exists, so it is safe to start
+            communication on the LIN interface.
+
+            If this value is false, you cannot start communication
+            successfully. Wire power to the LIN transceiver and run your
+            application again.
+        sched_index (int): Indicates the LIN schedule that the interface
+            currently is running.
+
+            This index refers to a LIN schedule that you requested using the
+            ``change_lin_sched`` function. It indexes the array of schedules
+            represented in the :any:`nixnet._session.intf.Interface.lin_sched_names`.
+
+            This index applies only when the LIN interface is running as a
+            master. If the LIN interface is running as a slave only, this
+            element should be ignored.
+        """
 
     pass
 

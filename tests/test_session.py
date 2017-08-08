@@ -154,6 +154,31 @@ def test_parse_can_comm_bitfield():
         rx_err_count=255)
 
 
+def test_parse_lin_comm_bitfield():
+    """A part of Session.lin_comm"""
+    comm = _utils.parse_lin_comm_bitfield(0, 0)
+    assert comm == types.LinComm(
+        sleep=False,
+        state=constants.LinCommState.IDLE,
+        last_err=constants.LinLastErrCode.NONE,
+        last_err_received=0,
+        last_err_expected=0,
+        last_err_id=0,
+        tcvr_rdy=False,
+        sched_index=0)
+
+    comm = _utils.parse_lin_comm_bitfield(0xFFFFFF6B, 0xFFFFFFFF)
+    assert comm == types.LinComm(
+        sleep=True,
+        state=constants.LinCommState.INACTIVE,
+        last_err=constants.LinLastErrCode.CRC,
+        last_err_received=255,
+        last_err_expected=255,
+        last_err_id=63,
+        tcvr_rdy=False,
+        sched_index=255)
+
+
 def assert_can_frame(index, sent, received):
     assert sent.identifier == received.identifier
     assert sent.echo == received.echo

@@ -441,6 +441,19 @@ class SessionBase(object):
         bitfield = state_value_ctypes.value
         return _utils.parse_can_comm_bitfield(bitfield)
 
+    @property
+    def lin_comm(self):
+        # type: () -> types.LinComm
+        """:any:`nixnet.types.LinComm`: LIN Communication state"""
+        state_value_ctypes = (_ctypedefs.u32 * 2)()  # type: ignore
+        _funcs.nx_read_state(
+            self._handle,
+            constants.ReadState.LIN_COMM,
+            ctypes.pointer(state_value_ctypes))
+        first = state_value_ctypes[0].value
+        second = state_value_ctypes[1].value
+        return _utils.parse_lin_comm_bitfield(first, second)
+
     def check_fault(self):
         # type: () -> None
         """Check for an asynchronous fault.

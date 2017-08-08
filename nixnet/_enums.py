@@ -1400,6 +1400,35 @@ class FlexRayPocState(enum.Enum):
 
 
 class LinCommState(enum.Enum):
+    '''LIN Comm State
+
+    Values:
+        IDLE:
+            This is the LIN interface initial state on power-up. The
+            interface is essentially off, in that it is not attempting to
+            communicate with other nodes (ECUs). When the start trigger
+            occurs for the LIN interface, it transitions from the Idle
+            state to the Active state. When the interface stops due to a
+            call to XNET Stop, the LIN interface transitions from either
+            Active or Inactive to the Idle state.
+        ACTIVE:
+            This state reflects normal communication. The LIN interface remains
+            in this state as long as bus activity is detected (frame headers
+            received or transmitted).
+        INACTIVE:
+            This state indicates that no bus activity has been detected in the
+            past four seconds.
+
+            Regardless of whether the interface acts as a master or slave, it
+            transitions to this state after four seconds of bus inactivity. As
+            soon as bus activity is detected (break or frame header), the
+            interface transitions to the Active state.
+
+            The LIN interface does not go to sleep automatically when it
+            transitions to Inactive. To place the interface into sleep mode,
+            set the XNET Session Interface:LIN:Sleep property when you detect
+            the Inactive state.
+    '''
     IDLE = _cconsts.NX_LIN_COMM_STATE_IDLE
     ACTIVE = _cconsts.NX_LIN_COMM_STATE_ACTIVE
     INACTIVE = _cconsts.NX_LIN_COMM_STATE_INACTIVE
@@ -1468,6 +1497,28 @@ class LinDiagnosticSchedule(enum.Enum):
 
 
 class LinLastErrCode(enum.Enum):
+    '''LIN Comm Last Error Code
+
+    Values:
+        NONE:
+            No bus error has occurred since the previous communication state read.
+        UNKNOWN_ID:
+            Received a frame identifier that is not valid.
+        FORM:
+            The form of a received frame is incorrect. For example, the
+            database specifies 8 bytes of payload, but you receive only 4
+            bytes.
+        FRAMING:
+            The byte framing is incorrect (for example, a missing stop bit).
+        READBACK:
+            The interface transmitted a byte, but the value read back from the
+            transceiver was different. This often is caused by a cabling
+            problem, such as noise.
+        TIMEOUT:
+            Receiving the frame took longer than the LIN-specified timeout.
+        CRC:
+            The received checksum was different than the expected checksum.
+    '''
     NONE = _cconsts.NX_LIN_LAST_ERR_CODE_NONE
     UNKNOWN_ID = _cconsts.NX_LIN_LAST_ERR_CODE_UNKNOWN_ID
     FORM = _cconsts.NX_LIN_LAST_ERR_CODE_FORM
