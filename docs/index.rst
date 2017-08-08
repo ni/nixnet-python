@@ -4,19 +4,18 @@
    contain the root `toctree` directive.
 
 NI-XNET Python Documentation
-=============================
+============================
 
-.. include:: README.rst
+.. include:: ../README.rst
 
 .. toctree::
    :maxdepth: 3
-   :caption: API Reference:
+   :caption: Table of Contents:
 
-   session
-   convert
-   constants
-   types
-   errors
+   installation
+   api_reference
+   examples
+   contributing
 
 
 Indices and Tables
