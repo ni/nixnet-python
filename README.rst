@@ -39,8 +39,8 @@ Author       National Instruments
    >>>         print('Received frame:')
    >>>         print(frame)
 
-Installation
-============
+Quick Start
+===========
 
 Running **nixnet** requires NI-XNET or NI-XNET Runtime. Visit the
 `ni.com/downloads <http://www.ni.com/downloads/>`_ to download the latest version
@@ -50,14 +50,7 @@ of NI-XNET.
 
   $ python -m pip install nixnet
 
-Or **easy_install** from
-`setuptools <http://pypi.python.org/pypi/setuptools>`_::
-
-  $ python -m easy_install nixnet
-
-You also can download the project source and run::
-
-  $ python setup.py install
+Now you should be able to move onto the `Examples <https://github.com/ni/nixnet-python/tree/master/nixnet_examples>`_.
 
 Resources
 =========

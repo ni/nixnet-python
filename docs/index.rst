@@ -12,6 +12,7 @@ NI-XNET Python Documentation
    :maxdepth: 3
    :caption: Table of Contents:
 
+   installation
    api_reference
    examples
    contributing
