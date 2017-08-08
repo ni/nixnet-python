@@ -13,6 +13,7 @@ NI-XNET Python Documentation
    :caption: Table of Contents:
 
    api_reference
+   examples
    contributing
 
 
