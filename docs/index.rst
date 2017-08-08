@@ -10,9 +10,10 @@ NI-XNET Python Documentation
 
 .. toctree::
    :maxdepth: 3
-   :caption: API Reference:
+   :caption: Table of Contents:
 
    api_reference
+   contributing
 
 
 Indices and Tables

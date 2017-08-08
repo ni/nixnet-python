@@ -4,7 +4,7 @@ Contributing to nixnet
 Contributions to **nixnet** are welcome from all!
 
 **nixnet** is managed via `git <https://git-scm.com>`_, with the canonical
-upstream repository hosted on `GitHub <http://developercertificate.org/>`_.
+upstream repository hosted on `GitHub <https://github.com/ni/nixnet-python>`_.
 
 **nixnet** follows a pull-request model for development.  If you wish to
 contribute, you will need to create a GitHub account, fork this project,
