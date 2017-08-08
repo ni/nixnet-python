@@ -12,11 +12,7 @@ NI-XNET Python Documentation
    :maxdepth: 3
    :caption: API Reference:
 
-   session
-   convert
-   constants
-   types
-   errors
+   api_reference
 
 
 Indices and Tables
