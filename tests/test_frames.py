@@ -151,6 +151,25 @@ def test_can_bus_error_frame_equality():
     assert frame != 5
 
 
+def test_lin_frame_equality():
+    empty_frame = types.LinFrame(2, constants.FrameType.LIN_DATA, b'')
+    base_frame = types.LinFrame(2, constants.FrameType.LIN_DATA, b'\x01')
+
+    assert empty_frame == empty_frame
+    assert not (empty_frame == base_frame)
+    assert not (empty_frame == 5)
+
+    assert not (empty_frame != empty_frame)
+    assert empty_frame != base_frame
+    assert empty_frame != 5
+
+
+@mock.patch('nixnet._errors.check_for_error', raise_code)
+def test_lin_frame_identifier_overflow():
+    with pytest.raises(errors.XnetError):
+        types.LinFrame(0xFFFFFFFF).to_raw()
+
+
 def test_delay_frame_equality():
     frame = types.DelayFrame(100)
     other_frame = types.DelayFrame(120)

@@ -101,11 +101,10 @@ class InFrames(Frames):
             timeout=constants.TIMEOUT_NONE,
             frame_type=types.XnetFrame):
         # type: (int, float, typing.Type[types.FrameFactory]) -> typing.Iterable[types.Frame]
-        """Read raw CAN frames.
+        """Read frames.
 
         Args:
-            num_frames(int): Number of raw CAN frames
-                to read.
+            num_frames(int): Number of frames to read.
             timeout(float): The time in seconds to wait for number to read
                 frame bytes to become available.
 
@@ -163,7 +162,7 @@ class SinglePointInFrames(Frames):
             self,
             frame_type=types.XnetFrame):
         # type: (typing.Type[types.FrameFactory]) -> typing.Iterable[types.Frame]
-        """Read raw CAN frames.
+        """Read frames.
 
         Args:
             frame_type(:any:`nixnet.types.FrameFactory`): A factory for the
@@ -222,7 +221,7 @@ class OutFrames(Frames):
             frames,
             timeout=10):
         # type: (typing.Iterable[types.Frame], float) -> None
-        """Write raw CAN frame data.
+        """Write frame data.
 
         Args:
             frames(list of float): One or more :any:`nixnet.types.Frame` objects to be
@@ -273,7 +272,7 @@ class SinglePointOutFrames(Frames):
             self,
             frames):
         # type: (typing.Iterable[types.Frame]) -> None
-        """Write raw CAN frame data.
+        """Write frame data.
 
         Args:
             frames(list of float): One or more :any:`nixnet.types.Frame` objects to be
