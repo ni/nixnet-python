@@ -20,7 +20,8 @@ __all__ = [
     'FrameFactory',
     'Frame',
     'RawFrame',
-    'CanFrame']
+    'CanFrame',
+    'LinFrame']
 
 
 DriverVersion = collections.namedtuple(
@@ -495,6 +496,135 @@ class CanBusErrorFrame(Frame):
             self.rx_err_count)
 
 
+class LinFrame(object):
+    """LIN Frame.
+
+    Attributes:
+        identifier(int): LIN frame arbitration identifier.
+        echo(bool): If the frame is an echo of a successful
+            transmit rather than being received from the network.
+        type(:any:`nixnet._enums.FrameType`): Frame type.
+        timestamp(int): Absolute time the XNET interface received the end-of-frame.
+        eventslot(bool): Whether the frame was received within an
+            event-triggered slot or an unconditional or sporadic slot.
+        eventid(int): Identifier for an event-triggered slot.
+        payload(bytes): A byte string representing the payload.
+    """
+
+    __slots__ = [
+        "identifier",
+        "echo",
+        "type",
+        "timestamp",
+        "eventslot",
+        "eventid",
+        "payload"]
+
+    _FRAME_ID_MASK = 0x0000003F
+
+    def __init__(self, identifier, type=constants.FrameType.LIN_DATA, payload=b""):
+        # type: (int, constants.FrameType, bytes) -> None
+        self.identifier = identifier
+        self.echo = False  # Used only for Read
+        self.type = type
+        self.timestamp = 0  # Used only for Read
+        self.eventslot = False  # Used only for Read
+        self.eventid = 0  # Used only for Read
+        self.payload = payload
+
+    @classmethod
+    def from_raw(cls, frame):
+        # type: (RawFrame) -> LinFrame
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(5, 2, constants.FrameType.LIN_DATA, 0x81, 1, b'\x01')
+        >>> LinFrame.from_raw(raw)
+        LinFrame(identifier=2, echo=True, timestamp=0x5, eventslot=True, eventid=1, len(payload)=1)
+        >>> raw = RawFrame(5, 2, constants.FrameType.LIN_DATA, _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO, 0, b'\x01')
+        >>> LinFrame.from_raw(raw)
+        LinFrame(identifier=2, echo=True, timestamp=0x5, len(payload)=1)
+        """
+        identifier = frame.identifier & cls._FRAME_ID_MASK
+        lin_frame = LinFrame(identifier, constants.FrameType(frame.type), frame.payload)
+        lin_frame.timestamp = frame.timestamp
+        lin_frame.echo = bool(frame.flags & _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO)
+        lin_frame.eventslot = bool(frame.flags & _cconsts.NX_FRAME_FLAGS_LIN_EVENT_SLOT)
+        if lin_frame.eventslot:
+            lin_frame.eventid = frame.info
+        else:
+            lin_frame.eventid = 0
+
+        return lin_frame
+
+    def to_raw(self):
+        # type: () -> RawFrame
+        """Convert to RawFrame.
+
+        >>> LinFrame(2, constants.FrameType.LIN_DATA).to_raw()
+        RawFrame(timestamp=0x0, identifier=0x2, type=FrameType.LIN_DATA)
+        >>> l = LinFrame(2, constants.FrameType.LIN_DATA)
+        >>> l.echo = True
+        >>> l.eventslot = True
+        >>> l.eventid = 1
+        >>> l.to_raw()
+        RawFrame(timestamp=0x0, identifier=0x2, type=FrameType.LIN_DATA, flags=0x81, info=0x1)
+        """
+        if self.identifier != (self.identifier & self._FRAME_ID_MASK):
+            _errors.check_for_error(_cconsts.NX_ERR_UNDEFINED_FRAME_ID)
+        flags = 0
+        info = 0
+        if self.echo:
+            flags |= _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO
+        if self.eventslot:
+            flags |= _cconsts.NX_FRAME_FLAGS_LIN_EVENT_SLOT
+            info |= self.eventid
+        return RawFrame(self.timestamp, self.identifier, self.type, flags, info, self.payload)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(LinFrame, other)
+            return all((
+                self.identifier == other_frame.identifier,
+                self.echo == other_frame.echo,
+                self.type == other_frame.type,
+                self.timestamp == other_frame.timestamp,
+                self.eventslot == other_frame.eventslot,
+                self.eventid == other_frame.eventid,
+                self.payload == other_frame.payload))
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """LinFrame debug representation.
+
+        >>> LinFrame(2)
+        LinFrame(identifier=2)
+        >>> LinFrame(2, constants.FrameType.LIN_NO_RESPONSE, b'\x01')
+        LinFrame(identifier=2, type=FrameType.LIN_NO_RESPONSE, len(payload)=1)
+        """
+        optional = []
+        if self.echo:
+            optional.append('echo={}'.format(self.echo))
+        if self.type != constants.FrameType.LIN_DATA:
+            optional.append('type={}'.format(self.type))
+        if self.timestamp != 0:
+            optional.append('timestamp=0x{:x}'.format(self.timestamp))
+        if self.eventslot:
+            optional.append('eventslot={}'.format(self.eventslot))
+        if self.eventid != 0:
+            optional.append('eventid={}'.format(self.eventid))
+        if self.payload:
+            optional.append('len(payload)={}'.format(len(self.payload)))
+        if optional:
+            optional_params = ', {}'.format(", ".join(optional))
+        else:
+            optional_params = ''
+        return "LinFrame(identifier={}{})".format(
+            self.identifier,
+            optional_params)
+
+
 class DelayFrame(Frame):
     """Delay hardware when DelayFrame is outputted.
 
@@ -694,6 +824,7 @@ class XnetFrame(FrameFactory):
             constants.FrameType.CANFDBRS_DATA: CanFrame,
             constants.FrameType.CAN_REMOTE: CanFrame,
             constants.FrameType.CAN_BUS_ERROR: CanBusErrorFrame,
+            constants.FrameType.LIN_DATA: LinFrame,
             constants.FrameType.SPECIAL_DELAY: DelayFrame,
             constants.FrameType.SPECIAL_LOG_TRIGGER: LogTriggerFrame,
             constants.FrameType.SPECIAL_START_TRIGGER: StartTriggerFrame,
