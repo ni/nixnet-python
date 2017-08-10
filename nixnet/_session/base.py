@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import ctypes  # type: ignore
 import typing  # NOQA: F401
 import warnings
 
@@ -374,14 +375,24 @@ class SessionBase(object):
     def time_current(self):
         # type: () -> int
         """int: Current interface time."""
-        time, _ = _funcs.nx_read_state(self._handle, constants.ReadState.TIME_CURRENT, _ctypedefs.nxTimestamp_t)
+        state_value_ctypes = _ctypedefs.nxTimestamp_t()
+        _funcs.nx_read_state(
+            self._handle,
+            constants.ReadState.TIME_CURRENT,
+            ctypes.pointer(state_value_ctypes))
+        time = state_value_ctypes.value
         return time
 
     @property
     def time_start(self):
         # type: () -> int
         """int: Time the interface was started."""
-        time, _ = _funcs.nx_read_state(self._handle, constants.ReadState.TIME_START, _ctypedefs.nxTimestamp_t)
+        state_value_ctypes = _ctypedefs.nxTimestamp_t()
+        _funcs.nx_read_state(
+            self._handle,
+            constants.ReadState.TIME_START,
+            ctypes.pointer(state_value_ctypes))
+        time = state_value_ctypes.value
         if time == 0:
             # The interface is not communicating.
             _errors.check_for_error(constants.Err.SESSION_NOT_STARTED.value)
@@ -395,7 +406,12 @@ class SessionBase(object):
         The time is usually later than ``time_start`` because the interface
         must undergo a communication startup procedure.
         """
-        time, _ = _funcs.nx_read_state(self._handle, constants.ReadState.TIME_COMMUNICATING, _ctypedefs.nxTimestamp_t)
+        state_value_ctypes = _ctypedefs.nxTimestamp_t()
+        _funcs.nx_read_state(
+            self._handle,
+            constants.ReadState.TIME_COMMUNICATING,
+            ctypes.pointer(state_value_ctypes))
+        time = state_value_ctypes.value
         if time == 0:
             # The interface is not communicating.
             _errors.check_for_error(constants.Err.SESSION_NOT_STARTED.value)
@@ -405,14 +421,24 @@ class SessionBase(object):
     def state(self):
         # type: () -> constants.SessionInfoState
         """:any:`nixnet._enums.SessionInfoState`: Session running state."""
-        state, _ = _funcs.nx_read_state(self._handle, constants.ReadState.SESSION_INFO, _ctypedefs.u32)
+        state_value_ctypes = _ctypedefs.u32()
+        _funcs.nx_read_state(
+            self._handle,
+            constants.ReadState.SESSION_INFO,
+            ctypes.pointer(state_value_ctypes))
+        state = state_value_ctypes.value
         return constants.SessionInfoState(state)
 
     @property
     def can_comm(self):
         # type: () -> types.CanComm
         """:any:`nixnet.types.CanComm`: CAN Communication state"""
-        bitfield, _ = _funcs.nx_read_state(self._handle, constants.ReadState.CAN_COMM, _ctypedefs.u32)
+        state_value_ctypes = _ctypedefs.u32()
+        _funcs.nx_read_state(
+            self._handle,
+            constants.ReadState.CAN_COMM,
+            ctypes.pointer(state_value_ctypes))
+        bitfield = state_value_ctypes.value
         return _utils.parse_can_comm_bitfield(bitfield)
 
     def check_fault(self):
@@ -427,7 +453,11 @@ class SessionBase(object):
         NI-XNET function calls, yet easy to use alongside the common practice
         of checking the communication state.
         """
-        _, fault = _funcs.nx_read_state(self._handle, constants.ReadState.SESSION_INFO, _ctypedefs.u32)
+        state_value_ctypes = _ctypedefs.u32()
+        fault = _funcs.nx_read_state(
+            self._handle,
+            constants.ReadState.SESSION_INFO,
+            ctypes.pointer(state_value_ctypes))
         _errors.check_for_error(fault)
 
     @property
