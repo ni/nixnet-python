@@ -21,7 +21,12 @@ __all__ = [
     'Frame',
     'RawFrame',
     'CanFrame',
-    'LinFrame']
+    'CanBusErrorFrame',
+    'LinFrame',
+    'DelayFrame',
+    'LogTriggerFrame',
+    'StartTriggerFrame',
+    'XnetFrame']
 
 
 DriverVersion = collections.namedtuple(
