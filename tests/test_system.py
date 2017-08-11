@@ -13,13 +13,13 @@ from nixnet import system
 
 
 @pytest.fixture
-def nixnet_in_interface(request):
+def can_in_interface(request):
     interface = request.config.getoption("--can-in-interface")
     return interface
 
 
 @pytest.fixture
-def nixnet_out_interface(request):
+def can_out_interface(request):
     interface = request.config.getoption("--can-out-interface")
     return interface
 
@@ -57,7 +57,7 @@ def test_system_properties():
 
 
 @pytest.mark.integration
-def test_system_intf_refs_superset(nixnet_in_interface, nixnet_out_interface):
+def test_system_intf_refs_superset(can_in_interface, can_out_interface):
     with system.System() as sys:
         intfs = set(sys.intf_refs_all)
         can_intfs = set(sys.intf_refs_can)
@@ -67,7 +67,7 @@ def test_system_intf_refs_superset(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_system_intf_refs_all_superset(nixnet_in_interface, nixnet_out_interface):
+def test_system_intf_refs_all_superset(can_in_interface, can_out_interface):
     with system.System() as sys:
         intfs_all = set(sys.intf_refs_all)
         intfs = set(sys.intf_refs)
@@ -95,7 +95,7 @@ def test_device_container():
 
 
 @pytest.mark.integration
-def test_device_properties(nixnet_in_interface):
+def test_device_properties(can_in_interface):
     """Verify Device properties.
 
     Ideally we'd match these against a known piece of hardware to ensure the
@@ -103,13 +103,13 @@ def test_device_properties(nixnet_in_interface):
     to run these tests with any piece of hardware for most properties.  For
     now, we'll just verify the calls don't call catastrophically and someone
     can always run py.test with ``-s``_.  For ``int_refs_all``, we can at least
-    make sure that one device reports ``nixnet_in_interface``_.
+    make sure that one device reports ``can_in_interface``_.
     """
     with system.System() as sys:
         devs = list(sys.dev_refs)
         assert 0 < len(devs), "Pre-requisite failed"
         for dev in devs:
-            in_intfs = [intf for intf in dev.intf_refs_all if intf == nixnet_in_interface]
+            in_intfs = [intf for intf in dev.intf_refs_all if intf == can_in_interface]
             if len(in_intfs) == 1:
                 break
         else:
@@ -128,20 +128,20 @@ def test_device_properties(nixnet_in_interface):
 
 
 @pytest.mark.integration
-def test_intf_container(nixnet_in_interface):
+def test_intf_container(can_in_interface):
     with system.System() as sys:
         intfs = list(sys.intf_refs_all)
-        in_intfs = [intf for intf in intfs if intf == nixnet_in_interface]
+        in_intfs = [intf for intf in intfs if intf == can_in_interface]
         assert len(in_intfs) == 1
         in_intf = in_intfs[0]
 
-        assert str(in_intf) == nixnet_in_interface
+        assert str(in_intf) == can_in_interface
 
-        assert in_intf == nixnet_in_interface
+        assert in_intf == can_in_interface
         assert in_intf == in_intf
         assert not (in_intf == 100)
 
-        assert not (in_intf != nixnet_in_interface)
+        assert not (in_intf != can_in_interface)
         assert not (in_intf != in_intf)
         assert in_intf != "<Invalid>"
         assert in_intf != 100
@@ -152,7 +152,7 @@ def test_intf_container(nixnet_in_interface):
 
 
 @pytest.mark.integration
-def test_intf_blink(nixnet_in_interface):
+def test_intf_blink(can_in_interface):
     """Verify LEDs can be blinked.
 
     Since we don't have a camera watching the LEDs, we can at least test if we
@@ -166,7 +166,7 @@ def test_intf_blink(nixnet_in_interface):
     """
     with system.System() as sys:
         intfs = list(sys.intf_refs_all)
-        in_intfs = [intf for intf in intfs if intf == nixnet_in_interface]
+        in_intfs = [intf for intf in intfs if intf == can_in_interface]
         assert len(in_intfs) == 1, "Pre-requisite failed"
         in_intf = in_intfs[0]
 
@@ -175,7 +175,7 @@ def test_intf_blink(nixnet_in_interface):
         time.sleep(0.01)
         in_intf.blink(constants.BlinkMode.DISABLE)
         time.sleep(0.01)
-        with nixnet.FrameInStreamSession(nixnet_in_interface) as input_session:
+        with nixnet.FrameInStreamSession(can_in_interface) as input_session:
             input_session.intf.baud_rate = 125000
             input_session.start()
             with pytest.raises(errors.XnetError) as excinfo:
@@ -187,7 +187,7 @@ def test_intf_blink(nixnet_in_interface):
 
 
 @pytest.mark.integration
-def test_intf_properties(nixnet_in_interface):
+def test_intf_properties(can_in_interface):
     """Verify Interface properties.
 
     Ideally we'd match these against a known piece of hardware to ensure the
@@ -198,7 +198,7 @@ def test_intf_properties(nixnet_in_interface):
     """
     with system.System() as sys:
         intfs = list(sys.intf_refs_all)
-        in_intfs = [intf for intf in intfs if intf == nixnet_in_interface]
+        in_intfs = [intf for intf in intfs if intf == can_in_interface]
         assert len(in_intfs) == 1, "Pre-requisite failed"
         in_intf = in_intfs[0]
 
