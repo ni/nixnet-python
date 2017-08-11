@@ -60,7 +60,7 @@ def parse_lin_comm_bitfield(first, second):
     """Parse a LIN Comm first."""
     sleep = ((first >> 1) & 0x01) != 0
     state = constants.LinCommState((first >> 2) & 0x03)
-    last_err = constants.LinLastErrCode((first >> 4) & 0x0F)
+    last_err = constants.LinLastErr((first >> 4) & 0x0F)
     last_err_received = (first >> 8) & 0x0FF
     last_err_expected = (first >> 16) & 0x0FF
     last_err_id = (first >> 24) & 0x03F

@@ -160,10 +160,10 @@ def test_parse_lin_comm_bitfield():
     assert comm == types.LinComm(
         sleep=False,
         state=constants.LinCommState.IDLE,
-        last_err=constants.LinLastErrCode.NONE,
-        last_err_received=0,
-        last_err_expected=0,
-        last_err_id=0,
+        last_err=constants.LinLastErr.NONE,
+        err_received=0,
+        err_expected=0,
+        err_id=0,
         tcvr_rdy=False,
         sched_index=0)
 
@@ -171,10 +171,10 @@ def test_parse_lin_comm_bitfield():
     assert comm == types.LinComm(
         sleep=True,
         state=constants.LinCommState.INACTIVE,
-        last_err=constants.LinLastErrCode.CRC,
-        last_err_received=255,
-        last_err_expected=255,
-        last_err_id=63,
+        last_err=constants.LinLastErr.CRC,
+        err_received=255,
+        err_expected=255,
+        err_id=63,
         tcvr_rdy=False,
         sched_index=255)
 

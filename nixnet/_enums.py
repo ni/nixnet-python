@@ -1496,7 +1496,7 @@ class LinDiagnosticSchedule(enum.Enum):
     SLAVE_RESP = _cconsts.NX_LIN_DIAGNOSTIC_SCHEDULE_SLAVE_RESP
 
 
-class LinLastErrCode(enum.Enum):
+class LinLastErr(enum.Enum):
     '''LIN Comm Last Error Code
 
     Values:

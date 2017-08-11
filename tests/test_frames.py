@@ -182,6 +182,19 @@ def test_lin_frame_identifier_overflow():
         types.LinFrame(0xFFFFFFFF).to_raw()
 
 
+def test_lin_bus_error_frame_equality():
+    frame = types.LinBusErrorFrame(100, constants.LinCommState.IDLE, constants.LinLastErr.UNKNOWN_ID, 1, 2, 3)
+    other_frame = types.LinBusErrorFrame(100, constants.LinCommState.IDLE, constants.LinLastErr.UNKNOWN_ID, 1, 3, 3)
+
+    assert frame == frame
+    assert not (frame == other_frame)
+    assert not (frame == 5)
+
+    assert not (frame != frame)
+    assert frame != other_frame
+    assert frame != 5
+
+
 def test_delay_frame_equality():
     frame = types.DelayFrame(100)
     other_frame = types.DelayFrame(120)
