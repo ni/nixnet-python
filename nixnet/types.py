@@ -544,10 +544,10 @@ class LinFrame(object):
 
         >>> raw = RawFrame(5, 2, constants.FrameType.LIN_DATA, 0x81, 1, b'\x01')
         >>> LinFrame.from_raw(raw)
-        LinFrame(identifier=2, echo=True, timestamp=0x5, eventslot=True, eventid=1, len(payload)=1)
+        LinFrame(identifier=0x2, echo=True, timestamp=0x5, eventslot=True, eventid=1, len(payload)=1)
         >>> raw = RawFrame(5, 2, constants.FrameType.LIN_DATA, _cconsts.NX_FRAME_FLAGS_TRANSMIT_ECHO, 0, b'\x01')
         >>> LinFrame.from_raw(raw)
-        LinFrame(identifier=2, echo=True, timestamp=0x5, len(payload)=1)
+        LinFrame(identifier=0x2, echo=True, timestamp=0x5, len(payload)=1)
         """
         identifier = frame.identifier & cls._FRAME_ID_MASK
         lin_frame = LinFrame(identifier, constants.FrameType(frame.type), frame.payload)
@@ -604,9 +604,9 @@ class LinFrame(object):
         """LinFrame debug representation.
 
         >>> LinFrame(2)
-        LinFrame(identifier=2)
+        LinFrame(identifier=0x2)
         >>> LinFrame(2, constants.FrameType.LIN_NO_RESPONSE, b'\x01')
-        LinFrame(identifier=2, type=FrameType.LIN_NO_RESPONSE, len(payload)=1)
+        LinFrame(identifier=0x2, type=FrameType.LIN_NO_RESPONSE, len(payload)=1)
         """
         optional = []
         if self.echo:
@@ -625,7 +625,7 @@ class LinFrame(object):
             optional_params = ', {}'.format(", ".join(optional))
         else:
             optional_params = ''
-        return "LinFrame(identifier={}{})".format(
+        return "LinFrame(identifier=0x{:x}{})".format(
             self.identifier,
             optional_params)
 
