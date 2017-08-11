@@ -7,6 +7,8 @@ import time
 import pytest  # type: ignore
 
 import nixnet
+from nixnet import _ctypedefs
+from nixnet._session import signals as session_signals
 
 
 @pytest.fixture
@@ -86,3 +88,32 @@ def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
             actual_signals = list(input_session.signals.read())
             for expected, (_, actual) in zip(expected_signals, actual_signals):
                 assert pytest.approx(expected, rel=1) == actual
+
+
+def test_xy_unflatten_signals_empty():
+    signals = session_signals.XYInSignals._unflatten_signals([], [], [])
+    assert len(signals) == 0
+
+
+def test_xy_unflatten_signals_single_signal():
+    signals = session_signals.XYInSignals._unflatten_signals(
+        [_ctypedefs.f64(v) for v in [0, 1, 2, 3]],
+        [_ctypedefs.nxTimestamp_t(v) for v in [4, 5, 6, 7]],
+        [_ctypedefs.u32(v) for v in [4]])
+    assert signals == [[(0, 4), (1, 5), (2, 6), (3, 7)]]
+
+
+def test_xy_unflatten_signals_multi_signal():
+    signals = session_signals.XYInSignals._unflatten_signals(
+        [_ctypedefs.f64(v) for v in [0, 1, 2, 3]],
+        [_ctypedefs.nxTimestamp_t(v) for v in [4, 5, 6, 7]],
+        [_ctypedefs.u32(v) for v in [2, 2]])
+    assert signals == [[(0, 4), (1, 5)], [(2, 6), (3, 7)]]
+
+
+def test_xy_unflatten_signals_uneven():
+    signals = session_signals.XYInSignals._unflatten_signals(
+        [_ctypedefs.f64(v) for v in [0, 1, 2, 3]],
+        [_ctypedefs.nxTimestamp_t(v) for v in [4, 5, 6, 7]],
+        [_ctypedefs.u32(v) for v in [1, 2]])
+    assert signals == [[(0, 4)], [(2, 6), (3, 7)]]

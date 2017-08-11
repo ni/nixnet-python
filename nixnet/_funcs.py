@@ -138,6 +138,37 @@ def nx_read_signal_single_point(
     return timestamp_buffer_ctypes, value_buffer_ctypes
 
 
+def nx_read_signal_xy(
+    session_ref,  # type: int
+    time_limit,  # type: int
+    num_signals,  # type: int
+    num_values_per_signal,  # type: int
+):
+    # type: (...) -> typing.Any
+    total_number_of_values = num_signals * num_values_per_signal
+
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
+    time_limit_ctypes = _ctypedefs.nxTimestamp_t(time_limit)
+    value_buffer_ctypes = (_ctypedefs.f64 * total_number_of_values)()  # type: ignore
+    size_of_value_buffer_ctypes = _ctypedefs.u32(_ctypedefs.f64.BYTES * total_number_of_values)
+    timestamp_buffer_ctypes = (_ctypedefs.nxTimestamp_t * total_number_of_values)()  # type: ignore
+    size_of_timestamp_buffer_ctypes = _ctypedefs.u32(_ctypedefs.nxTimestamp_t.BYTES * total_number_of_values)
+    num_pairs_buffer_ctypes = (_ctypedefs.u32 * num_signals)()  # type: ignore
+    size_of_num_pairs_buffer_ctypes = _ctypedefs.u32(_ctypedefs.u32.BYTES * num_signals)
+    result = _cfuncs.lib.nx_read_signal_xy(
+        session_ref_ctypes,
+        ctypes.pointer(time_limit_ctypes),
+        value_buffer_ctypes,
+        size_of_value_buffer_ctypes,
+        timestamp_buffer_ctypes,
+        size_of_timestamp_buffer_ctypes,
+        num_pairs_buffer_ctypes,
+        size_of_num_pairs_buffer_ctypes,
+    )
+    _errors.check_for_error(result.value)
+    return value_buffer_ctypes, timestamp_buffer_ctypes, num_pairs_buffer_ctypes
+
+
 def nx_read_state(
     session_ref,  # type: int
     state_id,  # type: _enums.ReadState

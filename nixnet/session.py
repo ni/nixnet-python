@@ -21,7 +21,9 @@ __all__ = [
     "FrameInSinglePointSession",
     "FrameOutSinglePointSession",
     "SignalInSinglePointSession",
-    "SignalOutSinglePointSession"]
+    "SignalOutSinglePointSession",
+    "SignalInXYSession",
+    "SignalOutXYSession"]
 
 
 class FrameInStreamSession(base.SessionBase):
@@ -626,6 +628,138 @@ class SignalOutSinglePointSession(base.SessionBase):
         return self._signals
 
 
+class SignalInXYSession(base.SessionBase):
+    """Signal Input X-Y session.
+
+    For each frame received, this mode provides the frame signals as a
+    timestamp/value pair. The timestamp represents the absolute time when the
+    XNET interface received the frame (end of frame), accurate to microseconds.
+
+    The received frames for this mode are stored in queues to avoid signal data loss.
+
+    .. note:: This is the recommended mode for reading a sequence of all signal
+       values.
+    """
+
+    def __init__(
+            self,
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            signals,  # type: typing.Union[typing.Text, typing.List[typing.Text]]
+    ):
+        # type: (...) -> None
+        """Create a Signal Input X-Y session.
+
+        This function creates a Signal Input X-Y session using the named
+        references to database objects.
+
+        Args:
+            interface_name(str): XNET Interface name to use for
+                this session.
+            database_name(str): XNET database name to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name(str): XNET cluster name to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the ``signals`` parameter.
+            signals(list of str): Strings describing signals for the session. The
+                list syntax is as follows:
+
+                ``signals`` contains one or more XNET Signal names. Each name must
+                be one of the following options, whichever uniquely
+                identifies a signal within the database given:
+
+                    - ``<Signal>``
+                    - ``<Frame>.<Signal>``
+                    - ``<Cluster>.<Frame>.<Signal>``
+                    - ``<PDU>.<Signal>``
+                    - ``<Cluster>.<PDU>.<Signal>``
+        """
+        flattened_list = _utils.flatten_items(signals)
+        base.SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface_name,
+            constants.CreateSessionMode.SIGNAL_IN_SINGLE_POINT)
+        self._signals = session_signals.XYInSignals(self._handle)
+
+    @property
+    def signals(self):
+        # type: () -> session_signals.XYInSignals
+        """:any:`nixnet._session.signals.XYInSignals`: Operate on session's signals"""
+        return self._signals
+
+
+class SignalOutXYSession(base.SessionBase):
+    """Signal Out X-Y session.
+
+    This mode provides a sequence of signal values for transmit using each
+    frame's timing as specified in the database.
+
+    The frames for this mode are stored in queues, such that every signal
+    provided is transmitted in a frame.
+
+    .. note:: This is the recommended mode for writing a sequence of all signal
+       values.
+    """
+
+    def __init__(
+            self,
+            interface_name,  # type: typing.Text
+            database_name,  # type: typing.Text
+            cluster_name,  # type: typing.Text
+            signals,  # type: typing.Union[typing.Text, typing.List[typing.Text]]
+    ):
+        # type: (...) -> None
+        """Create a Signal Output X-Y session.
+
+        This function creates a Signal Output X-Y session using the named
+        references to database objects.
+
+        Args:
+            interface_name(str): XNET Interface name to use for
+                this session.
+            database_name(str): XNET database name to use for
+                interface configuration. The database name must use the <alias>
+                or <filepath> syntax (refer to Databases).
+            cluster_name(str): XNET cluster name to use for
+                interface configuration. The name must specify a cluster from
+                the database given in the database_name parameter. If it is left
+                blank, the cluster is extracted from the ``signals`` parameter.
+            signals(list of str): Strings describing signals for the session. The
+                list syntax is as follows:
+
+                ``signals`` contains one or more XNET Signal names. Each name must
+                be one of the following options, whichever uniquely
+                identifies a signal within the database given:
+
+                    - ``<Signal>``
+                    - ``<Frame>.<Signal>``
+                    - ``<Cluster>.<Frame>.<Signal>``
+                    - ``<PDU>.<Signal>``
+                    - ``<Cluster>.<PDU>.<Signal>``
+        """
+        flattened_list = _utils.flatten_items(signals)
+        base.SessionBase.__init__(
+            self,
+            database_name,
+            cluster_name,
+            flattened_list,
+            interface_name,
+            constants.CreateSessionMode.SIGNAL_OUT_SINGLE_POINT)
+        self._signals = session_signals.XYOutSignals(self._handle)
+
+    @property
+    def signals(self):
+        # type: () -> session_signals.XYOutSignals
+        """:any:`nixnet._session.signals.XYInSignals`: Operate on session's signals"""
+        return self._signals
+
+
 def create_session_by_ref(
         database_refs,
         interface_name,
@@ -644,29 +778,8 @@ def read_signal_waveform(
     raise NotImplementedError("Placeholder")
 
 
-def read_signal_xy(
-        session_ref,
-        time_limit,
-        value_buffer,
-        size_of_value_buffer,
-        timestamp_buffer,
-        size_of_timestamp_buffer,
-        num_pairs_buffer,
-        size_of_num_pairs_buffer):
-    raise NotImplementedError("Placeholder")
-
-
 def write_signal_waveform(
         session_ref,
         timeout,
         value_buffer):
     _funcs.nx_write_signal_waveform(session_ref, timeout, value_buffer)
-
-
-def write_signal_xy(
-        session_ref,
-        timeout,
-        value_buffer,
-        timestamp_buffer,
-        num_pairs_buffer):
-    _funcs.nx_write_signal_xy(session_ref, timeout, value_buffer, timestamp_buffer, num_pairs_buffer)
