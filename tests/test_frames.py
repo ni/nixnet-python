@@ -16,14 +16,26 @@ from nixnet import types
 
 
 @pytest.fixture
-def nixnet_in_interface(request):
-    interface = request.config.getoption("--nixnet-in-interface")
+def can_in_interface(request):
+    interface = request.config.getoption("--can-in-interface")
     return interface
 
 
 @pytest.fixture
-def nixnet_out_interface(request):
-    interface = request.config.getoption("--nixnet-out-interface")
+def can_out_interface(request):
+    interface = request.config.getoption("--can-out-interface")
+    return interface
+
+
+@pytest.fixture
+def lin_in_interface(request):
+    interface = request.config.getoption("--lin-in-interface")
+    return interface
+
+
+@pytest.fixture
+def lin_out_interface(request):
+    interface = request.config.getoption("--lin-out-interface")
     return interface
 
 
@@ -251,9 +263,9 @@ def assert_can_frame(index, sent, received):
 
 
 @pytest.mark.integration
-def test_stream_loopback(nixnet_in_interface, nixnet_out_interface):
-    with nixnet.FrameInStreamSession(nixnet_in_interface) as input_session:
-        with nixnet.FrameOutStreamSession(nixnet_out_interface) as output_session:
+def test_stream_loopback(can_in_interface, can_out_interface):
+    with nixnet.FrameInStreamSession(can_in_interface) as input_session:
+        with nixnet.FrameOutStreamSession(can_out_interface) as output_session:
             input_session.intf.baud_rate = 125000
             output_session.intf.baud_rate = 125000
 
@@ -277,18 +289,18 @@ def test_stream_loopback(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_queued_loopback(nixnet_in_interface, nixnet_out_interface):
+def test_queued_loopback(can_in_interface, can_out_interface):
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
         with nixnet.FrameOutQueuedSession(
-                nixnet_out_interface,
+                can_out_interface,
                 database_name,
                 cluster_name,
                 frame_name) as output_session:
@@ -312,18 +324,18 @@ def test_queued_loopback(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
+def test_singlepoint_loopback(can_in_interface, can_out_interface):
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     frame_name = ['CANEventFrame1', 'CANEventFrame2']
 
     with nixnet.FrameInSinglePointSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
         with nixnet.FrameOutSinglePointSession(
-                nixnet_out_interface,
+                can_out_interface,
                 database_name,
                 cluster_name,
                 frame_name) as output_session:
@@ -349,13 +361,13 @@ def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_session_frames_container(nixnet_in_interface):
+def test_session_frames_container(can_in_interface):
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
@@ -398,7 +410,7 @@ def test_session_frames_container(nixnet_in_interface):
 
 
 @pytest.mark.integration
-def test_session_frames_properties(nixnet_out_interface):
+def test_session_frames_properties(can_out_interface):
     """Verify Frames properties.
 
     These are pretty transient and can't easily be verified against known good
@@ -410,7 +422,7 @@ def test_session_frames_properties(nixnet_out_interface):
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameOutQueuedSession(
-            nixnet_out_interface,
+            can_out_interface,
             database_name,
             cluster_name,
             frame_name) as output_session:
@@ -418,13 +430,13 @@ def test_session_frames_properties(nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_session_frame_container(nixnet_in_interface):
+def test_session_frame_container(can_in_interface):
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
@@ -439,3 +451,34 @@ def test_session_frame_container(nixnet_in_interface):
         assert frame != 5
 
         print(repr(frame))
+
+
+@pytest.mark.integration
+def test_lin_stream_loopback(lin_in_interface, lin_out_interface):
+    database_name = 'NIXNET_exampleLDF'
+
+    with nixnet.FrameInStreamSession(lin_in_interface, database_name) as input_session:
+        with nixnet.FrameOutStreamSession(lin_out_interface, database_name) as output_session:
+            output_session.intf.lin_master = True
+
+            # Start the input session manually to make sure that the first
+            # frame value sent before the initial read will be received.
+            input_session.start()
+
+            # Set the schedule. This will also automically enable
+            # master mode
+            output_session.change_lin_schedule(0)
+
+            payload_list = [2, 4, 8, 16]
+            expected_frames = [
+                types.LinFrame(0, constants.FrameType.LIN_DATA, bytes(bytearray(payload_list)))]
+            output_session.frames.write(expected_frames)
+
+            # Wait 1 s and then read the received values.
+            # They should be the same as the ones sent.
+            time.sleep(1)
+
+            actual_frames = list(input_session.frames.read(1))
+            assert len(expected_frames) == len(actual_frames)
+            for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
+                assert_can_frame(i, expected, actual)

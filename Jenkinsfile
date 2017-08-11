@@ -5,8 +5,10 @@ node('xnetPython') {
 
 	// Environment variables to configure the hardware for testing. This scope applies to all stages
 	environment {
-		NIXNET_FIXTURE_IN_INTERFACE = 'CAN1'
-		NIXNET_FIXTURE_OUT_INTERFACE = 'CAN2'
+		CAN_FIXTURE_IN_INTERFACE = 'CAN1'
+		CAN_FIXTURE_OUT_INTERFACE = 'CAN2'
+		LIN_FIXTURE_IN_INTERFACE = 'LIN1'
+		LIN_FIXTURE_OUT_INTERFACE = 'LIN2'
 	}
 
 	try{
