@@ -243,6 +243,24 @@ def nx_write_signal_xy(
     _errors.check_for_error(result.value)
 
 
+def nx_write_state(
+    session_ref,  # type: int
+    state_id,  # type: _enums.WriteState
+    state_value_ctypes,  # type: typing.Any
+):
+    # type: (...) -> None
+    session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
+    state_id_ctypes = _ctypedefs.u32(state_id.value)
+    state_size_ctypes = state_value_ctypes.BYTES
+    result = _cfuncs.lib.nx_write_state(
+        session_ref_ctypes,
+        state_id_ctypes,
+        state_size_ctypes,
+        ctypes.pointer(state_value_ctypes),
+    )
+    _errors.check_for_error(result.value)
+
+
 def nx_convert_frames_to_signals_single_point(
     session_ref,  # type: int
     frame_buffer,  # type: bytes

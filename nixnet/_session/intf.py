@@ -776,6 +776,26 @@ class Interface(object):
 
     @property
     def lin_master(self):
+        '''boolean: LIN Master?
+
+        Specifies the NI-XNET LIN interface role on the network: master (true)
+        or slave (false).
+
+        In a LIN network (cluster), there always is a single ECU in the system
+        called the master. The master transmits a schedule of frame headers.
+        Each frame header is a remote request for a specific frame ID. For each
+        header, typically a single ECU in the network (slave) responds by transmitting
+        the requested ID payload. The master ECU can respond to a specific header
+        as well, and thus the master can transmit payload data for the slave
+        ECUs to receive.
+
+        The default value for this property is false (slave). This means that by
+        default, the interface does not transmit frame headers onto the network.
+        When you use input sessions, you read frames that other ECUs transmit.
+        When you use output sessions, the NI-XNET interface waits for the remote
+        master to send a header for a frame in the output sessions, then the interface
+        responds with data for the requested frame.
+        '''
         return _props.get_session_intf_lin_master(self._handle)
 
     @lin_master.setter

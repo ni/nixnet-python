@@ -335,6 +335,41 @@ class SessionBase(object):
         """
         _funcs.nx_disconnect_terminals(self._handle, source, destination)
 
+    def change_lin_schedule(self, sched_index):
+        # type: (typing.Text) -> None
+        """Writes communication states of an XNET session.
+
+        This function writes a request for the LIN interface to change
+        the running schedule.
+
+        According to the LIN protocol, only the master executes schedules,
+        not slaves. If the
+        :any:`nixnet._session.intf.Interface.lin_master` property is false (slave),
+        this write function implicitly sets that property to true (master). If the
+        interface currently is running as a slave, this write returns an error,
+        because it cannot change to master while running.
+
+        Args:
+            sched_index(int): Index to the schedule table that the LIN master executes.
+
+            The schedule tables are sorted the way they are returned from the database
+            with the `nixnet.db._cluster.Cluster.lin_schedules` property.
+        """
+        _funcs.nx_write_state(self._handle, constants.WriteState.LIN_SCHEDULE_CHANGE, _ctypedefs.u32(sched_index))
+
+    def change_lin_diagnostic_schedule(self, schedule):
+        # type: (constants.LinDiagnosticSchedule) -> None
+        """Writes communication states of an XNET session.
+
+        This function writes a request for the LIN interface to change
+        the diagnostic schedule.
+
+        Args:
+            schedule(:any:`nixnet._enums.LinDiagnosticSchedule`): Diagnostic schedule
+                that the LIN master executes.
+        """
+        _funcs.nx_write_state(self._handle, constants.WriteState.LIN_DIAGNOSTIC_SCHEDULE_CHANGE, _ctypedefs.u32(schedule.value))  # NOQA: E501
+
     @property
     def time_current(self):
         # type: () -> int

@@ -1406,6 +1406,62 @@ class LinCommState(enum.Enum):
 
 
 class LinDiagnosticSchedule(enum.Enum):
+    """LIN Diagnostic Schedule
+
+    Values:
+        NULL:
+            The master does not execute any diagnostic schedule. No master
+            request or slave response headers are transmitted on the LIN.
+        MASTER_REQ:
+            The master executes a diagnostic master request schedule
+            (transmits a master request header onto the LIN) if it can.
+            First, a master request schedule must be defined for the LIN
+            cluster in the imported or in-memory database. Otherwise, error
+            'nixnet._enums.Err.DIAGNOSTIC_SCHEDULE_NOT_DEFINED' is returned
+            when attempting to set this value. Second, the master must have
+            a frame output queued session created for the master request frame,
+            and there must be one or more new master request frames pending in
+            the queue. If no new frames are pending in the output queue, no
+            master request header is transmitted. This allows the timing of
+            master request header transmission to be controlled by the timing
+            of master request frame writes to the output queue.
+
+            If there are no normal schedules pending, the master is effectively
+            in diagnostics-only mode, and master request headers are transmitted
+            at a rate determined by the slot delay defined for the master request
+            frame slot in the master request schedule or the
+            `nixnet._session.intf.Interface.lin_diag_s_tmin` property time, whichever
+            is greater, and the state of the master request frame output queue
+            as described above.
+
+            If there are normal schedules pending, the master is effectively in
+            diagnostics-interleaved mode, and a master request header transmission
+            is inserted between each complete execution of a run-once or
+            run-continuous schedule, as long as the
+            `nixnet._session.intf.Interface.lin_diag_s_tmin` property time has
+            been met, and there are one or more new master request frames pending
+            in the master request frame output queue.
+        SLAVE_RESP:
+            The master executes a diagnostic slave response schedule
+            (transmits a slave response header onto the LIN) if it is able to.
+            A slave response schedule must be defined for the LIN cluster in the
+            imported or in-memory database. Otherwise, error
+            'nixnet._enums.Err.DIAGNOSTIC_SCHEDULE_NOT_DEFINED' is returned when
+            attempting to set this value.
+
+            If there are no normal schedules pending, the master is effectively
+            in diagnostics-only mode, and slave response headers are transmitted
+            at the rate of the slot delay defined for the slave response frame
+            slot in the slave response schedule. The addressed slave may or
+            may not respond to each header, depending on its specified
+            P2min and STmin timings.
+
+            If there are normal schedules pending, the master is effectively in
+            diagnostics-interleaved mode, and a slave response header transmission
+            is inserted between each complete execution of a run-once or run-continuous
+            schedule. Here again, the addressed slave may or may not respond to each
+            header, depending on its specified P2min and STmin timings.
+    """
     NULL = _cconsts.NX_LIN_DIAGNOSTIC_SCHEDULE_NULL
     MASTER_REQ = _cconsts.NX_LIN_DIAGNOSTIC_SCHEDULE_MASTER_REQ
     SLAVE_RESP = _cconsts.NX_LIN_DIAGNOSTIC_SCHEDULE_SLAVE_RESP
