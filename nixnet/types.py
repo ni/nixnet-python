@@ -127,8 +127,9 @@ class LinComm(LinComm_):
             currently is running.
 
             This index refers to a LIN schedule that you requested using the
-            ``change_lin_sched`` function. It indexes the array of schedules
-            represented in the :any:`nixnet._session.intf.Interface.lin_sched_names`.
+            :any:`nixnet._session.base.SessionBase.change_lin_schedule` function. It
+            indexes the array of schedules represented in the
+            :any:`nixnet._session.intf.Interface.lin_sched_names`.
 
             This index applies only when the LIN interface is running as a
             master. If the LIN interface is running as a slave only, this

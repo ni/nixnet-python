@@ -814,11 +814,12 @@ class Interface(object):
         the remote master to send a header for a frame in the output sessions,
         then the interface responds with data for the requested frame.
 
-        If you call the ``change_lin_sched`` function to request execution of a
+        If you call the :any:`nixnet._session.base.SessionBase.change_lin_schedule` function to request execution of a
         schedule, that implicitly sets this property to true (master). You also
-        can set this property to true using, but no schedule is
-        active by default, so you still must call the ``change_lin_sched`` function at
-        some point to request a specific schedule.
+        can set this property to true using, but no schedule is active by
+        default, so you still must call the
+        :any:`nixnet._session.base.SessionBase.change_lin_schedule` function at some
+        point to request a specific schedule.
 
         Regardless of this property's value, you use can input and output
         sessions. This property specifies which hardware transmits the
@@ -838,8 +839,9 @@ class Interface(object):
 
         List of schedules for use when the NI-XNET LIN interface acts as a
         master (``lin_master`` is true). When the interface is master, you can
-        pass the index of one of these schedules to the ``change_lin_sched``
-        function to request a schedule change.
+        pass the index of one of these schedules to the
+        :any:`nixnet._session.base.SessionBase.change_lin_schedule` function to request
+        a schedule change.
 
         This list of schedules is the same as ``Cluster.lin_schedules`` used to
         configure the session.
