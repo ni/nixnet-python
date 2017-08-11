@@ -16,13 +16,13 @@ from nixnet import types
 
 @pytest.fixture
 def nixnet_in_interface(request):
-    interface = request.config.getoption("--nixnet-in-interface")
+    interface = request.config.getoption("--can-in-interface")
     return interface
 
 
 @pytest.fixture
 def nixnet_out_interface(request):
-    interface = request.config.getoption("--nixnet-out-interface")
+    interface = request.config.getoption("--can-out-interface")
     return interface
 
 
