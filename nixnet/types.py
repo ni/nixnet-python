@@ -440,14 +440,14 @@ class CanBusErrorFrame(Frame):
 
         >>> raw = RawFrame(0x64, 0x0, constants.FrameType.CAN_BUS_ERROR, 0, 0, b'\\x00\\x01\\x02\\x03\\x04')
         >>> CanBusErrorFrame.from_raw(raw)
-        CanBusErrorFrame(0x64, CanCommState.ERROR_ACTIVE, True, CanLastErr.STUFF, 3, 4)
+        CanBusErrorFrame(0x64, CanCommState.ERROR_ACTIVE, True, CanLastErr.ACK, 1, 2)
         """
         timestamp = frame.timestamp
         state = constants.CanCommState(six.indexbytes(frame.payload, 0))
-        tcvr_err = six.indexbytes(frame.payload, 1) != 0
-        bus_err = constants.CanLastErr(six.indexbytes(frame.payload, 1))
-        tx_err_count = six.indexbytes(frame.payload, 3)
-        rx_err_count = six.indexbytes(frame.payload, 4)
+        tx_err_count = six.indexbytes(frame.payload, 1)
+        rx_err_count = six.indexbytes(frame.payload, 2)
+        bus_err = constants.CanLastErr(six.indexbytes(frame.payload, 3))
+        tcvr_err = six.indexbytes(frame.payload, 4) != 0
         return CanBusErrorFrame(timestamp, state, tcvr_err, bus_err, tx_err_count, rx_err_count)
 
     def to_raw(self):
@@ -462,10 +462,10 @@ class CanBusErrorFrame(Frame):
 
         payload_data = [
             self.state.value,
-            1 if self.tcvr_err else 0,
-            self.bus_err.value,
             self.tx_err_count,
             self.rx_err_count,
+            self.bus_err.value,
+            1 if self.tcvr_err else 0,
         ]
         payload = bytes(bytearray(payload_data))
         return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
