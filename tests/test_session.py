@@ -26,6 +26,18 @@ def can_out_interface(request):
     return interface
 
 
+@pytest.fixture
+def lin_in_interface(request):
+    interface = request.config.getoption("--lin-in-interface")
+    return interface
+
+
+@pytest.fixture
+def lin_out_interface(request):
+    interface = request.config.getoption("--lin-out-interface")
+    return interface
+
+
 def raise_code(code):
     raise errors.XnetError("", code)
 
@@ -96,6 +108,20 @@ def test_session_properties(can_out_interface):
         print(output_session.queue_size)
         output_session.queue_size = 2040
         assert output_session.queue_size == 2040
+
+
+@pytest.mark.integration
+def test_session_lin_properties(lin_in_interface):
+    """Verify Session properties.
+
+    Ideally, mutable properties would be set to multiple values and we'd test
+    for the intended side-effect.  That'll be a massive undertaking.  For now,
+    ensure they are settable and getttable.
+    """
+    database_name = 'NIXNET_exampleLDF'
+
+    with nixnet.FrameInStreamSession(lin_in_interface, database_name) as input_session:
+        print(input_session.lin_comm)
 
 
 @pytest.mark.integration
