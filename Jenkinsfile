@@ -7,6 +7,8 @@ node('xnetPython') {
 	environment {
 		CAN_FIXTURE_IN_INTERFACE = 'CAN1'
 		CAN_FIXTURE_OUT_INTERFACE = 'CAN2'
+		LIN_FIXTURE_IN_INTERFACE = 'LIN1'
+		LIN_FIXTURE_OUT_INTERFACE = 'LIN2'
 	}
 
 	try{

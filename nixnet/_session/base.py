@@ -336,7 +336,7 @@ class SessionBase(object):
         _funcs.nx_disconnect_terminals(self._handle, source, destination)
 
     def change_lin_schedule(self, sched_index):
-        # type: (typing.Text) -> None
+        # type: (int) -> None
         """Writes communication states of an XNET session.
 
         This function writes a request for the LIN interface to change

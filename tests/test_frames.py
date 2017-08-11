@@ -27,6 +27,18 @@ def can_out_interface(request):
     return interface
 
 
+@pytest.fixture
+def lin_in_interface(request):
+    interface = request.config.getoption("--lin-in-interface")
+    return interface
+
+
+@pytest.fixture
+def lin_out_interface(request):
+    interface = request.config.getoption("--lin-out-interface")
+    return interface
+
+
 def raise_code(code):
     raise errors.XnetError("", code)
 
@@ -439,3 +451,34 @@ def test_session_frame_container(can_in_interface):
         assert frame != 5
 
         print(repr(frame))
+
+
+@pytest.mark.integration
+def test_lin_stream_loopback(lin_in_interface, lin_out_interface):
+    database_name = 'NIXNET_exampleLDF'
+
+    with nixnet.FrameInStreamSession(lin_in_interface, database_name) as input_session:
+        with nixnet.FrameOutStreamSession(lin_out_interface, database_name) as output_session:
+            output_session.intf.lin_master = True
+
+            # Start the input session manually to make sure that the first
+            # frame value sent before the initial read will be received.
+            input_session.start()
+
+            # Set the schedule. This will also automically enable
+            # master mode
+            output_session.change_lin_schedule(0)
+
+            payload_list = [2, 4, 8, 16]
+            expected_frames = [
+                types.LinFrame(0, constants.FrameType.LIN_DATA, bytes(bytearray(payload_list)))]
+            output_session.frames.write(expected_frames)
+
+            # Wait 1 s and then read the received values.
+            # They should be the same as the ones sent.
+            time.sleep(1)
+
+            actual_frames = list(input_session.frames.read(1))
+            assert len(expected_frames) == len(actual_frames)
+            for i, (expected, actual) in enumerate(zip(expected_frames, actual_frames)):
+                assert_can_frame(i, expected, actual)

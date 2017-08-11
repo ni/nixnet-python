@@ -776,6 +776,7 @@ class Interface(object):
 
     @property
     def lin_master(self):
+        # type: () -> bool
         '''boolean: LIN Master?
 
         Specifies the NI-XNET LIN interface role on the network: master (true)

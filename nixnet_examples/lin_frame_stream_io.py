@@ -59,7 +59,7 @@ def main():
 
                 frame.payload = payload
                 output_session.frames.write([frame])
-                print('Sent frame with ID {} payload: {}'.format(id, list(payload)))
+                print('Sent frame with ID {} payload: {}'.format(id, payload))
 
                 # Wait 1 s and then read the received values.
                 # They should be the same as the ones sent.
