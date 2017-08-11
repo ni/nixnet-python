@@ -406,6 +406,8 @@ class CanBusErrorFrame(Frame):
     .. note:: This requires enabling
        :any:`nixnet._session.intf.Interface.bus_err_to_in_strm`.
 
+    See also :any:`nixnet.types.CanComm`.
+
     Attributes:
         timestamp(int): Absolute time when the bus error occurred.
         state (:any:`nixnet._enums.CanCommState`): Communication State
