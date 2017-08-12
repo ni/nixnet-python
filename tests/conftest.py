@@ -7,19 +7,19 @@ import pytest  # type: ignore
 
 def pytest_addoption(parser):
     parser.addoption(
-        "--can-out-interface", default="CAN1",
+        "--can-out-interface", default="None",
         action="store",
         help="The CAN interface to use with the tests")
     parser.addoption(
-        "--can-in-interface", default="CAN2",
+        "--can-in-interface", default="None",
         action="store",
         help="The CAN interface to use with the tests")
     parser.addoption(
-        "--lin-out-interface", default="LIN1",
+        "--lin-out-interface", default="None",
         action="store",
         help="The LIN interface to use with the tests")
     parser.addoption(
-        "--lin-in-interface", default="LIN2",
+        "--lin-in-interface", default="None",
         action="store",
         help="The LIN interface to use with the tests")
 
