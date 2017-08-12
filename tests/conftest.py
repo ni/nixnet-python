@@ -20,3 +20,27 @@ def pytest_addoption(parser):
         "--lin-in-interface", default="LIN2",
         action="store",
         help="The LIN interface to use with the tests")
+
+
+@pytest.fixture
+def can_in_interface(request):
+    interface = request.config.getoption("--can-in-interface")
+    return interface
+
+
+@pytest.fixture
+def can_out_interface(request):
+    interface = request.config.getoption("--can-out-interface")
+    return interface
+
+
+@pytest.fixture
+def lin_in_interface(request):
+    interface = request.config.getoption("--lin-in-interface")
+    return interface
+
+
+@pytest.fixture
+def lin_out_interface(request):
+    interface = request.config.getoption("--lin-out-interface")
+    return interface

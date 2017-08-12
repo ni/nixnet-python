@@ -10,18 +10,6 @@ from nixnet import constants
 from nixnet import errors
 
 
-@pytest.fixture
-def can_in_interface(request):
-    interface = request.config.getoption("--can-in-interface")
-    return interface
-
-
-@pytest.fixture
-def can_out_interface(request):
-    interface = request.config.getoption("--can-out-interface")
-    return interface
-
-
 @pytest.mark.integration
 def test_intf_container(can_in_interface):
     database_name = 'NIXNET_example'
