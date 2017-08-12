@@ -16,6 +16,7 @@ from nixnet import constants
 __all__ = [
     'DriverVersion',
     'CanComm',
+    'LinComm',
     'CanIdentifier',
     'FrameFactory',
     'Frame',
@@ -23,6 +24,7 @@ __all__ = [
     'CanFrame',
     'CanBusErrorFrame',
     'LinFrame',
+    'LinBusErrorFrame',
     'DelayFrame',
     'LogTriggerFrame',
     'StartTriggerFrame',
@@ -75,6 +77,64 @@ class CanComm(CanComm_):
             increases when a certain ratio of frames (roughly 1/8) encounter
             errors.
     """
+
+    pass
+
+
+LinComm_ = collections.namedtuple(
+    'LinComm_',
+    ['sleep', 'state', 'last_err', 'err_received', 'err_expected', 'err_id', 'tcvr_rdy', 'sched_index'])
+
+
+class LinComm(LinComm_):
+    """CAN Communication State.
+
+    Attributes:
+        sleep (bool): Sleep.
+            Indicates whether the transceiver and communication
+            controller are in their sleep state. False indicates normal
+            operation (awake), and true indicates sleep.
+        state (:any:`nixnet._enums.LinCommState`): Communication State
+        last_err (:any:`nixnet._enums.LinLastErr`): Last Error.
+            Last error specifies the status of the last attempt to receive or
+            transmit a frame
+        err_received (int): Returns the value received from the network
+            when last error occurred.
+
+            When ``last_err`` is ``READBACK``, this is the value read back.
+
+            When ``last_err`` is ``CHECKSUM``, this is the received checksum.
+        err_expected (int): Returns the value that the LIN interface
+            expected to see (instead of last received).
+
+            When ``last_err`` is ``READBACK``, this is the value transmitted.
+
+            When ``last_err`` is ``CHECKSUM``, this is the calculated checksum.
+        err_id (int): Returns the frame identifier in which the last error
+            occurred.
+
+            This is not applicable when ``last_err`` is ``NONE`` or ``UNKNOWN_ID``.
+        tcvr_rdy (bool): Indicates whether the LIN transceiver is powered from
+            the bus.
+
+            True indicates the bus power exists, so it is safe to start
+            communication on the LIN interface.
+
+            If this value is false, you cannot start communication
+            successfully. Wire power to the LIN transceiver and run your
+            application again.
+        sched_index (int): Indicates the LIN schedule that the interface
+            currently is running.
+
+            This index refers to a LIN schedule that you requested using the
+            :any:`nixnet._session.base.SessionBase.change_lin_schedule` function. It
+            indexes the array of schedules represented in the
+            :any:`nixnet._session.intf.Interface.lin_sched_names`.
+
+            This index applies only when the LIN interface is running as a
+            master. If the LIN interface is running as a slave only, this
+            element should be ignored.
+        """
 
     pass
 
@@ -630,6 +690,109 @@ class LinFrame(object):
         return "LinFrame(identifier=0x{:x}{})".format(
             self.identifier,
             optional_params)
+
+
+class LinBusErrorFrame(Frame):
+    """Error detected on hardware bus of a :any:`nixnet.session.FrameInStreamSession`.
+
+    .. note:: This requires enabling
+       :any:`nixnet._session.intf.Interface.bus_err_to_in_strm`.
+
+    See also :any:`nixnet.types.LinComm`.
+
+    Attributes:
+        timestamp(int): Absolute time when the bus error occurred.
+        state (:any:`nixnet._enums.LinCommState`): Communication State.
+        bus_err (:any:`nixnet._enums.LinLastErr`): Last Error.
+        err_id (int): Identifier on bus.
+        err_received (int): Received byte on bus
+        err_expected (int): Expected byte on bus
+    """
+
+    __slots__ = [
+        "timestamp",
+        "state",
+        "bus_err",
+        "err_id",
+        "err_received",
+        "err_expected"]
+
+    def __init__(self, timestamp, state, bus_err, err_id, err_received, err_expected):
+        # type: (int, constants.LinCommState, constants.LinLastErr, int, int, int) -> None
+        self.timestamp = timestamp
+        self.state = state
+        self.bus_err = bus_err
+        self.err_id = err_id
+        self.err_received = err_received
+        self.err_expected = err_expected
+
+    @classmethod
+    def from_raw(cls, frame):
+        """Convert from RawFrame.
+
+        >>> raw = RawFrame(0x64, 0x0, constants.FrameType.LIN_BUS_ERROR, 0, 0, b'\\x00\\x01\\x02\\x03\\x04')
+        >>> LinBusErrorFrame.from_raw(raw)
+        LinBusErrorFrame(0x64, LinCommState.IDLE, LinLastErr.UNKNOWN_ID, 0x2, 3, 4)
+        """
+        timestamp = frame.timestamp
+        state = constants.LinCommState(six.indexbytes(frame.payload, 0))
+        bus_err = constants.LinLastErr(six.indexbytes(frame.payload, 1))
+        err_id = six.indexbytes(frame.payload, 2)
+        err_received = six.indexbytes(frame.payload, 3)
+        err_expected = six.indexbytes(frame.payload, 4)
+        return LinBusErrorFrame(timestamp, state, bus_err, err_id, err_received, err_expected)
+
+    def to_raw(self):
+        """Convert to RawFrame.
+
+        >>> LinBusErrorFrame(100, constants.LinCommState.INACTIVE, constants.LinLastErr.UNKNOWN_ID, 2, 3, 4).to_raw()
+        RawFrame(timestamp=0x64, identifier=0x0, type=FrameType.LIN_BUS_ERROR, len(payload)=5)
+        """
+        identifier = 0
+        flags = 0
+        info = 0
+
+        payload_data = [
+            self.state.value,
+            self.bus_err.value,
+            self.err_id,
+            self.err_received,
+            self.err_expected,
+        ]
+        payload = bytes(bytearray(payload_data))
+        return RawFrame(self.timestamp, identifier, self.type, flags, info, payload)
+
+    @property
+    def type(self):
+        return constants.FrameType.LIN_BUS_ERROR
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_frame = typing.cast(LinBusErrorFrame, other)
+            return all((
+                self.timestamp == other_frame.timestamp,
+                self.state == other_frame.state,
+                self.bus_err == other_frame.bus_err,
+                self.err_id == other_frame.err_id,
+                self.err_received == other_frame.err_received,
+                self.err_expected == other_frame.err_expected))
+        else:
+            return NotImplemented
+
+    def __repr__(self):
+        # type: () -> typing.Text
+        """LinBusErrorFrame debug representation.
+
+        >>> LinBusErrorFrame(100, constants.LinCommState.INACTIVE, constants.LinLastErr.CRC, 1, 2, 3)
+        LinBusErrorFrame(0x64, LinCommState.INACTIVE, LinLastErr.CRC, 0x1, 2, 3)
+        """
+        return "LinBusErrorFrame(0x{:x}, {}, {}, 0x{:x}, {}, {})".format(
+            self.timestamp,
+            self.state,
+            self.bus_err,
+            self.err_id,
+            self.err_received,
+            self.err_expected)
 
 
 class DelayFrame(Frame):

@@ -10,25 +10,25 @@ import nixnet
 
 
 @pytest.fixture
-def nixnet_in_interface(request):
+def can_in_interface(request):
     interface = request.config.getoption("--can-in-interface")
     return interface
 
 
 @pytest.fixture
-def nixnet_out_interface(request):
+def can_out_interface(request):
     interface = request.config.getoption("--can-out-interface")
     return interface
 
 
 @pytest.mark.integration
-def test_signals_container(nixnet_in_interface):
+def test_signals_container(can_in_interface):
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     signal_name = 'CANEventSignal1'
 
     with nixnet.SignalInSinglePointSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             signal_name) as input_session:
@@ -57,18 +57,18 @@ def test_signals_container(nixnet_in_interface):
 
 
 @pytest.mark.integration
-def test_singlepoint_loopback(nixnet_in_interface, nixnet_out_interface):
+def test_singlepoint_loopback(can_in_interface, can_out_interface):
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     signal_names = ['CANEventSignal1', 'CANEventSignal2']
 
     with nixnet.SignalInSinglePointSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             signal_names) as input_session:
         with nixnet.SignalOutSinglePointSession(
-                nixnet_out_interface,
+                can_out_interface,
                 database_name,
                 cluster_name,
                 signal_names) as output_session:

@@ -1384,7 +1384,7 @@ def set_session_intf_lin_term(
     )
 
 
-def get_session_intf_lin_diag_p_2min(
+def get_session_intf_lin_diag_p2min(
     ref,  # type: int
 ):
     # type: (...) -> float
@@ -1394,7 +1394,7 @@ def get_session_intf_lin_diag_p_2min(
     )
 
 
-def set_session_intf_lin_diag_p_2min(
+def set_session_intf_lin_diag_p2min(
     ref,  # type: int
     value,  # type: float
 ):
@@ -1406,7 +1406,7 @@ def set_session_intf_lin_diag_p_2min(
     )
 
 
-def get_session_intf_lin_diag_s_tmin(
+def get_session_intf_lin_diag_stmin(
     ref,  # type: int
 ):
     # type: (...) -> float
@@ -1416,7 +1416,7 @@ def get_session_intf_lin_diag_s_tmin(
     )
 
 
-def set_session_intf_lin_diag_s_tmin(
+def set_session_intf_lin_diag_stmin(
     ref,  # type: int
     value,  # type: float
 ):
@@ -1450,7 +1450,7 @@ def set_session_intf_lin_alw_start_wo_bus_pwr(
     )
 
 
-def get_session_intf_lino_str_slv_rsp_lst_by_nad(
+def get_session_intf_lin_ostr_slv_rsp_lst_by_nad(
     ref,  # type: int
 ):
     # type: (...) -> typing.Iterable[int]
@@ -1460,7 +1460,7 @@ def get_session_intf_lino_str_slv_rsp_lst_by_nad(
     )
 
 
-def set_session_intf_lino_str_slv_rsp_lst_by_nad(
+def set_session_intf_lin_ostr_slv_rsp_lst_by_nad(
     ref,  # type: int
     value,  # type: typing.List[int]
 ):

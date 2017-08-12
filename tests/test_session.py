@@ -15,14 +15,26 @@ from nixnet import types
 
 
 @pytest.fixture
-def nixnet_in_interface(request):
+def can_in_interface(request):
     interface = request.config.getoption("--can-in-interface")
     return interface
 
 
 @pytest.fixture
-def nixnet_out_interface(request):
+def can_out_interface(request):
     interface = request.config.getoption("--can-out-interface")
+    return interface
+
+
+@pytest.fixture
+def lin_in_interface(request):
+    interface = request.config.getoption("--lin-in-interface")
+    return interface
+
+
+@pytest.fixture
+def lin_out_interface(request):
+    interface = request.config.getoption("--lin-out-interface")
     return interface
 
 
@@ -39,9 +51,9 @@ def test_flatten_items_invalid():
 
 
 @pytest.mark.integration
-def test_session_container(nixnet_in_interface, nixnet_out_interface):
-    with nixnet.FrameInStreamSession(nixnet_in_interface) as input_session:
-        with nixnet.FrameInStreamSession(nixnet_out_interface) as output_session:
+def test_session_container(can_in_interface, can_out_interface):
+    with nixnet.FrameInStreamSession(can_in_interface) as input_session:
+        with nixnet.FrameInStreamSession(can_out_interface) as output_session:
             assert input_session == input_session
             assert not (input_session == output_session)
             assert not (input_session == 1)
@@ -59,7 +71,7 @@ def test_session_container(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_session_properties(nixnet_out_interface):
+def test_session_properties(can_out_interface):
     """Verify Session properties.
 
     Ideally, mutable properties would be set to multiple values and we'd test
@@ -71,7 +83,7 @@ def test_session_properties(nixnet_out_interface):
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameOutQueuedSession(
-            nixnet_out_interface,
+            can_out_interface,
             database_name,
             cluster_name,
             frame_name) as output_session:
@@ -99,14 +111,28 @@ def test_session_properties(nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_session_properties_transition(nixnet_out_interface):
+def test_session_lin_properties(lin_in_interface):
+    """Verify Session properties.
+
+    Ideally, mutable properties would be set to multiple values and we'd test
+    for the intended side-effect.  That'll be a massive undertaking.  For now,
+    ensure they are settable and getttable.
+    """
+    database_name = 'NIXNET_exampleLDF'
+
+    with nixnet.FrameInStreamSession(lin_in_interface, database_name) as input_session:
+        print(input_session.lin_comm)
+
+
+@pytest.mark.integration
+def test_session_properties_transition(can_out_interface):
     """Verify Session properties relationship to session start/stop."""
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameOutQueuedSession(
-            nixnet_out_interface,
+            can_out_interface,
             database_name,
             cluster_name,
             frame_name) as output_session:
@@ -154,6 +180,31 @@ def test_parse_can_comm_bitfield():
         rx_err_count=255)
 
 
+def test_parse_lin_comm_bitfield():
+    """A part of Session.lin_comm"""
+    comm = _utils.parse_lin_comm_bitfield(0, 0)
+    assert comm == types.LinComm(
+        sleep=False,
+        state=constants.LinCommState.IDLE,
+        last_err=constants.LinLastErr.NONE,
+        err_received=0,
+        err_expected=0,
+        err_id=0,
+        tcvr_rdy=False,
+        sched_index=0)
+
+    comm = _utils.parse_lin_comm_bitfield(0xFFFFFF6B, 0xFFFFFFFF)
+    assert comm == types.LinComm(
+        sleep=True,
+        state=constants.LinCommState.INACTIVE,
+        last_err=constants.LinLastErr.CRC,
+        err_received=255,
+        err_expected=255,
+        err_id=63,
+        tcvr_rdy=False,
+        sched_index=255)
+
+
 def assert_can_frame(index, sent, received):
     assert sent.identifier == received.identifier
     assert sent.echo == received.echo
@@ -164,7 +215,7 @@ def assert_can_frame(index, sent, received):
 
 
 @pytest.mark.integration
-def test_start_explicit(nixnet_in_interface, nixnet_out_interface):
+def test_start_explicit(can_in_interface, can_out_interface):
     """Demonstrate that data is properly sent out on an explicit start.
 
     Assumes test_frames.test_queued_loopback works
@@ -174,12 +225,12 @@ def test_start_explicit(nixnet_in_interface, nixnet_out_interface):
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
         with nixnet.FrameOutQueuedSession(
-                nixnet_out_interface,
+                can_out_interface,
                 database_name,
                 cluster_name,
                 frame_name) as output_session:
@@ -204,7 +255,7 @@ def test_start_explicit(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_flush_baseline(nixnet_in_interface, nixnet_out_interface):
+def test_flush_baseline(can_in_interface, can_out_interface):
     """Demonstrate that the non-flush version of the code works.
 
     Assumes test_frames.test_queued_loopback works.
@@ -214,12 +265,12 @@ def test_flush_baseline(nixnet_in_interface, nixnet_out_interface):
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
         with nixnet.FrameOutQueuedSession(
-                nixnet_out_interface,
+                can_out_interface,
                 database_name,
                 cluster_name,
                 frame_name) as output_session:
@@ -248,7 +299,7 @@ def test_flush_baseline(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_flush_output_queue(nixnet_in_interface, nixnet_out_interface):
+def test_flush_output_queue(can_in_interface, can_out_interface):
     """Verifies that `flush` drops frames in the output queue
 
     Assumes test_frames.test_queued_loopback works.
@@ -258,12 +309,12 @@ def test_flush_output_queue(nixnet_in_interface, nixnet_out_interface):
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
         with nixnet.FrameOutQueuedSession(
-                nixnet_out_interface,
+                can_out_interface,
                 database_name,
                 cluster_name,
                 frame_name) as output_session:
@@ -291,7 +342,7 @@ def test_flush_output_queue(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_wait_for_intf_communicating(nixnet_in_interface):
+def test_wait_for_intf_communicating(can_in_interface):
     """Verifies wait_for_intf_communicating does not catastrophically fail.
 
     Considering the wait time is so short, it'd be hard to verify it,
@@ -304,7 +355,7 @@ def test_wait_for_intf_communicating(nixnet_in_interface):
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
@@ -319,7 +370,7 @@ def test_wait_for_intf_communicating(nixnet_in_interface):
 
 
 @pytest.mark.integration
-def test_wait_for_transmit_complete(nixnet_in_interface, nixnet_out_interface):
+def test_wait_for_transmit_complete(can_in_interface, can_out_interface):
     """Verifies wait_for_transmit_complete does not fail catastrophically.
 
     We can at least see how long it takes us to wait.  Longer term, we should
@@ -335,12 +386,12 @@ def test_wait_for_transmit_complete(nixnet_in_interface, nixnet_out_interface):
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
         with nixnet.FrameOutQueuedSession(
-                nixnet_out_interface,
+                can_out_interface,
                 database_name,
                 cluster_name,
                 frame_name) as output_session:
@@ -373,7 +424,7 @@ def test_wait_for_transmit_complete(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_wait_for_intf_remote_wakeup(nixnet_in_interface, nixnet_out_interface):
+def test_wait_for_intf_remote_wakeup(can_in_interface, can_out_interface):
     """Verifies wait_for_intf_remote_wakeup does not fail catastrophically.
 
     We can at least see how long it takes us to wait.  Longer term, we should
@@ -389,7 +440,7 @@ def test_wait_for_intf_remote_wakeup(nixnet_in_interface, nixnet_out_interface):
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
@@ -406,14 +457,14 @@ def test_wait_for_intf_remote_wakeup(nixnet_in_interface, nixnet_out_interface):
 
 
 @pytest.mark.integration
-def test_connect_terminals_failures(nixnet_in_interface):
+def test_connect_terminals_failures(can_in_interface):
     """Verifies connect_terminals fails when expected to."""
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
@@ -425,14 +476,14 @@ def test_connect_terminals_failures(nixnet_in_interface):
 
 
 @pytest.mark.integration
-def test_disconnect_terminals_failures(nixnet_in_interface):
+def test_disconnect_terminals_failures(can_in_interface):
     """Verifies disconnect_terminals fails when expected to."""
     database_name = 'NIXNET_example'
     cluster_name = 'CAN_Cluster'
     frame_name = 'CANEventFrame1'
 
     with nixnet.FrameInQueuedSession(
-            nixnet_in_interface,
+            can_in_interface,
             database_name,
             cluster_name,
             frame_name) as input_session:
