@@ -10,5 +10,5 @@ nixnet.convert
    :maxdepth: 3
    :caption: API Reference:
 
-   signals
-   j1939
+   session/signals
+   session/j1939
