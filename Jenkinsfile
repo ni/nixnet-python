@@ -14,12 +14,12 @@ node('xnetPython') {
 	try{
 		stage('Checkout'){
 			// Checkout the repository from scm
-			echo "Cheking out source"
+			echo "Checking out source"
 			checkout scm
 		}
 
 		stage('EnvironmentSetup'){
-			// Stage to setup environment variables and ensure correct testing evironment.
+			// Stage to setup environment variables and ensure correct testing environment.
 			bat 'pip install --upgrade setuptools'
 		}
 
