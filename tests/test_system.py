@@ -70,12 +70,10 @@ def test_device_container():
         assert 0 < len(devs), "Pre-requisite failed"
         dev = devs[0]
 
-        assert dev == str(dev)
         assert dev == dev
         assert not (dev == 100)
 
         assert not (dev != dev)
-        assert dev != "<Invalid>"
         assert dev != 100
 
         set([dev])  # Testing `__hash__`
@@ -110,7 +108,9 @@ def test_device_properties(can_in_interface):
 
         print(dev.form_fac)
         print(dev.num_ports)
+        print(dev.product_name)
         print(dev.product_num)
+        assert str(dev.product_num) in dev.product_name
         print(dev.ser_num)
         print(dev.slot_num)
         print(dev.num_ports_all)
@@ -192,6 +192,7 @@ def test_intf_properties(can_in_interface):
         in_intf = in_intfs[0]
 
         print(in_intf.num)
+        assert str(in_intf).endswith(str(in_intf.num))
         print(in_intf.port_num)
         print(in_intf.protocol)
         print(in_intf.can_term_cap)

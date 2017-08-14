@@ -78,18 +78,31 @@ class System(object):
     @property
     def dev_refs(self):
         # type: () -> typing.Iterable[_device.Device]
+        '''iter of :any:`nixnet.system._device.Device`: Physical XNET devices in the system.'''
         for ref in _props.get_system_dev_refs(self._handle):
             yield _device.Device(ref)
 
     @property
     def intf_refs(self):
         # type: () -> typing.Iterable[_interface.Interface]
+        '''iter of :any:`nixnet.system._interface.Interface`: Available interfaces on the system.'''
         for ref in _props.get_system_intf_refs(self._handle):
+            yield _interface.Interface(ref)
+
+    @property
+    def intf_refs_all(self):
+        # type: () -> typing.Iterable[_interface.Interface]
+        '''iter of :any:`nixnet.system._interface.Interface`: Available interfaces on the system.
+
+        This Includes those not equipped with a Transceiver Cable.
+        '''
+        for ref in _props.get_system_intf_refs_all(self._handle):
             yield _interface.Interface(ref)
 
     @property
     def intf_refs_can(self):
         # type: () -> typing.Iterable[_interface.Interface]
+        '''iter of :any:`nixnet.system._interface.Interface`: Available interfaces on the system (CAN Protocol).'''
         for ref in _props.get_system_intf_refs_can(self._handle):
             yield _interface.Interface(ref)
 
@@ -102,12 +115,20 @@ class System(object):
     @property
     def intf_refs_lin(self):
         # type: () -> typing.Iterable[_interface.Interface]
+        '''iter of :any:`nixnet.system._interface.Interface`: Available interfaces on the system (LIN Protocol).'''
         for ref in _props.get_system_intf_refs_lin(self._handle):
             yield _interface.Interface(ref)
 
     @property
     def ver(self):
         # type: () -> types.DriverVersion
+        ''':any:`nixnet.types.DriverVersion`: The driver version (larger numbers imply a newer version).
+
+        Use this for:
+
+        * Determining the driver functionality or release date
+        * Determining upgrade availability
+        '''
         return types.DriverVersion(
             self._ver_major,
             self._ver_minor,
@@ -139,9 +160,3 @@ class System(object):
     def _ver_update(self):
         # type: () -> int
         return _props.get_system_ver_update(self._handle)
-
-    @property
-    def intf_refs_all(self):
-        # type: () -> typing.Iterable[_interface.Interface]
-        for ref in _props.get_system_intf_refs_all(self._handle):
-            yield _interface.Interface(ref)
