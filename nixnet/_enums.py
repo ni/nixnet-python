@@ -1610,6 +1610,11 @@ class DongleId(enum.Enum):
 
 
 class Phase(enum.Enum):
+    '''Version Phase.
+
+    Values:
+        RELEASE
+    '''
     DEVELOPMENT = _cconsts.NX_PHASE_DEVELOPMENT
     ALPHA = _cconsts.NX_PHASE_ALPHA
     BETA = _cconsts.NX_PHASE_BETA

@@ -31,9 +31,23 @@ __all__ = [
     'XnetFrame']
 
 
-DriverVersion = collections.namedtuple(
-    'DriverVersion',
+DriverVersion_ = collections.namedtuple(
+    'DriverVersion_',
     ['major', 'minor', 'update', 'phase', 'build'])
+
+
+class DriverVersion(DriverVersion_):
+    """Driver Version
+
+    The arguments align with the following fields: ``[major].[minor].[update][phase][build]``.
+
+    Attributes:
+        major (int):
+        minor (int):
+        update (int):
+        phase (:any:`nixnet._enums.Phase`):
+        build (int):
+    """
 
 
 CanComm_ = collections.namedtuple(
