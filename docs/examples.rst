@@ -12,3 +12,4 @@ Examples
    examples/stream_io
    examples/single_point_io
    examples/conversion
+   examples/can_lin_diff
