@@ -86,12 +86,6 @@ class System(object):
             yield _interface.Interface(ref)
 
     @property
-    def intf_refs_flex_ray(self):
-        # type: () -> typing.Iterable[_interface.Interface]
-        for ref in _props.get_system_intf_refs_flex_ray(self._handle):
-            yield _interface.Interface(ref)
-
-    @property
     def intf_refs_lin(self):
         # type: () -> typing.Iterable[_interface.Interface]
         for ref in _props.get_system_intf_refs_lin(self._handle):

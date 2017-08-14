@@ -70,38 +70,6 @@ class Ecu(object):
         _props.set_ecu_tx_frm_refs(self._handle, value)
 
     @property
-    def flex_ray_is_coldstart(self):
-        return _props.get_ecu_flex_ray_is_coldstart(self._handle)
-
-    @property
-    def flex_ray_startup_frame_ref(self):
-        return _props.get_ecu_flex_ray_startup_frame_ref(self._handle)
-
-    @property
-    def flex_ray_wakeup_ptrn(self):
-        return _props.get_ecu_flex_ray_wakeup_ptrn(self._handle)
-
-    @flex_ray_wakeup_ptrn.setter
-    def flex_ray_wakeup_ptrn(self, value):
-        _props.set_ecu_flex_ray_wakeup_ptrn(self._handle, value)
-
-    @property
-    def flex_ray_wakeup_chs(self):
-        return _props.get_ecu_flex_ray_wakeup_chs(self._handle)
-
-    @flex_ray_wakeup_chs.setter
-    def flex_ray_wakeup_chs(self, value):
-        _props.set_ecu_flex_ray_wakeup_chs(self._handle, value)
-
-    @property
-    def flex_ray_connected_chs(self):
-        return _props.get_ecu_flex_ray_connected_chs(self._handle)
-
-    @flex_ray_connected_chs.setter
-    def flex_ray_connected_chs(self, value):
-        _props.set_ecu_flex_ray_connected_chs(self._handle, value)
-
-    @property
     def lin_master(self):
         return _props.get_ecu_lin_master(self._handle)
 
