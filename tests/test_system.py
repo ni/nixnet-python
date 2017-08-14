@@ -2,6 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os
 import time
 
 import pytest  # type: ignore
@@ -202,3 +203,29 @@ def test_intf_properties(can_in_interface):
             print(in_intf.dongle_firmware_version)
             print(in_intf.dongle_compatible_revision)
             print(in_intf.dongle_compatible_firmware_version)
+
+
+@pytest.mark.integration
+def test_database_aliases():
+    with system.System() as sys:
+        print(list(sys.databases))
+        print(len(sys.databases))
+        database_alias = 'test_database'
+        dir_name = os.path.dirname(__file__)
+        database_filepath = os.path.join(dir_name, '..', 'nixnet_examples\databases\custom_database.dbc')
+        default_baud_rate = 750000
+        sys.databases.add_alias(database_alias, database_filepath, default_baud_rate)
+        print(len(sys.databases))
+        print(list(sys.databases))
+        print(sys.databases['test_database'].filepath)
+
+        del sys.databases['test_database']
+        print(len(sys.databases))
+        print(list(sys.databases))
+
+        print(list(sys.databases.keys()))
+        print(list(sys.databases.values()))
+        print(list(sys.databases.items()))
+
+        for database in sys.databases:
+            print(database)
