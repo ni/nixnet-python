@@ -9,7 +9,6 @@ API Reference
    :caption: Table of Contents:
 
    api_reference/session
-   api_reference/system
    api_reference/convert
    api_reference/system
    api_reference/constants
