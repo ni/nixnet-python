@@ -43,58 +43,59 @@ Quick Start
 ===========
 
 Running **nixnet** requires NI-XNET or NI-XNET Runtime. Visit the
-`ni.com/downloads <http://www.ni.com/downloads/>`_ to download the latest version
+`ni.com/downloads <http://www.ni.com/downloads/>`__ to download the latest version
 of NI-XNET.
 
-**nixnet** can be installed with `pip <http://pypi.python.org/pypi/pip>`_::
+**nixnet** can be installed with `pip <http://pypi.python.org/pypi/pip>`__::
 
   $ python -m pip install nixnet
 
-Now you should be able to move onto the `Examples <https://github.com/ni/nixnet-python/tree/master/nixnet_examples>`_.
+Now you should be able to move onto the `Examples <https://github.com/ni/nixnet-python/tree/master/nixnet_examples>`__.
 
 Resources
 =========
 
-- `Documentation <http://nixnet.readthedocs.io>`_.
-- `Source <https://github.com/ni/nixnet-python>`_.
+* `Documentation <http://nixnet.readthedocs.io>`__.
+* `Source <https://github.com/ni/nixnet-python>`__.
 
 Product Support
 ---------------
 
 The **nixnet** package and NI-XNET are supported by NI. For support, open
-a request through the NI support portal at `ni.com <http://www.ni.com>`_.
+a request through the NI support portal at `ni.com <http://www.ni.com>`__.
 
 Bugs / Feature Requests
 -----------------------
 
 We welcome all kinds of contributions.  If you have a bug to report or a feature
 request for **nixnet**, feel free to `open an issue on Github
-<https://github.com/ni/nixnet-python/issues>`_ or `contribute the change yourself
-<https://github.com/ni/nixnet-python/blob/master/CONTRIBUTING.rst>`_.
+<https://github.com/ni/nixnet-python/issues>`__ or `contribute the change yourself
+<https://github.com/ni/nixnet-python/blob/master/CONTRIBUTING.rst>`__.
 
 Status
 ======
 
-**nixnet** is still early in its development with all the bugs, unimplemented
-features, and API changes that go along with that.
+**nixnet** package is created and maintained by National Instruments.
 
-The areas that are more mature include:
+* The following is support is included:
 
-- ``FrameInStreamSession`` with reading and writing bytes, raw frames, and can frames.
-- ``FrameOutStreamSession`` with writing bytes, raw frames, and can frames.
-- ``FrameInQueuedSession`` with reading bytes, raw frames, and can frames.
-- ``FrameOutQueuedSession`` with writing bytes, raw frames, and can frames.
-- ``FrameInSinglePointSession`` with reading bytes, raw frames, and can frames.
-- ``FrameOutSinglePointSession`` with writing bytes, raw frames, and can frames.
-- ``SignalInSinglePointSession`` with reading values (timestamps are available but less mature).
-- ``SignalOutSinglePointSession`` with writing values.
+   * CAN and LIN protocol
+   * Frames, Signals, and frame/signal conversion
+   * Database import
+   * For a complete list of supported features and functions, see the `documentation <http://nixnet.readthedocs.io>`__.
+
+* See the `enhancement issues <https://github.com/ni/nixnet-python/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement>`__ for potential future work.
+* Breaking API changes will be kept to a minimum. If a breaking change is made, it will be planned through
+  `breaking-change isssues <https://github.com/ni/nixnet-python/issues?q=is%3Aissue+is%3Aopen+label%3Abreaking-change>`__
+  and communicated via `semver <http://semver.org/>`__ and the `release notes <https://github.com/ni/nixnet-python/releases>`__.
+
+* `Known issues <https://github.com/ni/nixnet-python/issues?q=is%3Aissue+is%3Aopen+label%3Abug>`__.
 
 **nixnet** currently supports
 
-- Windows operating system.
-- CPython 2.7.7+, 3.4+, PyPy2, and PyPy3.
-
-You can checkout the `issues page <https://github.com/ni/nixnet-python/issues>`_ for more details.
+* Windows operating system.
+* CPython 2.7.0+, 3.4+, PyPy2, and PyPy3.
+* NI-XNET 15.5+
 
 License
 =======
