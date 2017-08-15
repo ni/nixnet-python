@@ -7,3 +7,5 @@ nixnet.system
 
    system/system
    system/databases
+   system/device
+   system/interface

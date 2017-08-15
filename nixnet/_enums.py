@@ -1214,6 +1214,17 @@ class StartStopScope(enum.Enum):
 
 
 class BlinkMode(enum.Enum):
+    '''Interface blink mode.
+
+    Values:
+        DISABLE:
+            Disable blinking for identification.  This option turns off both
+            LEDs for the port.
+        ENABLE:
+            Enable blinking for identification.  Both LEDs of the interface's
+            physical port turn on and off.  The hardware blinks the LEDs
+            automatically until you disable.
+    '''
     DISABLE = _cconsts.NX_BLINK_DISABLE
     ENABLE = _cconsts.NX_BLINK_ENABLE
 
@@ -1549,16 +1560,46 @@ class Merge(enum.Enum):
 
 
 class DongleState(enum.Enum):
+    '''Dongle State.
+
+    Values:
+        NO_DONGLE_NO_EXT_POWER:
+            No dongle, no external power.
+        NO_DONGLE_EXT_POWER:
+            No dongle, has external power.
+        DONGLE_NO_EXT_POWER:
+            Has dongle, no external power.
+        READY:
+            Ready.
+        BUSY:
+            Busy.
+        COMM_ERROR:
+            Comm Error.
+        OVERCURRENT:
+            Overcurrent.
+    '''
     NO_DONGLE_NO_EXT_POWER = _cconsts.NX_DONGLE_STATE_NO_DONGLE_NO_EXT_POWER
     NO_DONGLE_EXT_POWER = _cconsts.NX_DONGLE_STATE_NO_DONGLE_EXT_POWER
     DONGLE_NO_EXT_POWER = _cconsts.NX_DONGLE_STATE_DONGLE_NO_EXT_POWER
     READY = _cconsts.NX_DONGLE_STATE_READY
     BUSY = _cconsts.NX_DONGLE_STATE_BUSY
     COMM_ERROR = _cconsts.NX_DONGLE_STATE_COMM_ERROR
-    OVER_CURRENT = _cconsts.NX_DONGLE_STATE_OVER_CURRENT
+    OVERCURRENT = _cconsts.NX_DONGLE_STATE_OVER_CURRENT
 
 
 class DongleId(enum.Enum):
+    '''Dongle ID
+
+    Values:
+        HSCAN:
+            CAN High Speed
+        XSCAN:
+            CAN Software-Selectable
+        LIN:
+            LIN
+        DONGLE_LESS:
+            Dongle-Less Design
+    '''
     LSCAN = _cconsts.NX_DONGLE_ID_LS_CAN
     HSCAN = _cconsts.NX_DONGLE_ID_HS_CAN
     SWCAN = _cconsts.NX_DONGLE_ID_SW_CAN
@@ -1569,6 +1610,11 @@ class DongleId(enum.Enum):
 
 
 class Phase(enum.Enum):
+    '''Version Phase.
+
+    Values:
+        RELEASE
+    '''
     DEVELOPMENT = _cconsts.NX_PHASE_DEVELOPMENT
     ALPHA = _cconsts.NX_PHASE_ALPHA
     BETA = _cconsts.NX_PHASE_BETA
@@ -1576,6 +1622,7 @@ class Phase(enum.Enum):
 
 
 class DevForm(enum.Enum):
+    '''Device physical form factor.'''
     PXI = _cconsts.NX_DEV_FORM_PXI
     PCI = _cconsts.NX_DEV_FORM_PCI
     C_SERIES = _cconsts.NX_DEV_FORM_C_SERIES
@@ -1584,6 +1631,12 @@ class DevForm(enum.Enum):
 
 
 class CanTermCap(enum.Enum):
+    '''CAN Termination Capability.
+
+    Values:
+        NO
+        YES
+    '''
     NO = _cconsts.NX_CAN_TERM_CAP_NO
     YES = _cconsts.NX_CAN_TERM_CAP_YES
 
@@ -1634,6 +1687,18 @@ class CanTerm(enum.Enum):
 
 
 class CanTcvrCap(enum.Enum):
+    '''CAN bus phusical transceivers support.
+
+    Values:
+        HS:
+            High-Speed / Flexible Data-Rate (HS/FD).
+        LS:
+            Low-Speed / Fault-Tolerant (LS//FT)
+        XS:
+            XS (HS//FD, LS/FT, SW, or External)
+        XSHSLS:
+            XS (HS//FD, LS/FT)
+    '''
     HS = _cconsts.NX_CAN_TCVR_CAP_HS
     LS = _cconsts.NX_CAN_TCVR_CAP_LS
     XS = _cconsts.NX_CAN_TCVR_CAP_XS
