@@ -78,17 +78,14 @@ Status
 **nixnet** package is created and maintained by National Instruments.
 
 * The following is support is included:
-
    * CAN and LIN protocol
    * Frames, Signals, and frame/signal conversion
    * Database import
    * For a complete list of supported features and functions, see the `documentation <http://nixnet.readthedocs.io>`__.
-
 * See the `enhancement issues <https://github.com/ni/nixnet-python/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement>`__ for potential future work.
 * Breaking API changes will be kept to a minimum. If a breaking change is made, it will be planned through
   `breaking-change isssues <https://github.com/ni/nixnet-python/issues?q=is%3Aissue+is%3Aopen+label%3Abreaking-change>`__
   and communicated via `semver <http://semver.org/>`__ and the `release notes <https://github.com/ni/nixnet-python/releases>`__.
-
 * `Known issues <https://github.com/ni/nixnet-python/issues?q=is%3Aissue+is%3Aopen+label%3Abug>`__.
 
 **nixnet** currently supports
