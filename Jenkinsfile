@@ -14,12 +14,12 @@ node('xnetPython') {
 	try{
 		stage('Checkout'){
 			// Checkout the repository from scm
-			echo "Cheking out source"
+			echo "Checking out source"
 			checkout scm
 		}
 
 		stage('EnvironmentSetup'){
-			// Stage to setup environment variables and ensure correct testing evironment.
+			// Stage to setup environment variables and ensure correct testing environment.
 			bat 'pip install --upgrade setuptools'
 		}
 
@@ -27,7 +27,8 @@ node('xnetPython') {
 			// Run tox with the tox-integration.ini file in the root of the repository
 			echo "Running Tox integration script"
 			try {
-				bat 'tox -c tox-integration.ini'
+				bat 'tox -c tox-integration.ini -e py27-test -- --can-in-interface CAN1 --can-out-interface CAN2 --lin-in-interface LIN1 --lin-out-interface LIN2'
+				bat 'tox -c tox-integration.ini -e py34-test -- --can-in-interface CAN1 --can-out-interface CAN2 --lin-in-interface LIN1 --lin-out-interface LIN2'
 			} finally {
 				step([$class: 'CoberturaPublisher', coberturaReportFile: 'coverage.xml'])
 				junit "junit/*.xml"
