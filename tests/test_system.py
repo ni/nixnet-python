@@ -2,7 +2,6 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import os
 import time
 
 import pytest  # type: ignore
@@ -207,15 +206,14 @@ def test_intf_properties(can_in_interface):
 
 
 @pytest.mark.integration
-def test_database_aliases():
+def test_database_aliases(custom_database_path):
     with system.System() as sys:
         print(list(sys.databases))
         print(len(sys.databases))
+
         database_alias = 'test_database'
-        dir_name = os.path.dirname(__file__)
-        database_filepath = os.path.join(dir_name, '..', 'nixnet_examples\databases\custom_database.dbc')
         default_baud_rate = 750000
-        sys.databases.add_alias(database_alias, database_filepath, default_baud_rate)
+        sys.databases.add_alias(database_alias, custom_database_path, default_baud_rate)
         print(len(sys.databases))
         print(list(sys.databases))
         print(sys.databases['test_database'].filepath)
