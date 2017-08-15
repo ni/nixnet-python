@@ -2,6 +2,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import os
+
 import pytest  # type: ignore
 
 
@@ -54,3 +56,11 @@ def lin_out_interface(request):
     if interface.lower() == "none":
         pytest.skip("Test requires a LIN board")
     return interface
+
+
+@pytest.fixture
+def custom_database_path():
+    tests_path = os.path.dirname(__file__)
+    root_path = os.path.dirname(tests_path)
+    database_path = os.path.join(root_path, 'nixnet_examples', 'databases', 'custom_database.dbc')
+    return database_path
