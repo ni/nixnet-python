@@ -17,6 +17,7 @@ from nixnet.system import databases
 
 
 class System(object):
+    '''Interact with the NI driver and interface hardware.'''
 
     def __init__(self):
         # type: () -> None
