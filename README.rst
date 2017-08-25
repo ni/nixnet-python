@@ -77,7 +77,7 @@ Status
 
 **nixnet** package is created and maintained by National Instruments.
 
-* The following is support is included:
+* The following support is included:
    * CAN and LIN protocol
    * Frames, Signals, and frame/signal conversion
    * Database import
