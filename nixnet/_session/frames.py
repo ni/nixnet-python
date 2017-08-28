@@ -16,9 +16,6 @@ from nixnet import types
 class Frames(collection.Collection):
     """Frames in a session."""
 
-    def __repr__(self):
-        return 'Session.Frames(handle={0})'.format(self._handle)
-
     def _create_item(self, handle, index, name):
         return Frame(handle, index, name)
 
@@ -46,9 +43,6 @@ class Frames(collection.Collection):
 
 class InFrames(Frames):
     """Frames in a session."""
-
-    def __repr__(self):
-        return 'Session.InFrames(handle={0})'.format(self._handle)
 
     def read_bytes(
             self,
@@ -137,9 +131,6 @@ class InFrames(Frames):
 class SinglePointInFrames(Frames):
     """Frames in a session."""
 
-    def __repr__(self):
-        return 'Session.SinglePointInFrames(handle={0})'.format(self._handle)
-
     def read_bytes(
             self,
             num_bytes):
@@ -183,9 +174,6 @@ class SinglePointInFrames(Frames):
 
 class OutFrames(Frames):
     """Frames in a session."""
-
-    def __repr__(self):
-        return 'Session.OutFrames(handle={0})'.format(self._handle)
 
     def write_bytes(
             self,
@@ -252,9 +240,6 @@ class OutFrames(Frames):
 class SinglePointOutFrames(Frames):
     """Frames in a session."""
 
-    def __repr__(self):
-        return 'Session.SinglePointOutFrames(handle={0})'.format(self._handle)
-
     def write_bytes(
             self,
             frame_bytes):
@@ -287,9 +272,6 @@ class SinglePointOutFrames(Frames):
 
 class Frame(collection.Item):
     """Frame configuration for a session."""
-
-    def __repr__(self):
-        return 'Session.Frame(handle={0}, index={0})'.format(self._handle, self._index)
 
     def set_can_start_time_off(self, offset):
         # type: (float) -> None

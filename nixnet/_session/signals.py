@@ -12,18 +12,12 @@ from nixnet._session import collection
 class Signals(collection.Collection):
     """Signals in a session."""
 
-    def __repr__(self):
-        return 'Session.Signals(handle={0})'.format(self._handle)
-
     def _create_item(self, handle, index, name):
         return Signal(handle, index, name)
 
 
 class SinglePointInSignals(Signals):
     """Writeable signals in a session."""
-
-    def __repr__(self):
-        return 'Session.SinglePointInSignals(handle={0})'.format(self._handle)
 
     def read(self):
         # type: () -> typing.Iterable[typing.Tuple[int, float]]
@@ -41,9 +35,6 @@ class SinglePointInSignals(Signals):
 class SinglePointOutSignals(Signals):
     """Writeable signals in a session."""
 
-    def __repr__(self):
-        return 'Session.SinglePointOutSignals(handle={0})'.format(self._handle)
-
     def write(
             self,
             signals):
@@ -58,6 +49,3 @@ class SinglePointOutSignals(Signals):
 
 class Signal(collection.Item):
     """Signal configuration for a session."""
-
-    def __repr__(self):
-        return 'Session.Signal(handle={0}, index={0})'.format(self._handle, self._index)
