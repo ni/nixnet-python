@@ -72,6 +72,7 @@ class System(object):
 
     @property
     def databases(self):
+        # type: () -> _databases.Databases
         """:any:`nixnet.system._databases.Databases`: Operate on systems's database's aliases"""
         return self._databases
 

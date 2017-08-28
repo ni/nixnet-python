@@ -719,7 +719,7 @@ def nxdb_get_database_list(
     size_of_alias_buffer,  # type: int
     size_of_filepath_buffer,  # type: int
 ):
-    # type: (...) -> typing.Tuple[typing.List[typing.Text], typing.List[typing.Text], int]
+    # type: (...) -> typing.Tuple[typing.Text, typing.Text, int]
     ip_address_ctypes = _ctypedefs.char_p(ip_address.encode('ascii'))
     size_of_alias_buffer_ctypes = _ctypedefs.u32(size_of_alias_buffer)
     size_of_filepath_buffer_ctypes = _ctypedefs.u32(size_of_filepath_buffer)

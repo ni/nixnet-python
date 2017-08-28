@@ -20,6 +20,7 @@ class Databases(collections.Mapping):
         return 'System.Databases(handle={0})'.format(self._handle)
 
     def __get_database_list(self, ip_address):
+        # type: (typing.Text) -> typing.List[typing.Tuple[typing.Text, typing.Text]]
         alias_buffer_size, filepath_buffer_size = _funcs.nxdb_get_database_list_sizes(ip_address)
         aliases, filepaths, _ = _funcs.nxdb_get_database_list(ip_address, alias_buffer_size, filepath_buffer_size)
         return list(zip(aliases.split(","), filepaths.split(",")))
@@ -31,7 +32,7 @@ class Databases(collections.Mapping):
         return self.keys()
 
     def __getitem__(self, index):
-        # type: (str) -> Database
+        # type: (typing.Text) -> Database
         """Return the Database object associated with the specified alias.
 
             Args:
@@ -47,7 +48,7 @@ class Databases(collections.Mapping):
             raise TypeError(index)
 
     def __delitem__(self, index):
-        # type: (str) -> None
+        # type: (typing.Text) -> None
         """Delete/Remove a database alias from the system.
 
         This function removes the alias from NI-XNET, but does not affect the
@@ -64,6 +65,7 @@ class Databases(collections.Mapping):
         _funcs.nxdb_remove_alias(index)
 
     def _create_item(self, database_alias, database_filepath):
+        # type: (typing.Text, typing.Text) -> Database
         return Database(database_alias, database_filepath)
 
     def keys(self):
@@ -94,7 +96,7 @@ class Databases(collections.Mapping):
             yield alias, self._create_item(alias, filepath)
 
     def add_alias(self, database_alias, database_filepath, default_baud_rate):
-        # type: (str, str, int) -> None
+        # type: (typing.Text, typing.Text, int) -> None
         """Add a new alias with baud rate size of up to 64 bits to a database file.
 
         NI-XNET uses alias names for database files. The alias names provide a
@@ -132,6 +134,7 @@ class Database(object):
             database_alias,
             database_filepath,
     ):
+        # type: (typing.Text, typing.Text) -> None
         self._database_alias = database_alias
         self._database_filepath = database_filepath
 
@@ -140,6 +143,6 @@ class Database(object):
 
     @property
     def filepath(self):
-        # type: () -> str
+        # type: () -> typing.Text
         """str: Get the filepath associated with the Database object"""
         return self._database_filepath
