@@ -20,6 +20,9 @@ class Collection(collections.Sequence):
         self._handle = handle
         self.__list_cache = None  # type: typing.List[typing.Text]
 
+    def __repr__(self):
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
+
     def __len__(self):
         # type: () -> int
         return _props.get_session_num_in_list(self._handle)
@@ -117,6 +120,9 @@ class Item(object):
         self._handle = handle
         self._index = index
         self._name = name
+
+    def __repr__(self):
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
