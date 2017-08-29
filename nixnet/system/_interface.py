@@ -20,7 +20,7 @@ class Interface(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self._handle == typing.cast(Interface, other._handle)
+            return self._handle == typing.cast(Interface, other)._handle
         elif isinstance(other, six.string_types):
             return self._name == typing.cast(typing.Text, other)
         else:

@@ -93,7 +93,7 @@ class SignalConversionSinglePointSession(object):
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self._handle == typing.cast(SignalConversionSinglePointSession, other._handle)
+            return self._handle == typing.cast(SignalConversionSinglePointSession, other)._handle
         else:
             return NotImplemented
 
