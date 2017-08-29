@@ -19,14 +19,24 @@ class Databases(collections.Mapping):
     def __repr__(self):
         return 'System.Databases(handle={0})'.format(self._handle)
 
-    def __get_database_list(self, ip_address):
-        # type: (typing.Text) -> typing.List[typing.Tuple[typing.Text, typing.Text]]
-        alias_buffer_size, filepath_buffer_size = _funcs.nxdb_get_database_list_sizes(ip_address)
-        aliases, filepaths, _ = _funcs.nxdb_get_database_list(ip_address, alias_buffer_size, filepath_buffer_size)
-        return list(zip(aliases.split(","), filepaths.split(",")))
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self._handle == typing.cast(Databases, other)._handle
+        else:
+            return NotImplemented
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
+
+    def __hash__(self):
+        return hash(self._handle)
 
     def __len__(self):
-        return len(self.__get_database_list(''))
+        return len(self._get_database_list(''))
 
     def __iter__(self):
         return self.keys()
@@ -39,7 +49,7 @@ class Databases(collections.Mapping):
                 index(str): The value of the index (alias name).
         """
         if isinstance(index, six.string_types):
-            for alias, filepath in self.__get_database_list(''):
+            for alias, filepath in self._get_database_list(''):
                 if alias == index:
                     return self._create_item(alias, filepath)
             else:
@@ -64,17 +74,13 @@ class Databases(collections.Mapping):
         """
         _funcs.nxdb_remove_alias(index)
 
-    def _create_item(self, database_alias, database_filepath):
-        # type: (typing.Text, typing.Text) -> Database
-        return Database(database_alias, database_filepath)
-
     def keys(self):
         """Return all keys (alias names) used in the Databases object.
 
             Yields:
                 An iterator to all the keys in the Database object.
         """
-        for alias, _ in self.__get_database_list(''):
+        for alias, _ in self._get_database_list(''):
             yield alias
 
     def values(self):
@@ -83,7 +89,7 @@ class Databases(collections.Mapping):
             Yields:
                 An iterator to all the values in the Databases object.
         """
-        for alias, filepath in self.__get_database_list(''):
+        for alias, filepath in self._get_database_list(''):
             yield self._create_item(alias, filepath)
 
     def items(self):
@@ -92,7 +98,7 @@ class Databases(collections.Mapping):
             Yields:
                 An iterator to tuple pairs of alias and database objects in the system.
         """
-        for alias, filepath in self.__get_database_list(''):
+        for alias, filepath in self._get_database_list(''):
             yield alias, self._create_item(alias, filepath)
 
     def add_alias(self, database_alias, database_filepath, default_baud_rate):
@@ -125,6 +131,16 @@ class Databases(collections.Mapping):
         """
         _funcs.nxdb_add_alias64(database_alias, database_filepath, default_baud_rate)
 
+    def _create_item(self, database_alias, database_filepath):
+        # type: (typing.Text, typing.Text) -> Database
+        return Database(database_alias, database_filepath)
+
+    def _get_database_list(self, ip_address):
+        # type: (typing.Text) -> typing.List[typing.Tuple[typing.Text, typing.Text]]
+        alias_buffer_size, filepath_buffer_size = _funcs.nxdb_get_database_list_sizes(ip_address)
+        aliases, filepaths, _ = _funcs.nxdb_get_database_list(ip_address, alias_buffer_size, filepath_buffer_size)
+        return list(zip(aliases.split(","), filepaths.split(",")))
+
 
 class Database(object):
     """Database alias."""
@@ -140,6 +156,27 @@ class Database(object):
 
     def __repr__(self):
         return 'System.Database(alias={}, filepath={})'.format(self._database_alias, self._database_filepath)
+
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            other_db = typing.cast(Database, other)
+            return self.alias == other_db.alias and self.filepath == other_db.filepath
+        else:
+            return NotImplemented
+
+    def __ne__(self, other):
+        result = self.__eq__(other)
+        if result is NotImplemented:
+            return result
+        else:
+            return not result
+
+    def __hash__(self):
+        return hash(self.alias)
+
+    @property
+    def alias(self):
+        return self._database_alias
 
     @property
     def filepath(self):
