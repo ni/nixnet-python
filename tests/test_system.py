@@ -49,9 +49,9 @@ def test_system_intf_refs_superset(can_in_interface, can_out_interface):
     with system.System() as sys:
         intfs = set(sys.intf_refs_all)
         can_intfs = set(sys.intf_refs_can)
-        flex_ray_intfs = set(sys.intf_refs_flex_ray)
         lin_intfs = set(sys.intf_refs_lin)
-        assert intfs == can_intfs | flex_ray_intfs | lin_intfs
+        # Subset because of missing flex-ray
+        assert intfs >= can_intfs | lin_intfs
 
 
 @pytest.mark.integration
