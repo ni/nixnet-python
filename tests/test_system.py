@@ -206,25 +206,74 @@ def test_intf_properties(can_in_interface):
 
 
 @pytest.mark.integration
-def test_database_aliases(custom_database_path):
+def test_databases_container(custom_database_path):
     with system.System() as sys:
-        print(list(sys.databases))
-        print(len(sys.databases))
+        print(repr(sys.databases))
 
+        print(list(sys.databases))
+        assert len(sys.databases) == len(list(sys.databases))
+
+        keys = list(sys.databases.keys())
+        values = list(sys.databases.values())
+        items = list(sys.databases.items())
+        assert len(sys.databases) == len(keys)
+        assert len(sys.databases) == len(values)
+        assert len(sys.databases) == len(items)
+        assert list(sys.databases) == keys
+        assert items == list(zip(keys, values))
+
+        for database in sys.databases.values():
+            print(repr(database))
+
+            assert database.alias in sys.databases
+
+            new_database = sys.databases[database.alias]
+            assert new_database.alias == database.alias
+            assert new_database.filepath == database.filepath
+
+        with pytest.raises(KeyError):
+            sys.databases["____unlikely to ever exist_____"]
+
+        unsupported_type = []
+        with pytest.raises(TypeError):
+            sys.databases[unsupported_type]
+
+
+@pytest.mark.integration
+def test_databases_equality(custom_database_path):
+    with system.System() as sys:
+        print(hash(sys.databases))
+
+        assert sys.databases == sys.databases
+        assert not (sys.databases != sys.databases)
+
+        assert not (sys.databases == "Hello")
+        assert sys.databases != "Hello"
+
+        for database in sys.databases.values():
+            print(hash(database))
+
+            assert database == database
+            assert not (database != database)
+
+            assert not (database == "Hello")
+            assert database != "Hello"
+
+
+@pytest.mark.integration
+def test_databases_modify(custom_database_path):
+    with system.System() as sys:
         database_alias = 'test_database'
         default_baud_rate = 750000
+
+        assert database_alias not in sys.databases  # pre-req
+        initial_alias_len = len(sys.databases)
+
         sys.databases.add_alias(database_alias, custom_database_path, default_baud_rate)
-        print(len(sys.databases))
-        print(list(sys.databases))
+        assert database_alias in sys.databases
+        assert len(sys.databases) == (initial_alias_len + 1)
         print(sys.databases['test_database'].filepath)
 
         del sys.databases['test_database']
-        print(len(sys.databases))
-        print(list(sys.databases))
-
-        print(list(sys.databases.keys()))
-        print(list(sys.databases.values()))
-        print(list(sys.databases.items()))
-
-        for database in sys.databases:
-            print(database)
+        assert database_alias not in sys.databases  # pre-req
+        assert len(sys.databases) == initial_alias_len
