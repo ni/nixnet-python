@@ -58,7 +58,8 @@ class Database(object):
 
         self._handle = None
 
-    def save_database(self, db_filepath):
+    def save(self, db_filepath=""):
+        # type: (typing.Text) -> None
         _funcs.nxdb_save_database(self._handle, db_filepath)
 
     @property
