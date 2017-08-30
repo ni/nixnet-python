@@ -23,7 +23,7 @@ class System(object):
         # type: () -> None
         self._handle = None  # To satisfy `__del__` in case nx_system_open throws
         self._handle = _funcs.nx_system_open()
-        self._databases = _databases.Databases(self._handle)
+        self._databases = _databases.AliasCollection(self._handle)
 
     def __del__(self):
         if self._handle is not None:
@@ -72,8 +72,8 @@ class System(object):
 
     @property
     def databases(self):
-        # type: () -> _databases.Databases
-        """:any:`nixnet.system._databases.Databases`: Operate on systems's database's aliases"""
+        # type: () -> _databases.AliasCollection
+        """:any:`nixnet.system._databases.AliasCollection`: Operate on systems's database's aliases"""
         return self._databases
 
     @property

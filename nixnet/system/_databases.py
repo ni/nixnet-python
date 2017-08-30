@@ -10,18 +10,18 @@ import six
 from nixnet import _funcs
 
 
-class Databases(collections.Mapping):
-    """Database aliases."""
+class AliasCollection(collections.Mapping):
+    """Alias aliases."""
 
     def __init__(self, handle):
         self._handle = handle
 
     def __repr__(self):
-        return 'System.Databases(handle={0})'.format(self._handle)
+        return 'System.AliasCollection(handle={0})'.format(self._handle)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            return self._handle == typing.cast(Databases, other)._handle
+            return self._handle == typing.cast(AliasCollection, other)._handle
         else:
             return NotImplemented
 
@@ -42,8 +42,8 @@ class Databases(collections.Mapping):
         return self.keys()
 
     def __getitem__(self, index):
-        # type: (typing.Text) -> Database
-        """Return the Database object associated with the specified alias.
+        # type: (typing.Text) -> Alias
+        """Return the Alias object associated with the specified alias.
 
             Args:
                 index(str): The value of the index (alias name).
@@ -53,7 +53,7 @@ class Databases(collections.Mapping):
                 if alias == index:
                     return self._create_item(alias, filepath)
             else:
-                raise KeyError('Database alias %s not found in the system' % index)
+                raise KeyError('Alias alias %s not found in the system' % index)
         else:
             raise TypeError(index)
 
@@ -75,19 +75,19 @@ class Databases(collections.Mapping):
         _funcs.nxdb_remove_alias(index)
 
     def keys(self):
-        """Return all keys (alias names) used in the Databases object.
+        """Return all keys (alias names) used in the AliasCollection object.
 
             Yields:
-                An iterator to all the keys in the Database object.
+                An iterator to all the keys in the Alias object.
         """
         for alias, _ in self._get_database_list(''):
             yield alias
 
     def values(self):
-        """Return all Database objects in the system.
+        """Return all Alias objects in the system.
 
             Yields:
-                An iterator to all the values in the Databases object.
+                An iterator to all the values in the AliasCollection object.
         """
         for alias, filepath in self._get_database_list(''):
             yield self._create_item(alias, filepath)
@@ -132,8 +132,8 @@ class Databases(collections.Mapping):
         _funcs.nxdb_add_alias64(database_alias, database_filepath, default_baud_rate)
 
     def _create_item(self, database_alias, database_filepath):
-        # type: (typing.Text, typing.Text) -> Database
-        return Database(database_alias, database_filepath)
+        # type: (typing.Text, typing.Text) -> Alias
+        return Alias(database_alias, database_filepath)
 
     @staticmethod
     def _get_database_len(ip_address):
@@ -150,8 +150,8 @@ class Databases(collections.Mapping):
         return list(zip(aliases.split(","), filepaths.split(",")))
 
 
-class Database(object):
-    """Database alias."""
+class Alias(object):
+    """Alias alias."""
 
     def __init__(
             self,
@@ -163,11 +163,11 @@ class Database(object):
         self._database_filepath = database_filepath
 
     def __repr__(self):
-        return 'System.Database(alias={}, filepath={})'.format(self._database_alias, self._database_filepath)
+        return 'System.Alias(alias={}, filepath={})'.format(self._database_alias, self._database_filepath)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            other_db = typing.cast(Database, other)
+            other_db = typing.cast(Alias, other)
             return self.alias == other_db.alias and self.filepath == other_db.filepath
         else:
             return NotImplemented
@@ -189,5 +189,5 @@ class Database(object):
     @property
     def filepath(self):
         # type: () -> typing.Text
-        """str: Get the filepath associated with the Database object"""
+        """str: Get the filepath associated with the Alias object"""
         return self._database_filepath
