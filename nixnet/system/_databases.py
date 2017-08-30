@@ -14,6 +14,7 @@ class AliasCollection(collections.Mapping):
     """Alias aliases."""
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
 
     def __repr__(self):
