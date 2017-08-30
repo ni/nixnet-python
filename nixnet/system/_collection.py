@@ -12,6 +12,7 @@ class SystemCollection(collections.Iterable, collections.Sized):
     """Collection of System related objects."""
 
     def __init__(self, handle, prop_id, factory):
+        # type: (int, int, typing.Any) -> None
         self._handle = handle
         self._prop_id = prop_id
         self._factory = factory
