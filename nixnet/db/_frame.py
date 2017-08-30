@@ -2,14 +2,25 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import typing  # NOQA: F401
+
+from nixnet import _cconsts
 from nixnet import _props
 from nixnet import constants
+
+from nixnet.db import _collection
+from nixnet.db import _signal
+from nixnet.db import _subframe
 
 
 class Frame(object):
 
     def __init__(self, handle):
         self._handle = handle
+        self._signals = _collection.DbCollection(
+            self._handle, constants.ObjectClass.SIGNAL, _cconsts.NX_PROP_FRM_SIG_REFS, _signal.Signal)
+        self._mux_subframes = _collection.DbCollection(
+            self._handle, constants.ObjectClass.SUBFRAME, _cconsts.NX_PROP_PDU_MUX_SUBFRAME_REFS, _subframe.SubFrame)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -87,8 +98,8 @@ class Frame(object):
         _props.set_frame_payload_len(self._handle, value)
 
     @property
-    def sig_refs(self):
-        return _props.get_frame_sig_refs(self._handle)
+    def signals(self):
+        return self._signals
 
     @property
     def can_ext_id(self):
@@ -207,8 +218,8 @@ class Frame(object):
         return _props.get_frame_mux_static_sig_refs(self._handle)
 
     @property
-    def mux_subframe_refs(self):
-        return _props.get_frame_mux_subframe_refs(self._handle)
+    def mux_subframes(self):
+        return self._mux_subframes
 
     @property
     def pdu_refs(self):

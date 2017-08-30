@@ -2,14 +2,25 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import typing  # NOQA: F401
+
+from nixnet import _cconsts
 from nixnet import _props
 from nixnet import constants
+
+from nixnet.db import _collection
+from nixnet.db import _linsched_entry
 
 
 class LinSched(object):
 
     def __init__(self, handle):
         self._handle = handle
+        self._entries = _collection.DbCollection(
+            self._handle,
+            constants.ObjectClass.LIN_SCHED_ENTRY,
+            _cconsts.NX_PROP_LIN_SCHED_ENTRIES,
+            _linsched_entry.LinSchedEntry)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -48,7 +59,7 @@ class LinSched(object):
 
     @property
     def entries(self):
-        return _props.get_lin_sched_entries(self._handle)
+        return self._entries
 
     @property
     def name(self):
