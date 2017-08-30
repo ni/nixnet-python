@@ -36,7 +36,7 @@ class Databases(collections.Mapping):
         return hash(self._handle)
 
     def __len__(self):
-        return len(self._get_database_list(''))
+        return self._get_database_len('')
 
     def __iter__(self):
         return self.keys()
@@ -135,7 +135,15 @@ class Databases(collections.Mapping):
         # type: (typing.Text, typing.Text) -> Database
         return Database(database_alias, database_filepath)
 
-    def _get_database_list(self, ip_address):
+    @staticmethod
+    def _get_database_len(ip_address):
+        # type: (typing.Text) -> int
+        alias_buffer_size, filepath_buffer_size = _funcs.nxdb_get_database_list_sizes(ip_address)
+        _, _, number_of_databases = _funcs.nxdb_get_database_list(ip_address, alias_buffer_size, filepath_buffer_size)
+        return number_of_databases
+
+    @staticmethod
+    def _get_database_list(ip_address):
         # type: (typing.Text) -> typing.List[typing.Tuple[typing.Text, typing.Text]]
         alias_buffer_size, filepath_buffer_size = _funcs.nxdb_get_database_list_sizes(ip_address)
         aliases, filepaths, _ = _funcs.nxdb_get_database_list(ip_address, alias_buffer_size, filepath_buffer_size)
