@@ -252,6 +252,13 @@ def set_session_ref(ref, prop_id, value):
     _errors.check_for_error(result.value)
 
 
+def get_session_ref_array_len(ref, prop_id):
+    # type: (int, int) -> int
+    value_size = _funcs.nx_get_property_size(ref, prop_id)
+    elements = value_size // _ctypedefs.nxSessionRef_t.BYTES
+    return elements
+
+
 def get_session_ref_array(ref, prop_id):
     # type: (int, int) -> typing.Iterable[int]
     value_size = _funcs.nx_get_property_size(ref, prop_id)
