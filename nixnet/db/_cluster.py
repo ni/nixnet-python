@@ -2,15 +2,32 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import typing  # NOQA: F401
+
+from nixnet import _cconsts
 from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
+
+from nixnet.db import _collection
+from nixnet.db import _ecu
+from nixnet.db import _frame
+from nixnet.db import _linsched
+from nixnet.db import _pdu
 
 
 class Cluster(object):
 
     def __init__(self, handle):
         self._handle = handle
+        self._ecus = _collection.DbCollection(
+            self._handle, constants.ObjectClass.ECU, _cconsts.NX_PROP_CLST_ECU_REFS, _ecu.Ecu)
+        self._frames = _collection.DbCollection(
+            self._handle, constants.ObjectClass.FRAME, _cconsts.NX_PROP_CLST_FRM_REFS, _frame.Frame)
+        self._linsched = _collection.DbCollection(
+            self._handle, constants.ObjectClass.LIN_SCHED, _cconsts.NX_PROP_CLST_LIN_SCHEDULES, _linsched.LinSched)
+        self._pdus = _collection.DbCollection(
+            self._handle, constants.ObjectClass.PDU, _cconsts.NX_PROP_CLST_PDU_REFS, _pdu.Pdu)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -37,7 +54,8 @@ class Cluster(object):
             copy_mode,
             prefix,
             wait_for_complete):
-        return _funcs.nxdb_merge(self._handle, source_obj._handle, copy_mode, prefix, wait_for_complete)
+        # type: (typing.Any, constants.Merge, typing.Text, bool) -> int
+        return _funcs.nxdb_merge(self._handle, source_obj._handle, copy_mode.value, prefix, wait_for_complete)
 
     @property
     def baud_rate(self):
@@ -64,12 +82,12 @@ class Cluster(object):
         return _props.get_cluster_database_ref(self._handle)
 
     @property
-    def ecu_refs(self):
-        return _props.get_cluster_ecu_refs(self._handle)
+    def ecus(self):
+        return self._ecus
 
     @property
-    def frm_refs(self):
-        return _props.get_cluster_frm_refs(self._handle)
+    def frames(self):
+        return self._frames
 
     @property
     def name(self):
@@ -80,8 +98,8 @@ class Cluster(object):
         _props.set_cluster_name(self._handle, value)
 
     @property
-    def pdu_refs(self):
-        return _props.get_cluster_pdu_refs(self._handle)
+    def pdus(self):
+        return self._pdus
 
     @property
     def pd_us_reqd(self):
@@ -385,7 +403,7 @@ class Cluster(object):
 
     @property
     def lin_schedules(self):
-        return _props.get_cluster_lin_schedules(self._handle)
+        return self._linsched
 
     @property
     def lin_tick(self):

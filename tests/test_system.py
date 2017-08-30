@@ -24,7 +24,7 @@ def test_system_container():
             assert sys_one != sys_two
             assert sys_one != 1
 
-        set([sys_one])  # Testing `__hash__`
+        print(hash(sys_one))
 
         print(repr(sys_one))
 
@@ -42,6 +42,27 @@ def test_system_properties():
     """
     with system.System() as sys:
         print(sys.ver)
+
+
+@pytest.mark.integration
+def test_system_collection(can_in_interface, can_out_interface):
+    with system.System() as sys:
+        print(repr(sys.dev_refs))
+
+        print(list(sys.dev_refs))
+        assert len(sys.dev_refs) == len(list(sys.dev_refs))
+
+
+@pytest.mark.integration
+def test_system_collection_equality():
+    with system.System() as sys:
+        print(hash(sys.dev_refs))
+
+        assert sys.dev_refs == sys.dev_refs
+        assert not (sys.dev_refs != sys.dev_refs)
+
+        assert not (sys.dev_refs == "Hello")
+        assert sys.dev_refs != "Hello"
 
 
 @pytest.mark.integration

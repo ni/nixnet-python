@@ -5,12 +5,14 @@ from __future__ import print_function
 import typing  # NOQA: F401
 import warnings
 
+from nixnet import _cconsts
 from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
 from nixnet import errors
 from nixnet import types
 
+from nixnet.system import _collection
 from nixnet.system import _databases
 from nixnet.system import _device
 from nixnet.system import _interface
@@ -23,7 +25,19 @@ class System(object):
         # type: () -> None
         self._handle = None  # To satisfy `__del__` in case nx_system_open throws
         self._handle = _funcs.nx_system_open()
-        self._databases = _databases.Databases(self._handle)
+        self._databases = _databases.AliasCollection(self._handle)
+        self._devices = _collection.SystemCollection(
+            self._handle, _cconsts.NX_PROP_SYS_DEV_REFS, _device.Device)
+        self._intfs = _collection.SystemCollection(
+            self._handle, _cconsts.NX_PROP_SYS_INTF_REFS, _interface.Interface)
+        self._intfs_all = _collection.SystemCollection(
+            self._handle, _cconsts.NX_PROP_SYS_INTF_REFS_ALL, _interface.Interface)
+        self._intfs_can = _collection.SystemCollection(
+            self._handle, _cconsts.NX_PROP_SYS_INTF_REFS_CAN, _interface.Interface)
+        self._intfs_flex_ray = _collection.SystemCollection(
+            self._handle, _cconsts.NX_PROP_SYS_INTF_REFS_FLEX_RAY, _interface.Interface)
+        self._intfs_lin = _collection.SystemCollection(
+            self._handle, _cconsts.NX_PROP_SYS_INTF_REFS_LIN, _interface.Interface)
 
     def __del__(self):
         if self._handle is not None:
@@ -72,53 +86,47 @@ class System(object):
 
     @property
     def databases(self):
-        # type: () -> _databases.Databases
-        """:any:`nixnet.system._databases.Databases`: Operate on systems's database's aliases"""
+        # type: () -> _databases.AliasCollection
+        """:any:`nixnet.system._databases.AliasCollection`: Operate on systems's database's aliases"""
         return self._databases
 
     @property
     def dev_refs(self):
-        # type: () -> typing.Iterable[_device.Device]
+        # type: () -> _collection.SystemCollection
         '''iter of :any:`nixnet.system._device.Device`: Physical XNET devices in the system.'''
-        for ref in _props.get_system_dev_refs(self._handle):
-            yield _device.Device(ref)
+        return self._devices
 
     @property
     def intf_refs(self):
-        # type: () -> typing.Iterable[_interface.Interface]
+        # type: () -> _collection.SystemCollection
         '''iter of :any:`nixnet.system._interface.Interface`: Available interfaces on the system.'''
-        for ref in _props.get_system_intf_refs(self._handle):
-            yield _interface.Interface(ref)
+        return self._intfs
 
     @property
     def intf_refs_all(self):
-        # type: () -> typing.Iterable[_interface.Interface]
+        # type: () -> _collection.SystemCollection
         '''iter of :any:`nixnet.system._interface.Interface`: Available interfaces on the system.
 
         This Includes those not equipped with a Transceiver Cable.
         '''
-        for ref in _props.get_system_intf_refs_all(self._handle):
-            yield _interface.Interface(ref)
+        return self._intfs_all
 
     @property
     def intf_refs_can(self):
-        # type: () -> typing.Iterable[_interface.Interface]
+        # type: () -> _collection.SystemCollection
         '''iter of :any:`nixnet.system._interface.Interface`: Available interfaces on the system (CAN Protocol).'''
-        for ref in _props.get_system_intf_refs_can(self._handle):
-            yield _interface.Interface(ref)
+        return self._intfs_can
 
     @property
     def intf_refs_flex_ray(self):
-        # type: () -> typing.Iterable[_interface.Interface]
-        for ref in _props.get_system_intf_refs_flex_ray(self._handle):
-            yield _interface.Interface(ref)
+        # type: () -> _collection.SystemCollection
+        return self._intfs_flex_ray
 
     @property
     def intf_refs_lin(self):
-        # type: () -> typing.Iterable[_interface.Interface]
+        # type: () -> _collection.SystemCollection
         '''iter of :any:`nixnet.system._interface.Interface`: Available interfaces on the system (LIN Protocol).'''
-        for ref in _props.get_system_intf_refs_lin(self._handle):
-            yield _interface.Interface(ref)
+        return self._intfs_lin
 
     @property
     def ver(self):

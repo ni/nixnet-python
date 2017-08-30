@@ -4,9 +4,11 @@ from __future__ import print_function
 
 import typing  # NOQA: F401
 
+from nixnet import _cconsts
 from nixnet import _props
 from nixnet import constants
 
+from nixnet.system import _collection
 from nixnet.system import _interface
 
 
@@ -16,6 +18,10 @@ class Device(object):
     def __init__(self, handle):
         # type: (int) -> None
         self._handle = handle
+        self._intfs = _collection.SystemCollection(
+            self._handle, _cconsts.NX_PROP_DEV_INTF_REFS, _interface.Interface)
+        self._intfs_all = _collection.SystemCollection(
+            self._handle, _cconsts.NX_PROP_DEV_INTF_REFS_ALL, _interface.Interface)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -45,20 +51,18 @@ class Device(object):
 
     @property
     def intf_refs(self):
-        # type: () -> typing.Iterable[_interface.Interface]
+        # type: () -> _collection.SystemCollection
         '''iter of :any:`nixnet.system._interface.Interface`: Interfaces associated with this device.'''
-        for ref in _props.get_device_intf_refs(self._handle):
-            yield _interface.Interface(ref)
+        return self._intfs
 
     @property
     def intf_refs_all(self):
-        # type: () -> typing.Iterable[_interface.Interface]
+        # type: () -> _collection.SystemCollection
         '''iter of :any:`nixnet.system._interface.Interface`: Interfaces associated with this device.
 
         This Includes those not equipped with a Transceiver Cable.
         '''
-        for ref in _props.get_device_intf_refs_all(self._handle):
-            yield _interface.Interface(ref)
+        return self._intfs_all
 
     @property
     def num_ports(self):

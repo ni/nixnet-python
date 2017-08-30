@@ -2,11 +2,17 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import typing  # NOQA: F401
 import warnings
 
+from nixnet import _cconsts
 from nixnet import _funcs
 from nixnet import _props
+from nixnet import constants
 from nixnet import errors
+
+from nixnet.db import _cluster
+from nixnet.db import _collection
 
 
 class Database(object):
@@ -14,6 +20,8 @@ class Database(object):
     def __init__(self, database_name):
         self._handle = None  # To satisfy `__del__` in case nxdb_open_database throws
         self._handle = _funcs.nxdb_open_database(database_name)
+        self._clusters = _collection.DbCollection(
+            self._handle, constants.ObjectClass.CLUSTER, _cconsts.NX_PROP_DATABASE_CLST_REFS, _cluster.Cluster)
 
     def __del__(self):
         if self._handle is not None:
@@ -58,7 +66,8 @@ class Database(object):
 
         self._handle = None
 
-    def save_database(self, db_filepath):
+    def save(self, db_filepath=""):
+        # type: (typing.Text) -> None
         _funcs.nxdb_save_database(self._handle, db_filepath)
 
     @property
@@ -66,8 +75,8 @@ class Database(object):
         return _props.get_database_name(self._handle)
 
     @property
-    def clst_refs(self):
-        return _props.get_database_clst_refs(self._handle)
+    def cluster(self):
+        return self._clusters
 
     @property
     def show_invalid_from_open(self):
