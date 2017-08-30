@@ -2,6 +2,8 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import typing  # NOQA: F401
+
 from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
@@ -37,7 +39,8 @@ class Cluster(object):
             copy_mode,
             prefix,
             wait_for_complete):
-        return _funcs.nxdb_merge(self._handle, source_obj._handle, copy_mode, prefix, wait_for_complete)
+        # type: (typing.Any, constants.Merge, typing.text, bool) -> int
+        return _funcs.nxdb_merge(self._handle, source_obj._handle, copy_mode.value, prefix, wait_for_complete)
 
     @property
     def baud_rate(self):
