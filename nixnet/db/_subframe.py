@@ -2,13 +2,20 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+from nixnet import _cconsts
 from nixnet import _props
+from nixnet import constants
+
+from nixnet.db import _collection
+from nixnet.db import _signal
 
 
 class SubFrame(object):
 
     def __init__(self, handle):
         self._handle = handle
+        self._dyn_signals = _collection.DbCollection(
+            self._handle, constants.ObjectClass.SIGNAL, _cconsts.NX_PROP_SUBFRM_DYN_SIG_REFS, _signal.Signal)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -34,8 +41,8 @@ class SubFrame(object):
         return _props.get_subframe_config_status(self._handle)
 
     @property
-    def dyn_sig_refs(self):
-        return _props.get_subframe_dyn_sig_refs(self._handle)
+    def dyn_signals(self):
+        return self._dyn_signals
 
     @property
     def frm_ref(self):
