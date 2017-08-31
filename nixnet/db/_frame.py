@@ -5,6 +5,7 @@ from __future__ import print_function
 import typing  # NOQA: F401
 
 from nixnet import _cconsts
+from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
@@ -211,7 +212,11 @@ class Frame(object):
 
     @property
     def mux_data_mux_sig_ref(self):
-        return _props.get_frame_mux_data_mux_sig_ref(self._handle)
+        ref = _props.get_frame_mux_data_mux_sig_ref(self._handle)
+        if ref == 0:
+            # A bit of an abuse of errors
+            _errors.check_for_error(_cconsts.NX_ERR_SIGNAL_NOT_FOUND)
+        return ref
 
     @property
     def mux_static_sig_refs(self):
