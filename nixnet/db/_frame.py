@@ -5,6 +5,7 @@ from __future__ import print_function
 import typing  # NOQA: F401
 
 from nixnet import _cconsts
+from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
@@ -17,8 +18,8 @@ class Frame(object):
 
     def __init__(self, handle):
         self._handle = handle
-        self._signals = _collection.DbCollection(
-            self._handle, constants.ObjectClass.SIGNAL, _cconsts.NX_PROP_FRM_SIG_REFS, _signal.Signal)
+        self._mux_static_signals = _collection.DbCollection(
+            self._handle, constants.ObjectClass.SIGNAL, _cconsts.NX_PROP_FRM_MUX_STATIC_SIG_REFS, _signal.Signal)
         self._mux_subframes = _collection.DbCollection(
             self._handle, constants.ObjectClass.SUBFRAME, _cconsts.NX_PROP_PDU_MUX_SUBFRAME_REFS, _subframe.SubFrame)
 
@@ -98,8 +99,8 @@ class Frame(object):
         _props.set_frame_payload_len(self._handle, value)
 
     @property
-    def signals(self):
-        return self._signals
+    def sig_refs(self):
+        return _props.get_frame_sig_refs(self._handle)
 
     @property
     def can_ext_id(self):
@@ -211,11 +212,15 @@ class Frame(object):
 
     @property
     def mux_data_mux_sig_ref(self):
-        return _props.get_frame_mux_data_mux_sig_ref(self._handle)
+        ref = _props.get_frame_mux_data_mux_sig_ref(self._handle)
+        if ref == 0:
+            # A bit of an abuse of errors
+            _errors.check_for_error(_cconsts.NX_ERR_SIGNAL_NOT_FOUND)
+        return ref
 
     @property
-    def mux_static_sig_refs(self):
-        return _props.get_frame_mux_static_sig_refs(self._handle)
+    def mux_static_signals(self):
+        return self._mux_static_signals
 
     @property
     def mux_subframes(self):
