@@ -36,8 +36,7 @@ def main():
             # frame value sent before the initial read will be received.
             input_session.start()
 
-            # Set the schedule. This will also automically enable
-            # master mode
+            # Set the schedule. This will also automatically enable master mode.
             output_session.change_lin_schedule(0)
 
             user_value = six.moves.input('Enter payload [int, int]: ')
