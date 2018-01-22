@@ -3,6 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 from nixnet import _props
+from nixnet import constants
 
 
 class Ecu(object):
@@ -111,11 +112,13 @@ class Ecu(object):
 
     @property
     def lin_protocol_ver(self):
-        return _props.get_ecu_lin_protocol_ver(self._handle)
+        # type: () -> constants.LinProtocolVer
+        return constants.LinProtocolVer(_props.get_ecu_lin_protocol_ver(self._handle))
 
     @lin_protocol_ver.setter
     def lin_protocol_ver(self, value):
-        _props.set_ecu_lin_protocol_ver(self._handle, value)
+        # type: (constants.LinProtocolVer) -> None
+        _props.set_ecu_lin_protocol_ver(self._handle, value.value)
 
     @property
     def lin_initial_nad(self):
