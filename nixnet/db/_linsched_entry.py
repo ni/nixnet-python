@@ -2,8 +2,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import typing  # NOQA: F401
+
 from nixnet import _props
 from nixnet import constants
+from nixnet.db import _frame
 
 
 class LinSchedEntry(object):
@@ -56,11 +59,15 @@ class LinSchedEntry(object):
 
     @property
     def frames(self):
-        return _props.get_lin_sched_entry_frames(self._handle)
+        # type: () -> typing.Iterable[_frame.Frame]
+        for ref in _props.get_lin_sched_entry_frames(self._handle):
+            yield _frame.Frame(ref)
 
     @frames.setter
     def frames(self, value):
-        _props.set_lin_sched_entry_frames(self._handle, value)
+        # type: (typing.Iterable[_frame.Frame]) -> None
+        frame_handles = [frame._handle for frame in value]
+        _props.set_lin_sched_entry_frames(self._handle, frame_handles)
 
     @property
     def name(self):
