@@ -391,7 +391,7 @@ def set_database_u8(ref, prop_id, value):
 
 def get_database_u8_array(ref, prop_id):
     # type: (int, int) -> typing.Iterable[int]
-    value_size = _funcs.nx_get_property_size(ref, prop_id)
+    value_size = _funcs.nxdb_get_property_size(ref, prop_id)
     elements = value_size // _ctypedefs.u8.BYTES
 
     ref_ctypes = _ctypedefs.nxDatabaseRef_t(ref)
@@ -458,7 +458,7 @@ def set_database_u32(ref, prop_id, value):
 
 def get_database_u32_array(ref, prop_id):
     # type: (int, int) -> typing.Iterable[int]
-    value_size = _funcs.nx_get_property_size(ref, prop_id)
+    value_size = _funcs.nxdb_get_property_size(ref, prop_id)
     elements = value_size // _ctypedefs.u32.BYTES
 
     ref_ctypes = _ctypedefs.nxDatabaseRef_t(ref)
@@ -556,7 +556,7 @@ def set_database_f64(ref, prop_id, value):
 
 def get_database_string(ref, prop_id):
     # type: (int, int) -> typing.Text
-    value_size = _funcs.nx_get_property_size(ref, prop_id)
+    value_size = _funcs.nxdb_get_property_size(ref, prop_id)
 
     ref_ctypes = _ctypedefs.nxDatabaseRef_t(ref)
     prop_id_ctypes = _ctypedefs.u32(prop_id)
@@ -621,14 +621,14 @@ def set_database_ref(ref, prop_id, value):
 
 def get_database_ref_array_len(ref, prop_id):
     # type: (int, int) -> int
-    value_size = _funcs.nx_get_property_size(ref, prop_id)
+    value_size = _funcs.nxdb_get_property_size(ref, prop_id)
     elements = value_size // _ctypedefs.nxDatabaseRef_t.BYTES
     return elements
 
 
 def get_database_ref_array(ref, prop_id):
     # type: (int, int) -> typing.Iterable[int]
-    value_size = _funcs.nx_get_property_size(ref, prop_id)
+    value_size = _funcs.nxdb_get_property_size(ref, prop_id)
     elements = value_size // _ctypedefs.nxDatabaseRef_t.BYTES
 
     ref_ctypes = _ctypedefs.nxDatabaseRef_t(ref)
