@@ -75,7 +75,7 @@ class Database(object):
         return _props.get_database_name(self._handle)
 
     @property
-    def cluster(self):
+    def clusters(self):
         return self._clusters
 
     @property

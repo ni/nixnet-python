@@ -1539,6 +1539,14 @@ class LinLastErr(enum.Enum):
     CRC = _cconsts.NX_LIN_LAST_ERR_CODE_CRC
 
 
+class LinProtocolVer(enum.Enum):
+    VER_1_2 = _cconsts.NX_LIN_PROTOCOL_VER_1_2
+    VER_1_3 = _cconsts.NX_LIN_PROTOCOL_VER_1_3
+    VER_2_0 = _cconsts.NX_LIN_PROTOCOL_VER_2_0
+    VER_2_1 = _cconsts.NX_LIN_PROTOCOL_VER_2_1
+    VER_2_2 = _cconsts.NX_LIN_PROTOCOL_VER_2_2
+
+
 class Condition(enum.Enum):
     TRANSMIT_COMPLETE = _cconsts.NX_CONDITION_TRANSMIT_COMPLETE
     INTF_COMMUNICATING = _cconsts.NX_CONDITION_INTF_COMMUNICATING

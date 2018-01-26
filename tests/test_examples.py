@@ -10,10 +10,12 @@ import pytest  # type: ignore
 from nixnet import _cfuncs
 from nixnet import _ctypedefs
 
+from nixnet_examples import can_dynamic_database_creation
 from nixnet_examples import can_frame_queued_io
 from nixnet_examples import can_frame_stream_io
 from nixnet_examples import can_signal_conversion
 from nixnet_examples import can_signal_single_point_io
+from nixnet_examples import lin_dynamic_database_creation
 from nixnet_examples import lin_frame_stream_io
 from nixnet_examples import programmatic_database_usage
 
@@ -33,9 +35,13 @@ MockXnetLibrary.nx_convert_signals_to_frames_single_point.return_value = _ctyped
 MockXnetLibrary.nx_stop.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_clear.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nx_system_open.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nx_system_close.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nxdb_add_alias64.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nxdb_remove_alias.return_value = _ctypedefs.u32(0)
-MockXnetLibrary.nx_system_close.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nxdb_open_database.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nxdb_close_database.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nxdb_create_object.return_value = _ctypedefs.u32(0)
+MockXnetLibrary.nxdb_set_property.return_value = _ctypedefs.u32(0)
 
 
 def six_input(queue):
@@ -48,6 +54,18 @@ def six_input(queue):
         return value
 
     return _six_input
+
+
+@pytest.mark.parametrize("input_values", [
+    ['y'],
+    ['n'],
+    ['invalid'],
+])
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
+@mock.patch('time.sleep', lambda time: None)
+def test_can_dynamic_database_creation(input_values):
+    with mock.patch('six.moves.input', six_input(input_values)):
+        can_dynamic_database_creation.main()
 
 
 @pytest.mark.parametrize("input_values", [
@@ -92,6 +110,18 @@ def test_can_frame_stream_empty_session(input_values):
 def test_can_signal_single_point_empty_session(input_values):
     with mock.patch('six.moves.input', six_input(input_values)):
         can_signal_single_point_io.main()
+
+
+@pytest.mark.parametrize("input_values", [
+    ['y'],
+    ['n'],
+    ['invalid'],
+])
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
+@mock.patch('time.sleep', lambda time: None)
+def test_lin_dynamic_database_creation(input_values):
+    with mock.patch('six.moves.input', six_input(input_values)):
+        lin_dynamic_database_creation.main()
 
 
 @pytest.mark.parametrize("input_values", [
