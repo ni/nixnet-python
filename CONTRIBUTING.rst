@@ -53,7 +53,7 @@ To run the tests::
   $ # Unit tests:
   $ tox
   $ # Integration tests:
-  $ tox -c tox-integration.ini -- --can-in-interface CAN1 --can-out-interface CAN2 --lin-in-interface LIN1 --lin-out-interface CAN2
+  $ tox -c tox-integration.ini -- --can-in-interface CAN1 --can-out-interface CAN2 --lin-in-interface LIN1 --lin-out-interface LIN2
   $ # Integration tests (no LIN board):
   $ tox -c tox-integration.ini -- --can-in-interface CAN1 --can-out-interface CAN2
 
