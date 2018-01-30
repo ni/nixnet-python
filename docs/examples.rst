@@ -14,4 +14,4 @@ Examples
    examples/conversion
    examples/can_lin_diff
    examples/programmatic_databases
-   examples/database_creation
+   examples/dynamic_database_creation

@@ -62,7 +62,7 @@ def main():
         schedule_entry.type = constants.LinSchedEntryType.UNCONDITIONAL
         schedule_entry.frames = [frame]
 
-        # Use the database we just created, write and then read a pair of signals.
+        # Using the database we just created, write and then read a pair of signals.
         with nixnet.SignalOutSinglePointSession(
                 output_interface,
                 database_name,

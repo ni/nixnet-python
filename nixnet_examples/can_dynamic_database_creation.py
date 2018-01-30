@@ -42,7 +42,7 @@ def main():
         signal_2.start_bit = 8
         signal_2.num_bits = 8
 
-        # Use the database we just created, write and then read a pair of signals.
+        # Using the database we just created, write and then read a pair of signals.
         with nixnet.SignalOutSinglePointSession(
                 output_interface,
                 database_name,
