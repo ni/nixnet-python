@@ -9,9 +9,9 @@ from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
-from nixnet.db import _collection
-from nixnet.db import _signal
-from nixnet.db import _subframe
+from nixnet.database import _collection
+from nixnet.database import _signal
+from nixnet.database import _subframe
 
 
 class Frame(object):

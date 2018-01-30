@@ -6,7 +6,7 @@ import typing  # NOQA: F401
 
 from nixnet import _props
 from nixnet import constants
-from nixnet.db import _frame
+from nixnet.database import _frame
 
 
 class LinSchedEntry(object):

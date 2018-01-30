@@ -11,8 +11,8 @@ from nixnet import _props
 from nixnet import constants
 from nixnet import errors
 
-from nixnet.db import _cluster
-from nixnet.db import _collection
+from nixnet.database import _cluster
+from nixnet.database import _collection
 
 
 class Database(object):

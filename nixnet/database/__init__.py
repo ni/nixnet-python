@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 
-from nixnet.db.database import Database
+from nixnet.database.database import Database
 
 
 __all__ = ["Database"]
