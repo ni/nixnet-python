@@ -8,7 +8,7 @@ import time
 
 import nixnet
 from nixnet import constants
-from nixnet import db
+from nixnet import database
 
 
 def main():
@@ -22,10 +22,10 @@ def main():
     input_interface = 'CAN2'
 
     # Open the default in-memory database.
-    with db.Database(database_name) as database:
+    with database.Database(database_name) as db:
 
         # Add a CAN cluster, a frame, and two signals to the database.
-        cluster = database.clusters.add(cluster_name)
+        cluster = db.clusters.add(cluster_name)
         cluster.protocol = constants.Protocol.CAN
         cluster.baud_rate = 125000
         frame = cluster.frames.add(frame_name)
@@ -42,7 +42,7 @@ def main():
         signal_2.start_bit = 8
         signal_2.num_bits = 8
 
-        # Use the database we just created, write and then read a pair of signals.
+        # Using the database we just created, write and then read a pair of signals.
         with nixnet.SignalOutSinglePointSession(
                 output_interface,
                 database_name,

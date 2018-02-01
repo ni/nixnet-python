@@ -9,11 +9,11 @@ from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
 
-from nixnet.db import _collection
-from nixnet.db import _ecu
-from nixnet.db import _frame
-from nixnet.db import _linsched
-from nixnet.db import _pdu
+from nixnet.database import _collection
+from nixnet.database import _ecu
+from nixnet.database import _frame
+from nixnet.database import _linsched
+from nixnet.database import _pdu
 
 
 class Cluster(object):

@@ -9,9 +9,9 @@ from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
-from nixnet.db import _collection
-from nixnet.db import _signal
-from nixnet.db import _subframe
+from nixnet.database import _collection
+from nixnet.database import _signal
+from nixnet.database import _subframe
 
 
 class Frame(object):
@@ -21,7 +21,7 @@ class Frame(object):
         self._mux_static_signals = _collection.DbCollection(
             self._handle, constants.ObjectClass.SIGNAL, _cconsts.NX_PROP_FRM_MUX_STATIC_SIG_REFS, _signal.Signal)
         self._mux_subframes = _collection.DbCollection(
-            self._handle, constants.ObjectClass.SUBFRAME, _cconsts.NX_PROP_PDU_MUX_SUBFRAME_REFS, _subframe.SubFrame)
+            self._handle, constants.ObjectClass.SUBFRAME, _cconsts.NX_PROP_FRM_MUX_SUBFRAME_REFS, _subframe.SubFrame)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

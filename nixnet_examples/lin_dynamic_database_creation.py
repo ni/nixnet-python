@@ -8,7 +8,7 @@ import time
 
 import nixnet
 from nixnet import constants
-from nixnet import db
+from nixnet import database
 
 
 def main():
@@ -26,10 +26,10 @@ def main():
     input_interface = 'LIN2'
 
     # Open the default in-memory database.
-    with db.Database(database_name) as database:
+    with database.Database(database_name) as db:
 
         # Add a LIN cluster, a frame, and two signals to the database.
-        cluster = database.clusters.add(cluster_name)
+        cluster = db.clusters.add(cluster_name)
         cluster.protocol = constants.Protocol.LIN
         cluster.baud_rate = 19200
         frame = cluster.frames.add(frame_name)
@@ -62,7 +62,7 @@ def main():
         schedule_entry.type = constants.LinSchedEntryType.UNCONDITIONAL
         schedule_entry.frames = [frame]
 
-        # Use the database we just created, write and then read a pair of signals.
+        # Using the database we just created, write and then read a pair of signals.
         with nixnet.SignalOutSinglePointSession(
                 output_interface,
                 database_name,

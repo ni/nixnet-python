@@ -8,8 +8,8 @@ from nixnet import _cconsts
 from nixnet import _props
 from nixnet import constants
 
-from nixnet.db import _collection
-from nixnet.db import _linsched_entry
+from nixnet.database import _collection
+from nixnet.database import _linsched_entry
 
 
 class LinSched(object):

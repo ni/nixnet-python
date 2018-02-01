@@ -8,7 +8,7 @@ import six
 
 from nixnet import _props
 from nixnet import constants
-from nixnet.db import _frame
+from nixnet.database import _frame
 
 
 class Interface(object):

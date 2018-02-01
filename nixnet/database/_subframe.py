@@ -6,8 +6,8 @@ from nixnet import _cconsts
 from nixnet import _props
 from nixnet import constants
 
-from nixnet.db import _collection
-from nixnet.db import _signal
+from nixnet.database import _collection
+from nixnet.database import _signal
 
 
 class SubFrame(object):
