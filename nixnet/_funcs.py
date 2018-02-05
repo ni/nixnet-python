@@ -565,12 +565,12 @@ def nxdb_get_property_size(
 
 def nxdb_get_dbc_attribute_size(
     db_object_ref,  # type: int
-    mode,  # type: int
+    mode,  # type: _enums.GetDbcAttributeMode
     attribute_name,  # type: typing.Text
 ):
     # type: (...) -> int
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
-    mode_ctypes = _ctypedefs.u32(mode)
+    mode_ctypes = _ctypedefs.u32(mode.value)
     attribute_name_ctypes = _ctypedefs.char_p(attribute_name.encode('ascii'))
     attribute_text_size_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nxdb_get_dbc_attribute_size(
@@ -585,17 +585,16 @@ def nxdb_get_dbc_attribute_size(
 
 def nxdb_get_dbc_attribute(
     db_object_ref,  # type: int
-    mode,  # type: int
+    mode,  # type:  _enums.GetDbcAttributeMode
     attribute_name,  # type: typing.Text
     attribute_text_size,  # type: int
-    attribute_text,  # type: typing.Text
 ):
-    # type: (...) -> int
+    # type: (...) -> typing.Tuple[typing.Text, bool]
     db_object_ref_ctypes = _ctypedefs.nxDatabaseRef_t(db_object_ref)
-    mode_ctypes = _ctypedefs.u32(mode)
+    mode_ctypes = _ctypedefs.u32(mode.value)
     attribute_name_ctypes = _ctypedefs.char_p(attribute_name.encode('ascii'))
     attribute_text_size_ctypes = _ctypedefs.u32(attribute_text_size)
-    attribute_text_ctypes = _ctypedefs.char_p(attribute_text.encode('ascii'))
+    attribute_text_ctypes = ctypes.create_string_buffer(attribute_text_size)
     is_default_ctypes = _ctypedefs.u32()
     result = _cfuncs.lib.nxdb_get_dbc_attribute(
         db_object_ref_ctypes,
@@ -606,7 +605,9 @@ def nxdb_get_dbc_attribute(
         ctypes.pointer(is_default_ctypes),
     )
     _errors.check_for_error(result.value)
-    return is_default_ctypes.value
+    attribute_text = attribute_text_ctypes.value.decode("ascii")
+    is_default = bool(is_default_ctypes.value)
+    return attribute_text, is_default
 
 
 def nxdb_merge(

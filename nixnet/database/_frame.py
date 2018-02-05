@@ -10,14 +10,17 @@ from nixnet import _props
 from nixnet import constants
 
 from nixnet.database import _collection
+from nixnet.database import _dbc_attributes
 from nixnet.database import _signal
 from nixnet.database import _subframe
 
 
 class Frame(object):
+    """Database frame"""
 
     def __init__(self, handle):
         self._handle = handle
+        self._dbc_attributes = None
         self._mux_static_signals = _collection.DbCollection(
             self._handle, constants.ObjectClass.SIGNAL, _cconsts.NX_PROP_FRM_MUX_STATIC_SIG_REFS, _signal.Signal)
         self._mux_subframes = _collection.DbCollection(
@@ -73,6 +76,14 @@ class Frame(object):
     @default_payload.setter
     def default_payload(self, value):
         _props.set_frame_default_payload(self._handle, value)
+
+    @property
+    def dbc_attributes(self):
+        # type: () -> _dbc_attributes.DbcAttributeCollection
+        """:any:`nixnet.database._dbc_attributes.DbcAttributeCollection`: Access the frame's DBC attributes."""
+        if self._dbc_attributes is None:
+            self._dbc_attributes = _dbc_attributes.DbcAttributeCollection(self._handle)
+        return self._dbc_attributes
 
     @property
     def id(self):

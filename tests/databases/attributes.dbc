@@ -1,0 +1,86 @@
+VERSION ""
+
+
+NS_ : 
+	NS_DESC_
+	CM_
+	BA_DEF_
+	BA_
+	VAL_
+	CAT_DEF_
+	CAT_
+	FILTER
+	BA_DEF_DEF_
+	EV_DATA_
+	ENVVAR_DATA_
+	SGTYPE_
+	SGTYPE_VAL_
+	BA_DEF_SGTYPE_
+	BA_SGTYPE_
+	SIG_TYPE_REF_
+	VAL_TABLE_
+	SIG_GROUP_
+	SIG_VALTYPE_
+	SIGTYPE_VALTYPE_
+	BO_TX_BU_
+	BA_DEF_REL_
+	BA_REL_
+	BA_DEF_DEF_REL_
+	BU_SG_REL_
+	BU_EV_REL_
+	BU_BO_REL_
+	SG_MUL_VAL_
+
+BS_:
+
+BU_: ECU2 ECU1
+
+
+BO_ 1 Msg2: 8 Vector__XXX
+ SG_ StatSig : 16|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ ModDepSig m0 : 8|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ MuxSig M : 0|8@1- (1,0) [0|0] "" Vector__XXX
+
+BO_ 0 Msg1: 8 Vector__XXX
+ SG_ Sig2 : 8|8@1- (1,0) [0|0] "" Vector__XXX
+ SG_ Sig1 : 0|8@1- (1,0) [0|0] "" Vector__XXX
+
+
+
+EV_ ev1: 0 [0|0] "" 0 1 DUMMY_NODE_VECTOR0 Vector__XXX;
+
+BA_DEF_ BO_  "MsgAttr4" ENUM  "1","2","3";
+BA_DEF_ BO_  "MsgAttr3" STRING ;
+BA_DEF_ BO_  "MsgAttr2" FLOAT 0 0;
+BA_DEF_ EV_  "EnvironmentalVariable1Float" FLOAT 0 0;
+BA_DEF_ BU_  "EcuAttr1" STRING ;
+BA_DEF_  "NetworkAttr1" STRING ;
+BA_DEF_ SG_  "SigAttr1" INT 0 0;
+BA_DEF_ BO_  "MsgAttr1" INT 0 0;
+BA_DEF_  "BusType" STRING ;
+BA_DEF_REL_ BU_EV_REL_  "ControlUnitEnvVariable" INT 0 0;
+BA_DEF_REL_ BU_SG_REL_  "RxSignalAttribute" INT 0 0;
+BA_DEF_REL_ BU_BO_REL_  "TxMessageAttribute" INT 0 0;
+BA_DEF_REL_ BU_SG_REL_  "NodeRxSignal" INT 0 0;
+BA_DEF_REL_ BU_BO_REL_  "NodeTxMessage" INT 0 0;
+BA_DEF_DEF_  "MsgAttr4" "2";
+BA_DEF_DEF_  "MsgAttr3" "DefaultMsgAttr3String";
+BA_DEF_DEF_  "MsgAttr2" -11.1;
+BA_DEF_DEF_  "EnvironmentalVariable1Float" 0;
+BA_DEF_DEF_  "EcuAttr1" "xEcu1";
+BA_DEF_DEF_  "NetworkAttr1" "abc";
+BA_DEF_DEF_  "SigAttr1" 1;
+BA_DEF_DEF_  "MsgAttr1" 2;
+BA_DEF_DEF_  "BusType" "CAN";
+BA_DEF_DEF_REL_ "ControlUnitEnvVariable" 0;
+BA_DEF_DEF_REL_ "RxSignalAttribute" 0;
+BA_DEF_DEF_REL_ "TxMessageAttribute" 0;
+BA_DEF_DEF_REL_ "NodeRxSignal" 0;
+BA_DEF_DEF_REL_ "NodeTxMessage" 0;
+BA_ "EcuAttr1" BU_ ECU2 "xEcu2-Set";
+BA_ "MsgAttr4" BO_ 1 0;
+BA_ "MsgAttr3" BO_ 1 "MsgAttr3String";
+BA_ "MsgAttr2" BO_ 1 -23.33;
+BA_ "MsgAttr1" BO_ 1 22;
+BA_ "SigAttr1" SG_ 0 Sig2 11;
+

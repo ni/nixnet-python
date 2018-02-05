@@ -10,6 +10,7 @@ from nixnet import _props
 from nixnet import constants
 
 from nixnet.database import _collection
+from nixnet.database import _dbc_attributes
 from nixnet.database import _ecu
 from nixnet.database import _frame
 from nixnet.database import _linsched
@@ -17,9 +18,11 @@ from nixnet.database import _pdu
 
 
 class Cluster(object):
+    """Database cluster"""
 
     def __init__(self, handle):
         self._handle = handle
+        self._dbc_attributes = None
         self._ecus = _collection.DbCollection(
             self._handle, constants.ObjectClass.ECU, _cconsts.NX_PROP_CLST_ECU_REFS, _ecu.Ecu)
         self._frames = _collection.DbCollection(
@@ -80,6 +83,14 @@ class Cluster(object):
     @property
     def database_ref(self):
         return _props.get_cluster_database_ref(self._handle)
+
+    @property
+    def dbc_attributes(self):
+        # type: () -> _dbc_attributes.DbcAttributeCollection
+        """:any:`nixnet.database._dbc_attributes.DbcAttributeCollection`: Access the cluster's DBC attributes."""
+        if self._dbc_attributes is None:
+            self._dbc_attributes = _dbc_attributes.DbcAttributeCollection(self._handle)
+        return self._dbc_attributes
 
     @property
     def ecus(self):

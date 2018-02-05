@@ -11,6 +11,7 @@ API Reference
    api_reference/session
    api_reference/convert
    api_reference/system
+   api_reference/database
    api_reference/constants
    api_reference/types
    api_reference/errors
