@@ -12,7 +12,7 @@ from nixnet import database
 
 
 def main():
-    database_name = ':memory:'
+    database_name = ':LIN_Database:'
     cluster_name = 'LIN_Cluster'
     ecu_1_name = 'LIN_ECU_1'
     ecu_2_name = 'LIN_ECU_2'
@@ -25,7 +25,7 @@ def main():
     output_interface = 'LIN1'
     input_interface = 'LIN2'
 
-    # Open the default in-memory database.
+    # Open an in-memory database.
     with database.Database(database_name) as db:
 
         # Add a LIN cluster, a frame, and two signals to the database.
