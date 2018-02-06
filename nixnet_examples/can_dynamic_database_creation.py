@@ -12,7 +12,7 @@ from nixnet import database
 
 
 def main():
-    database_name = ':memory:'
+    database_name = ':CAN_Database:'
     cluster_name = 'CAN_Cluster'
     frame_name = 'CAN_Event_Frame'
     signal_1_name = 'CAN_Event_Signal_1'
@@ -21,7 +21,7 @@ def main():
     output_interface = 'CAN1'
     input_interface = 'CAN2'
 
-    # Open the default in-memory database.
+    # Open an in-memory database.
     with database.Database(database_name) as db:
 
         # Add a CAN cluster, a frame, and two signals to the database.
