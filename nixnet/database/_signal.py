@@ -2,14 +2,19 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import typing  # NOQA: F401
+
 from nixnet import _props
 from nixnet import constants
+from nixnet.database import _dbc_attributes
 
 
 class Signal(object):
+    """Database signal"""
 
     def __init__(self, handle):
         self._handle = handle
+        self._dbc_attributes = None
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -57,6 +62,14 @@ class Signal(object):
     @data_type.setter
     def data_type(self, value):
         _props.set_signal_data_type(self._handle, value.value)
+
+    @property
+    def dbc_attributes(self):
+        # type: () -> _dbc_attributes.DbcAttributeCollection
+        """:any:`nixnet.database._dbc_attributes.DbcAttributeCollection`: Access the signal's DBC attributes."""
+        if self._dbc_attributes is None:
+            self._dbc_attributes = _dbc_attributes.DbcAttributeCollection(self._handle)
+        return self._dbc_attributes
 
     @property
     def default(self):
