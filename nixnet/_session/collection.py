@@ -117,6 +117,7 @@ class Item(object):
     """Item configuration for a session."""
 
     def __init__(self, handle, index, name):
+        # type: (int, int, typing.Text) -> None
         self._handle = handle
         self._index = index
         self._name = name

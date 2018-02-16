@@ -22,7 +22,7 @@ class DbCollection(collections.Mapping):
         self._factory = factory
 
     def __repr__(self):
-        return 'database.DbCollection(handle={0}, db_type={1})'.format(self._handle, self._type)
+        return '{}(handle={0}, db_type={1})'.format(type(self).__name__, self._handle, self._type)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

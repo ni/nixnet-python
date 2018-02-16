@@ -21,8 +21,9 @@ class Cluster(object):
     """Database cluster"""
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
-        self._dbc_attributes = None
+        self._dbc_attributes = None  # type: typing.Optional[_dbc_attributes.DbcAttributeCollection]
         self._ecus = _collection.DbCollection(
             self._handle, constants.ObjectClass.ECU, _cconsts.NX_PROP_CLST_ECU_REFS, _ecu.Ecu)
         self._frames = _collection.DbCollection(
@@ -49,7 +50,7 @@ class Cluster(object):
         return hash(self._handle)
 
     def __repr__(self):
-        return 'Cluster(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     def merge(
             self,

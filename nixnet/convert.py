@@ -109,7 +109,7 @@ class SignalConversionSinglePointSession(object):
 
     def __repr__(self):
         # type: () -> typing.Text
-        return 'Session(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     def close(self):
         # type: () -> None

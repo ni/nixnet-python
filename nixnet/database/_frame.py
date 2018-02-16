@@ -19,8 +19,9 @@ class Frame(object):
     """Database frame"""
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
-        self._dbc_attributes = None
+        self._dbc_attributes = None  # type: typing.Optional[_dbc_attributes.DbcAttributeCollection]
         self._mux_static_signals = _collection.DbCollection(
             self._handle, constants.ObjectClass.SIGNAL, _cconsts.NX_PROP_FRM_MUX_STATIC_SIG_REFS, _signal.Signal)
         self._mux_subframes = _collection.DbCollection(
@@ -43,7 +44,7 @@ class Frame(object):
         return hash(self._handle)
 
     def __repr__(self):
-        return 'Frame(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     @property
     def application_protocol(self):

@@ -13,8 +13,9 @@ class Ecu(object):
     """Database ECU"""
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
-        self._dbc_attributes = None
+        self._dbc_attributes = None  # type: typing.Optional[_dbc_attributes.DbcAttributeCollection]
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -33,7 +34,7 @@ class Ecu(object):
         return hash(self._handle)
 
     def __repr__(self):
-        return 'Ecu(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     @property
     def clst_ref(self):

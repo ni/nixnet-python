@@ -18,7 +18,7 @@ class AliasCollection(collections.Mapping):
         self._handle = handle
 
     def __repr__(self):
-        return 'System.AliasCollection(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -164,7 +164,8 @@ class Alias(object):
         self._database_filepath = database_filepath
 
     def __repr__(self):
-        return 'System.Alias(alias={}, filepath={})'.format(self._database_alias, self._database_filepath)
+        return '{}(alias={}, filepath={})'.format(
+            type(self).__name__, self._database_alias, self._database_filepath)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

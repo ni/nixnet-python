@@ -15,6 +15,7 @@ from nixnet.database import _linsched_entry
 class LinSched(object):
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
         self._entries = _collection.DbCollection(
             self._handle,
@@ -39,7 +40,7 @@ class LinSched(object):
         return hash(self._handle)
 
     def __repr__(self):
-        return 'LinSched(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     @property
     def clst_ref(self):

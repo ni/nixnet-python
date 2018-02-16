@@ -9,10 +9,11 @@ class J1939(object):
     """J1939 configuration for a session"""
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
 
     def __repr__(self):
-        return 'Session.J1939(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     def __str__(self):
         return self.name

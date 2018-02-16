@@ -18,6 +18,7 @@ from nixnet.database import _collection
 class Database(object):
 
     def __init__(self, database_name):
+        # type: (typing.Text) -> None
         self._handle = None  # To satisfy `__del__` in case nxdb_open_database throws
         self._handle = _funcs.nxdb_open_database(database_name)
         self._clusters = _collection.DbCollection(
@@ -53,7 +54,7 @@ class Database(object):
         return hash(self._handle)
 
     def __repr__(self):
-        return 'Database(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     def close(self, close_all_refs=False):
         if self._handle is None:

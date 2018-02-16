@@ -41,7 +41,7 @@ class Device(object):
 
     def __repr__(self):
         # type: () -> typing.Text
-        return 'Device(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     @property
     def form_fac(self):
