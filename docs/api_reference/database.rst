@@ -10,3 +10,4 @@ nixnet.database
    database/frame
    database/signal
    database/dbc_attributes
+   database/dbc_signal_value_table

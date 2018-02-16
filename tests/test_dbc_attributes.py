@@ -12,9 +12,6 @@ from nixnet import database
 from nixnet.database import _dbc_attributes
 
 MockXnetLibrary = mock.create_autospec(_cfuncs.XnetLibrary, spec_set=True, instance=True)
-MockXnetLibrary.nxdb_open_database.return_value = _ctypedefs.u32(0)
-MockXnetLibrary.nxdb_close_database.return_value = _ctypedefs.u32(0)
-MockXnetLibrary.nxdb_find_object.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nxdb_get_dbc_attribute_size.return_value = _ctypedefs.u32(0)
 MockXnetLibrary.nxdb_get_dbc_attribute.return_value = _ctypedefs.u32(0)
 
@@ -60,7 +57,7 @@ def test_cluster_dbc_attributes():
         for key in cluster.dbc_attributes:
             print(cluster.dbc_attributes[key])
 
-        # test containers
+        # test container
         assert sorted(cluster.dbc_attributes.keys()) == ['BusType', 'NetworkAttr1']
         assert sorted(cluster.dbc_attributes.values()) == [('CAN', True), ('abc', True)]
         assert sorted(cluster.dbc_attributes.items()) == [('BusType', ('CAN', True)), ('NetworkAttr1', ('abc', True))]
@@ -87,7 +84,7 @@ def test_ecu_dbc_attributes():
         for key in ecu1.dbc_attributes:
             print(ecu1.dbc_attributes[key])
 
-        # test mapping overrides
+        # test container
         assert sorted(ecu1.dbc_attributes.keys()) == ['EcuAttr1']
         assert sorted(ecu1.dbc_attributes.items()) == [('EcuAttr1', ('xEcu1', True))]
         assert sorted(ecu1.dbc_attributes.values()) == [('xEcu1', True)]
@@ -114,7 +111,7 @@ def test_frame_dbc_attributes():
         for key in frame1.dbc_attributes:
             print(frame1.dbc_attributes[key])
 
-        # test mapping overrides
+        # test container
         assert sorted(frame1.dbc_attributes.keys()) == ['MsgAttr1', 'MsgAttr2', 'MsgAttr3', 'MsgAttr4']
         assert sorted(frame1.dbc_attributes.values()) == [('-11.1', True),
                                                           ('2', True),
@@ -154,7 +151,7 @@ def test_signal_dbc_attributes():
         for key in sig1.dbc_attributes:
             print(sig1.dbc_attributes[key])
 
-        # test mapping overrides
+        # test container
         assert sorted(sig2.dbc_attributes.keys()) == ['SigAttr1']
         assert sorted(sig2.dbc_attributes.values()) == [('11', False)]
         assert sorted(sig2.dbc_attributes.items()) == [('SigAttr1', ('11', False))]
