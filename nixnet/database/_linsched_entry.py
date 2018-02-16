@@ -12,6 +12,7 @@ from nixnet.database import _frame
 class LinSchedEntry(object):
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
 
     def __eq__(self, other):
@@ -31,7 +32,7 @@ class LinSchedEntry(object):
         return hash(self._handle)
 
     def __repr__(self):
-        return 'LinSchedEntry(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     @property
     def collision_res_sched(self):

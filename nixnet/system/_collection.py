@@ -18,7 +18,7 @@ class SystemCollection(collections.Iterable, collections.Sized):
         self._factory = factory
 
     def __repr__(self):
-        return 'SystemCollection(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):

@@ -13,6 +13,7 @@ from nixnet.database import _signal
 class SubFrame(object):
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
         self._dyn_signals = _collection.DbCollection(
             self._handle, constants.ObjectClass.SIGNAL, _cconsts.NX_PROP_SUBFRM_DYN_SIG_REFS, _signal.Signal)
@@ -34,7 +35,7 @@ class SubFrame(object):
         return hash(self._handle)
 
     def __repr__(self):
-        return 'SubFrame(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     @property
     def config_status(self):

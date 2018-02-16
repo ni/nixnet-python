@@ -235,11 +235,13 @@ class CanIdentifier(object):
         CanIdentifier(0x1, extended=True)
         """
         if self.extended:
-            return "CanIdentifier(0x{:x}, extended={})".format(
+            return "{}(0x{:x}, extended={})".format(
+                type(self).__name__,
                 self.identifier,
                 self.extended)
         else:
-            return "CanIdentifier(0x{:x})".format(
+            return "{}(0x{:x})".format(
+                type(self).__name__,
                 self.identifier)
 
 
@@ -364,7 +366,8 @@ class RawFrame(Frame):
             optional_params = ', {}'.format(", ".join(optional))
         else:
             optional_params = ''
-        return "RawFrame(timestamp=0x{:x}, identifier=0x{:x}, type={}{})".format(
+        return "{}(timestamp=0x{:x}, identifier=0x{:x}, type={}{})".format(
+            type(self).__name__,
             self.timestamp,
             self.identifier,
             self.type,
@@ -469,7 +472,8 @@ class CanFrame(Frame):
             optional_params = ', {}'.format(", ".join(optional))
         else:
             optional_params = ''
-        return "CanFrame({}{})".format(
+        return "{}({}{})".format(
+            type(self).__name__,
             self.identifier,
             optional_params)
 
@@ -568,7 +572,8 @@ class CanBusErrorFrame(Frame):
         >>> CanBusErrorFrame(100, constants.CanCommState.BUS_OFF, True, constants.CanLastErr.STUFF, 1, 2)
         CanBusErrorFrame(0x64, CanCommState.BUS_OFF, True, CanLastErr.STUFF, 1, 2)
         """
-        return "CanBusErrorFrame(0x{:x}, {}, {}, {}, {}, {})".format(
+        return "{}(0x{:x}, {}, {}, {}, {}, {})".format(
+            type(self).__name__,
             self.timestamp,
             self.state,
             self.tcvr_err,
@@ -701,7 +706,8 @@ class LinFrame(object):
             optional_params = ', {}'.format(", ".join(optional))
         else:
             optional_params = ''
-        return "LinFrame(identifier=0x{:x}{})".format(
+        return "{}(identifier=0x{:x}{})".format(
+            type(self).__name__,
             self.identifier,
             optional_params)
 
@@ -800,7 +806,8 @@ class LinBusErrorFrame(Frame):
         >>> LinBusErrorFrame(100, constants.LinCommState.INACTIVE, constants.LinLastErr.CRC, 1, 2, 3)
         LinBusErrorFrame(0x64, LinCommState.INACTIVE, LinLastErr.CRC, 0x1, 2, 3)
         """
-        return "LinBusErrorFrame(0x{:x}, {}, {}, 0x{:x}, {}, {})".format(
+        return "{}(0x{:x}, {}, {}, 0x{:x}, {}, {})".format(
+            type(self).__name__,
             self.timestamp,
             self.state,
             self.bus_err,
@@ -866,7 +873,7 @@ class DelayFrame(Frame):
         >>> DelayFrame(250)
         DelayFrame(250)
         """
-        return "DelayFrame({})".format(self.offset)
+        return "{}({})".format(type(self).__name__, self.offset)
 
 
 class LogTriggerFrame(Frame):
@@ -930,7 +937,7 @@ class LogTriggerFrame(Frame):
         >>> LogTriggerFrame(250)
         LogTriggerFrame(0xfa)
         """
-        return "LogTriggerFrame(0x{:x})".format(self.timestamp)
+        return "{}(0x{:x})".format(type(self).__name__, self.timestamp)
 
 
 class StartTriggerFrame(Frame):
@@ -990,7 +997,7 @@ class StartTriggerFrame(Frame):
         >>> StartTriggerFrame(250)
         StartTriggerFrame(0xfa)
         """
-        return "StartTriggerFrame(0x{:x})".format(self.timestamp)
+        return "{}(0x{:x})".format(type(self).__name__, self.timestamp)
 
 
 class XnetFrame(FrameFactory):

@@ -14,6 +14,7 @@ from nixnet.database import _subframe
 class Pdu(object):
 
     def __init__(self, handle):
+        # type: (int) -> None
         self._handle = handle
         self._signals = _collection.DbCollection(
             self._handle, constants.ObjectClass.SIGNAL, _cconsts.NX_PROP_PDU_SIG_REFS, _signal.Signal)
@@ -37,7 +38,7 @@ class Pdu(object):
         return hash(self._handle)
 
     def __repr__(self):
-        return 'Pdu(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     @property
     def cluster_ref(self):

@@ -42,7 +42,7 @@ class Interface(object):
 
     def __repr__(self):
         # type: () -> typing.Text
-        return 'Interface(handle={0})'.format(self._handle)
+        return '{}(handle={})'.format(type(self).__name__, self._handle)
 
     # `dev_ref`: Intentionally not exposed to avoid circular imports
 
