@@ -7,6 +7,7 @@ import typing  # NOQA: F401
 from nixnet import _props
 from nixnet import constants
 from nixnet.database import _dbc_attributes
+from nixnet.database import _dbc_signal_value_table
 
 
 class Signal(object):
@@ -16,6 +17,7 @@ class Signal(object):
         # type: (int) -> None
         self._handle = handle
         self._dbc_attributes = None  # type: typing.Optional[_dbc_attributes.DbcAttributeCollection]
+        self._dbc_signal_value_table = _dbc_signal_value_table.DbcSignalValueTable(self._handle)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -71,6 +73,12 @@ class Signal(object):
         if self._dbc_attributes is None:
             self._dbc_attributes = _dbc_attributes.DbcAttributeCollection(self._handle)
         return self._dbc_attributes
+
+    @property
+    def dbc_signal_value_table(self):
+        # type: () -> _dbc_signal_value_table.DbcSignalValueTable
+        """:any:`nixnet.database._dbc_signal_value_table.DbcSignalValueTable`: Access the signal's DBC value table."""
+        return self._dbc_signal_value_table
 
     @property
     def default(self):

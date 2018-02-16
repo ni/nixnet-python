@@ -83,4 +83,5 @@ BA_ "MsgAttr3" BO_ 1 "MsgAttr3String";
 BA_ "MsgAttr2" BO_ 1 -23.33;
 BA_ "MsgAttr1" BO_ 1 22;
 BA_ "SigAttr1" SG_ 0 Sig2 11;
+VAL_ 0 Sig1 4 "High" 0 "Zero" -10 "Low" ;
 
