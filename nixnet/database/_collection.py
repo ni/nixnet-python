@@ -13,6 +13,7 @@ from nixnet import constants  # NOQA: F401
 
 
 class DbCollection(collections.Mapping):
+    """Collection of Database objects."""
 
     def __init__(self, handle, db_type, prop_id, factory):
         # type: (int, constants.ObjectClass, int, typing.Any) -> None
@@ -48,6 +49,13 @@ class DbCollection(collections.Mapping):
         return self.keys()
 
     def __getitem__(self, index):
+        """Return the database object.
+
+        Args:
+            Name of database object
+        Returns:
+            index(str): Name of database object.
+        """
         if isinstance(index, six.string_types):
             ref = _funcs.nxdb_find_object(self._handle, self._type, index)
             return self._factory(ref)
@@ -59,18 +67,38 @@ class DbCollection(collections.Mapping):
         _funcs.nxdb_delete_object(ref)
 
     def keys(self):
+        """Return database object names in the collection.
+
+        Yields:
+            An iterator to database object names in the collection.
+        """
         for child in self._get_children():
             yield child.name
 
     def values(self):
+        """Return database objects in the collection.
+
+        Yields:
+            An iterator to database objects in the collection.
+        """
         return self._get_children()
 
     def items(self):
+        """Return all database object names and objects in the collection.
+
+        Yields:
+            An iterator to tuple pairs of database object names and objects in the collection
+        """
         for child in self._get_children():
             yield child.name, child
 
     def add(self, name):
         # type: (typing.Text) -> typing.Any
+        """Add a new database object to the collection.
+
+        Args:
+            name(str): Name of the new database object.
+        """
         ref = _funcs.nxdb_create_object(self._handle, self._type, name)
         return self._factory(ref)
 

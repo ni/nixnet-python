@@ -50,7 +50,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'nixnet'
-copyright = u'2017, National Instruments'
+copyright = u'2018, National Instruments'
 author = u'National Instruments'
 
 # The version info for the project you're documenting, acts as replacement for

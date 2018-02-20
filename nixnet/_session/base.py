@@ -353,8 +353,9 @@ class SessionBase(object):
         Args:
             sched_index(int): Index to the schedule table that the LIN master executes.
 
-            The schedule tables are sorted the way they are returned from the database
-            with the `nixnet.database._cluster.Cluster.lin_schedules` property.
+                The schedule tables are sorted the way they are returned from the
+                database with the `nixnet.database._cluster.Cluster.lin_schedules`
+                property.
         """
         _funcs.nx_write_state(self._handle, constants.WriteState.LIN_SCHEDULE_CHANGE, _ctypedefs.u32(sched_index))
 
