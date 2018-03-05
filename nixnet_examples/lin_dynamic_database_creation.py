@@ -26,6 +26,7 @@ def main():
     input_interface = 'LIN2'
 
     # Open the default in-memory database.
+    # Database.close will be called by Database.__exit__ when exiting the 'with' block.
     with database.Database(database_name) as db:
 
         # Add a LIN cluster, a frame, and two signals to the database.

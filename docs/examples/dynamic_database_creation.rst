@@ -7,10 +7,14 @@ used in a :any:`nixnet.session.SignalOutSinglePointSession` and
 :any:`nixnet.session.SignalInSinglePointSession` to write and then
 read a pair of signals.
 
+.. _can_dynamic_database_creation_label:
+
 CAN Dynamic Database Creation
 -----------------------------
 
 .. literalinclude:: ../../nixnet_examples/can_dynamic_database_creation.py
+
+.. _lin_dynamic_database_creation_label:
 
 LIN Dynamic Database Creation
 -----------------------------
