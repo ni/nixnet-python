@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import typing  # NOQA: F401
 
+from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
@@ -66,21 +67,10 @@ class Ecu(object):
 
     @property
     def config_status(self):
-        # type: () -> int
-        """int: Returns the ECU object configuration status.
-
-        Configuration Status returns an NI-XNET error code.
-        You can pass the value to the `nxStatusToString` function to
-        convert the value to a text description of the configuration problem.
-
-        By default, incorrectly configured ECUs in the database are not returned from
-        :any:`Cluster.ecus` because they cannot be used in the bus communication.
-        You can change this behavior by setting :any:`Database.show_invalid_from_open` to ``True``.
-        When the configuration status of a ECU becomes invalid after opening the database,
-        the ECU still is returned from :any:`Cluster.ecus`
-        even if :any:`Database.show_invalid_from_open` is ``False``.
-        """
-        return _props.get_ecu_config_status(self._handle)
+        # type: () -> typing.Tuple[int, typing.Text]
+        status_code = _props.get_ecu_config_status(self._handle)
+        status_text = _errors.status_to_string(status_code)
+        return status_code, status_text
 
     @property
     def dbc_attributes(self):

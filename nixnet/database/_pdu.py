@@ -81,21 +81,10 @@ class Pdu(object):
 
     @property
     def config_status(self):
-        # type: () -> int
-        """int: Returns the PDU object configuration status.
-
-        Configuration Status returns an NI-XNET error code.
-        You can pass the value to the `nxStatusToString` function to
-        convert the value to a text description of the configuration problem.
-
-        By default, incorrectly configured frames in the database are not returned from
-        :any:`Cluster.frames` because they cannot be used in the bus communication.
-        You can change this behavior by setting :any:`Database.show_invalid_from_open` to ``True``.
-        When the configuration status of a frames becomes invalid after opening the database,
-        the frame still is returned from :any:`Cluster.frames`
-        even if :any:`Database.show_invalid_from_open` is ``False``.
-        """
-        return _props.get_pdu_config_status(self._handle)
+        # type: () -> typing.Tuple[int, typing.Text]
+        status_code = _props.get_pdu_config_status(self._handle)
+        status_text = _errors.status_to_string(status_code)
+        return status_code, status_text
 
     @property
     def frms(self):

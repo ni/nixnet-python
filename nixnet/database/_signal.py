@@ -87,21 +87,10 @@ class Signal(object):
 
     @property
     def config_status(self):
-        # type: () -> int
-        """int: Returns the signal object configuration status.
-
-        Configuration Status returns an NI-XNET error code.
-        You can pass the value to the `nxStatusToString` function to
-        convert the value to a text description of the configuration problem.
-
-        By default, incorrectly configured signals in the database are not returned from
-        :any:`Frame.sigs` because they cannot be used in the bus communication.
-        You can change this behavior by setting :any:`Database.show_invalid_from_open` to ``True``.
-        When the configuration status of a signal becomes invalid after opening the database,
-        the signal still is returned from :any:`Frame.sigs`
-        even if :any:`Database.show_invalid_from_open` is ``False``.
-        """
-        return _props.get_signal_config_status(self._handle)
+        # type: () -> typing.Tuple[int, typing.Text]
+        status_code = _props.get_signal_config_status(self._handle)
+        status_text = _errors.status_to_string(status_code)
+        return status_code, status_text
 
     @property
     def data_type(self):
