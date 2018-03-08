@@ -144,7 +144,7 @@ def nx_read_state(
     state_size,  # type: int
     state_value_ctypes_ptr,  # type: typing.Any
 ):
-    # type: (...) -> typing.Tuple[typing.Any, int]
+    # type: (...) -> int
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     state_id_ctypes = _ctypedefs.u32(state_id.value)
     state_size_ctypes = _ctypedefs.u32(state_size)

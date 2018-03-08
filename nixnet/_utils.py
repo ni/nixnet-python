@@ -14,7 +14,7 @@ from nixnet import types
 
 
 def flatten_items(list):
-    # (typing.Union[typing.Text, typing.List[typing.Text]]) -> typing.Text
+    # type: (typing.Union[typing.Text, typing.List[typing.Text]]) -> typing.Text
     """Flatten an item list to a string
 
     >>> str(flatten_items('Item'))
@@ -42,7 +42,7 @@ def flatten_items(list):
 
 
 def parse_can_comm_bitfield(bitfield):
-    # (int) -> types.CanComm
+    # type:  (int) -> types.CanComm
     """Parse a CAN Comm bitfield."""
     state = constants.CanCommState(bitfield & 0x0F)
     tcvr_err = ((bitfield >> 4) & 0x01) != 0
@@ -54,7 +54,7 @@ def parse_can_comm_bitfield(bitfield):
 
 
 def parse_lin_comm_bitfield(first, second):
-    # (int) -> types.CanComm
+    # type: (int, int) -> types.LinComm
     """Parse a LIN Comm first."""
     sleep = ((first >> 1) & 0x01) != 0
     state = constants.LinCommState((first >> 2) & 0x03)
