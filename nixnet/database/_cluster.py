@@ -13,7 +13,7 @@ from nixnet.database import _collection
 from nixnet.database import _dbc_attributes
 from nixnet.database import _ecu
 from nixnet.database import _frame
-from nixnet.database import _linsched
+from nixnet.database import _lin_sched
 from nixnet.database import _pdu
 
 
@@ -28,8 +28,8 @@ class Cluster(object):
             self._handle, constants.ObjectClass.ECU, _cconsts.NX_PROP_CLST_ECU_REFS, _ecu.Ecu)
         self._frames = _collection.DbCollection(
             self._handle, constants.ObjectClass.FRAME, _cconsts.NX_PROP_CLST_FRM_REFS, _frame.Frame)
-        self._linsched = _collection.DbCollection(
-            self._handle, constants.ObjectClass.LIN_SCHED, _cconsts.NX_PROP_CLST_LIN_SCHEDULES, _linsched.LinSched)
+        self._lin_sched = _collection.DbCollection(
+            self._handle, constants.ObjectClass.LIN_SCHED, _cconsts.NX_PROP_CLST_LIN_SCHEDULES, _lin_sched.LinSched)
         self._pdus = _collection.DbCollection(
             self._handle, constants.ObjectClass.PDU, _cconsts.NX_PROP_CLST_PDU_REFS, _pdu.Pdu)
 
@@ -415,7 +415,7 @@ class Cluster(object):
 
     @property
     def lin_schedules(self):
-        return self._linsched
+        return self._lin_sched
 
     @property
     def lin_tick(self):

@@ -9,7 +9,7 @@ from nixnet import _props
 from nixnet import constants
 
 from nixnet.database import _collection
-from nixnet.database import _linsched_entry
+from nixnet.database import _lin_sched_entry
 
 
 class LinSched(object):
@@ -21,7 +21,7 @@ class LinSched(object):
             self._handle,
             constants.ObjectClass.LIN_SCHED_ENTRY,
             _cconsts.NX_PROP_LIN_SCHED_ENTRIES,
-            _linsched_entry.LinSchedEntry)
+            _lin_sched_entry.LinSchedEntry)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
