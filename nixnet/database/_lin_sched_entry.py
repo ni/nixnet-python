@@ -9,16 +9,23 @@ from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
+from nixnet.database import _database_object
 from nixnet.database import _frame
 from nixnet.database import _lin_sched
 
 
-class LinSchedEntry(object):
+class LinSchedEntry(_database_object.DatabaseObject):
     """Database LIN schedule entry"""
 
-    def __init__(self, handle):
-        # type: (int) -> None
-        self._handle = handle
+    def __init__(
+            self,
+            **kwargs  # type: int
+    ):
+        # type: (...) -> None
+        if not kwargs or '_handle' not in kwargs:
+            raise TypeError()
+
+        self._handle = kwargs['_handle']
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -49,13 +56,13 @@ class LinSchedEntry(object):
         the master must switch to the collision resolving schedule to transfer the unconditional frames successfully.
 
         Raises:
-            XnetError: The property requires that :any:`LinSchedEntry.type` be set to ``EVENT_TRIGGERED``.
+            :any:`XnetError`: The property requires that :any:`LinSchedEntry.type` be set to ``EVENT_TRIGGERED``.
         """
         handle = _props.get_lin_sched_entry_collision_res_sched(self._handle)
         if handle == 0:
             _errors.raise_xnet_error(_cconsts.NX_ERR_DATABASE_OBJECT_NOT_FOUND)
 
-        return _lin_sched.LinSched(handle)
+        return _lin_sched.LinSched(_handle=handle)
 
     @collision_res_sched.setter
     def collision_res_sched(self, value):
@@ -114,7 +121,7 @@ class LinSchedEntry(object):
         this property uses the :any:`LinSchedEntry.collision_res_sched` to process the frames.
         """
         for ref in _props.get_lin_sched_entry_frames(self._handle):
-            yield _frame.Frame(ref)
+            yield _frame.Frame(_handle=ref)
 
     @frames.setter
     def frames(self, value):
@@ -166,7 +173,7 @@ class LinSchedEntry(object):
         You cannot change it afterwards.
         """
         handle = _props.get_lin_sched_entry_sched(self._handle)
-        lin_sched = _lin_sched.LinSched(handle)
+        lin_sched = _lin_sched.LinSched(_handle=handle)
         return lin_sched
 
     @property
