@@ -52,6 +52,21 @@ class Cluster(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def export(self, db_filepath):
+        # type: (typing.Text) -> None
+        """Exports this cluster to a CANdb++ or LIN database file format.
+
+        A CAN cluster is exported as a CANdb++ database file (.dbc).
+        A LIN cluster is exported as a LIN database file (.ldf).
+        If the target file exists, it is overwritten.
+
+        Exporting a cluster is not supported under Real-Time (RT).
+
+        Args:
+            db_filepath(str): Contains the pathname to the database file.
+        """
+        _funcs.nxdb_save_database(self._handle, db_filepath)
+
     def merge(
             self,
             source_obj,
