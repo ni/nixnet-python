@@ -1247,12 +1247,6 @@ class WriteState(enum.Enum):
     FLEX_RAY_SYMBOL = _cconsts.NX_STATE_FLEX_RAY_SYMBOL
 
 
-class IntfCanFdIsoMode(enum.Enum):
-    ISO = _cconsts.NX_CAN_FD_MODE_ISO
-    NON_ISO = _cconsts.NX_CAN_FD_MODE_NON_ISO
-    ISO_LEGACY = _cconsts.NX_CAN_FD_MODE_ISO_LEGACY
-
-
 class CanFdIsoMode(enum.Enum):
     """CAN FD ISO MODE.
 
@@ -1394,10 +1388,28 @@ class CanLastErr(enum.Enum):
 
 
 class CanIoMode(enum.Enum):
-    """CAN IO Mode."""
-    CAN = _cconsts.NX_CA_NIO_MODE_CAN
-    CAN_FD = _cconsts.NX_CA_NIO_MODE_CAN_FD
-    CAN_FD_BRS = _cconsts.NX_CA_NIO_MODE_CAN_FD_BRS
+    """CAN I/O Mode.
+
+    Values:
+        CAN:
+            This is the default CAN 2.0 A/B standard I/O mode as defined in ISO 11898-1:2003.
+            A fixed baud rate is used for transfer,
+            and the payload length is limited to 8 bytes.
+        CAN_FD:
+            This is the CAN FD mode as specified in the CAN with *Flexible Data-Rate specification*,
+            version 1.0. Payload lengths up to 64 are allowed,
+            but they are transmitted at a single fixed baud rate
+            (defined by :any:`Cluster.can_fd_baud_rate` or :any:`Interface.can_fd_baud_rate`).
+        CAN_FD_BRS:
+            This is the CAN FD as specified in the *CAN with Flexible Data-Rate* specification,
+            version 1.0, with the optional Baud Rate Switching enabled.
+            The same payload lengths as CAN FD mode are allowed; additionally,
+            the data portion of the CAN frame is transferred at a different (higher) baud rate
+            (defined by :any:`Cluster.can_fd_baud_rate` or :any:`Interface.can_fd_baud_rate`).
+    """
+    CAN = _cconsts.NX_CAN_IO_MODE_CAN
+    CAN_FD = _cconsts.NX_CAN_IO_MODE_CAN_FD
+    CAN_FD_BRS = _cconsts.NX_CAN_IO_MODE_CAN_FD_BRS
 
 
 class FlexRayPocState(enum.Enum):
@@ -1540,6 +1552,20 @@ class LinLastErr(enum.Enum):
 
 
 class LinProtocolVer(enum.Enum):
+    """LIN Protocol Version
+
+    Values:
+        VER_1_2:
+            Version 1.2
+        VER_1_3:
+            Version 1.3
+        VER_2_0:
+            Version 2.0
+        VER_2_1:
+            Version 2.1
+        VER_2_2:
+            Version 2.2
+    """
     VER_1_2 = _cconsts.NX_LIN_PROTOCOL_VER_1_2
     VER_1_3 = _cconsts.NX_LIN_PROTOCOL_VER_1_3
     VER_2_0 = _cconsts.NX_LIN_PROTOCOL_VER_2_0
@@ -1561,6 +1587,24 @@ class GetDbcAttributeMode(enum.Enum):
 
 
 class Merge(enum.Enum):
+    """Cluster Merge Behavior
+
+    Values:
+        COPY_USE_SOURCE:
+            The target object with all dependent child objects
+            is removed from the target cluster and replaced by the source objects.
+        COPY_USE_TARGET:
+            The source object is ignored (the target cluster object with child objects remains unchanged).
+        MERGE_USE_SOURCE:
+            This adds child objects from the source object to child objects from the destination object.
+            If target object contains a child object with the same name,
+            the child object from the source frame replaces it.
+            The source object properties (for example, payload length of the frame) replace the target properties.
+        MERGE_USE_TARGET:
+            This adds child objects from the source object to child objects from the destination object.
+            If the target object contains a child object with the same name, it remains unchanged.
+            The target object properties remain unchanged (for example, payload length).
+    """
     COPY_USE_SOURCE = _cconsts.NXDB_MERGE_COPY_USE_SOURCE
     COPY_USE_TARGET = _cconsts.NXDB_MERGE_COPY_USE_TARGET
     MERGE_USE_SOURCE = _cconsts.NXDB_MERGE_MERGE_USE_SOURCE
@@ -1715,7 +1759,18 @@ class CanTcvrCap(enum.Enum):
 
 
 class Protocol(enum.Enum):
-    """Protocol."""
+    """Protocol.
+
+    Values:
+        UNKNOWN:
+            Unknown protocol,
+        CAN:
+            CAN protocol.
+        FLEX_RAY:
+            FlexRay protocol.
+        LIN:
+            LIN protocol.
+    """
     UNKNOWN = _cconsts.NX_PROTOCOL_UNKNOWN
     CAN = _cconsts.NX_PROTOCOL_CAN
     FLEX_RAY = _cconsts.NX_PROTOCOL_FLEX_RAY
@@ -1723,7 +1778,19 @@ class Protocol(enum.Enum):
 
 
 class AppProtocol(enum.Enum):
-    """Application Protocol."""
+    """Application Protocol.
+
+    Values:
+        NONE:
+            The default application protocol.
+        J1939:
+            Indicates J1939 clusters. The value enables the following features:
+
+            *   Sending/receiving long frames as the SAE J1939 specification specifies,
+                using the J1939 transport protocol.
+            *   Using a special notation for J1939 identifiers.
+            *   Using J1939 address claiming.
+    """
     NONE = _cconsts.NX_APP_PROTOCOL_NONE
     J1939 = _cconsts.NX_APP_PROTOCOL_J1939
 
@@ -1975,6 +2042,35 @@ class FrmFlexRayTiming(enum.Enum):
 
 
 class FrmCanTiming(enum.Enum):
+    """CAN Frame Timing
+
+    Values:
+        CYCLIC_DATA:
+            The transmitting ECU transmits the CAN data frame in a cyclic (periodic) manner.
+            The :any:`Frame.can_tx_time` property defines the time between cycles.
+            The transmitting ECU ignores CAN remote frames received for this frame.
+        EVENT_DATA:
+            The transmitting ECU transmits the CAN data frame in an event-driven manner.
+            The :any:`Frame.can_tx_time` property defines the minimum interval.
+            For NI-XNET, the event occurs when you write data to a session.
+            The transmitting ECU ignores CAN remote frames received for this frame.
+        CYCLIC_REMOTE:
+            The receiving ECU transmits the CAN remote frame in a cyclic (periodic) manner.
+            The :any:`Frame.can_tx_time` property defines the time between cycles.
+            The transmitting ECU responds to each CAN remote frame by transmitting the associated CAN data frame.
+        EVENT_REMOTE:
+            The receiving ECU transmits the CAN remote frame in an event-driven manner.
+            The :any:`Frame.can_tx_time` property defines the minimum interval.
+            For NI-XNET, the event occurs when you write a frame to a session.
+            The transmitting ECU responds to each CAN remote frame by transmitting the associated CAN data frame.
+        CYCLIC_EVENT:
+            This timing type is a combination of the cyclic and event timing.
+            The frame is transmitted when you write to a session,
+            but also periodically sending the last recent values written.
+            The :any:`Frame.can_tx_time` property defines the cycle period.
+            There is no minimum interval time defined in this mode,
+            so be careful not to write too frequently to avoid creating a high busload.
+    """
     CYCLIC_DATA = _cconsts.NX_FRM_CAN_TIMING_CYCLIC_DATA
     EVENT_DATA = _cconsts.NX_FRM_CAN_TIMING_EVENT_DATA
     CYCLIC_REMOTE = _cconsts.NX_FRM_CAN_TIMING_CYCLIC_REMOTE
@@ -1983,23 +2079,99 @@ class FrmCanTiming(enum.Enum):
 
 
 class SigByteOrdr(enum.Enum):
+    """Signal Byte Order
+
+    Values:
+        Little Endian:
+            Higher significant signal bits are placed on higher byte addresses.
+            In NI-CAN, this was called Intel Byte Order.
+
+            .. image:: littleendianstartbit12.gif
+
+            **Little Endian Signal with Start Bit 12**
+
+        Big Endian:
+            Higher significant signal bits are placed on lower byte addresses.
+            In NI-CAN, this was called Motorola Byte Order.
+
+            .. image:: bigendianstartbit12.gif
+
+            **Big Endian Signal with Start Bit 12**
+    """
     LITTLE_ENDIAN = _cconsts.NX_SIG_BYTE_ORDR_LITTLE_ENDIAN
     BIG_ENDIAN = _cconsts.NX_SIG_BYTE_ORDR_BIG_ENDIAN
 
 
 class SigDataType(enum.Enum):
+    """Signal Data Type
+
+    Values:
+        SIGNED:
+            Signed integer with positive and negative values.
+        UNSIGNED:
+            Unsigned integer with no negative values.
+        IEEE_FLOAT:
+            Float value with 7 or 15 significant decimal digits (32 bit or 64 bit).
+    """
     SIGNED = _cconsts.NX_SIG_DATA_TYPE_SIGNED
     UNSIGNED = _cconsts.NX_SIG_DATA_TYPE_UNSIGNED
     IEEE_FLOAT = _cconsts.NX_SIG_DATA_TYPE_IEEE_FLOAT
 
 
 class LinSchedRunMode(enum.Enum):
+    """LIN Schedule Run Mode.
+
+    Values:
+        CONTINUOUS:
+            The master runs the schedule continuously.
+            When the last entry executes,
+            the schedule starts again with the first entry.
+        ONCE:
+            The master runs the schedule once (all entries),
+            then returns to the previously running continuous schedule (or NULL).
+            If requests are submitted for multiple run-once schedules,
+            each run-once executes in succession based on its :any:`LinSched.priority`,
+            then the master returns to the continuous schedule (or NULL).
+        NULL:
+            All communication stops immediately.
+            A schedule with this run mode is called a *null schedule*.
+    """
     CONTINUOUS = _cconsts.NX_LIN_SCHED_RUN_MODE_CONTINUOUS
     ONCE = _cconsts.NX_LIN_SCHED_RUN_MODE_ONCE
     NULL = _cconsts.NX_LIN_SCHED_RUN_MODE_NULL
 
 
 class LinSchedEntryType(enum.Enum):
+    """LIN Schedule Entry Type.
+
+    Values:
+        UNCONDITIONAL:
+            A single frame transfers in this slot.
+        SPORADIC:
+            The master transmits in this slot.
+            The master can select from multiple frames to transmit.
+            Only updated frames are transmitted.
+            When more than one frame is updated,
+            the master decides by priority which frame to send.
+            The other updated frame remains pending
+            and can be sent when this schedule entry is processed the following time.
+            The order of unconditional frames in :any:`LinSchedEntry.frames`
+            (the first frame has the highest priority) determines the frame priority.
+        EVENT_TRIGGERED:
+            Multiple slaves can transmit an unconditional frame in this slot.
+            The slave transmits the frame only if at least one frame signal has been updated.
+            When a collision occurs (multiple slaves try to transmit in the same slot),
+            this is detected and resolved using a different schedule
+            specified in the :any:`LinSchedEntry.collision_res_sched` property.
+            The resolving schedule runs once,
+            starting in the subsequent slot after the collision,
+            and automatically returns to the previous schedule
+            at the subsequent position where the collision occurred.
+        NODE_CONFIG_SERVICE:
+            The schedule entry contains a node configuration service.
+            The node configuration service is defined as raw data bytes
+            in :any:`LinSchedEntry.nc_ff_data_bytes`.
+    """
     UNCONDITIONAL = _cconsts.NX_LIN_SCHED_ENTRY_TYPE_UNCONDITIONAL
     SPORADIC = _cconsts.NX_LIN_SCHED_ENTRY_TYPE_SPORADIC
     EVENT_TRIGGERED = _cconsts.NX_LIN_SCHED_ENTRY_TYPE_EVENT_TRIGGERED
@@ -2007,6 +2179,14 @@ class LinSchedEntryType(enum.Enum):
 
 
 class FrmLinChecksum(enum.Enum):
+    """LIN Frame Transmitted Checksum
+
+    Values:
+        CLASSIC:
+            Classic checksum.
+        ENHANCED:
+            Enhanced checksum.
+    """
     CLASSIC = _cconsts.NX_FRM_LIN_CHECKSUM_CLASSIC
     ENHANCED = _cconsts.NX_FRM_LIN_CHECKSUM_ENHANCED
 

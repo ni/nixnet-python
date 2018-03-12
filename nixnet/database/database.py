@@ -11,7 +11,6 @@ from nixnet import _props
 from nixnet import constants
 from nixnet import errors
 
-from nixnet.database import _cluster
 from nixnet.database import _collection
 
 
@@ -32,6 +31,8 @@ class Database(object):
         # type: (typing.Text) -> None
         self._handle = None  # To satisfy `__del__` in case nxdb_open_database throws
         self._handle = _funcs.nxdb_open_database(database_name)
+
+        from nixnet.database import _cluster
         self._clusters = _collection.DbCollection(
             self._handle, constants.ObjectClass.CLUSTER, _cconsts.NX_PROP_DATABASE_CLST_REFS, _cluster.Cluster)
 
@@ -101,12 +102,11 @@ class Database(object):
         """
         if self._handle is None:
             warnings.warn(
-                'Attempting to close NI-XNET system but system was already '
+                'Attempting to close NI-XNET database but database was already '
                 'closed', errors.XnetResourceWarning)
             return
 
         _funcs.nxdb_close_database(self._handle, close_all_refs)
-
         self._handle = None
 
     def save(self, db_filepath=""):
@@ -160,6 +160,39 @@ class Database(object):
     @property
     def show_invalid_from_open(self):
         # type: () -> bool
+        """bool: Show or hide :any:`Frame<_frame.Frame>` and :any:`Signal<_signal.Signal>` objects that are invalid.
+
+        After opening a database, this property always is set to ``False``,
+        meaning that invalid :any:`Cluster`, :any:`Frame<_frame.Frame>`,
+        and :any:`Signal<_signal.Signal>` objects
+        are not returned in properties that return a :any:`DbCollection` for the database
+        (for example, :any:`Cluster.frames` and :any:`Frame.mux_static_signals`).
+        Invalid :any:`Cluster`, :any:`Frame<_frame.Frame>`,
+        and :any:`Signal<_signal.Signal>` objects are incorrectly defined
+        and therefore cannot be used in the bus communication.
+        The ``False`` setting is recommended when you use the database to create XNET sessions.
+
+        In case the database was opened to correct invalid configuration
+        (for example, in a database editor),
+        you must set the property to ``True`` prior to reading properties that return
+        a :any:`DbCollection` for the database
+        (for example, :any:`Cluster.frames` and :any:`Frame.mux_static_signals`).
+
+        For invalid objects,
+        the :any:`Cluster.config_status`,
+        :any:`Frame.config_status`,
+        and :any:`Signal.config_status` properties return an error code that explains the problem.
+        For valid objects, Configuration Status returns success (no error).
+
+        :any:`Cluster`, :any:`Frame<_frame.Frame>`, and :any:`Signal<_signal.Signal>` objects that became
+        invalid after the database is opened are still returned from the
+        :any:`Database.clusters`, :any:`Cluster.frames`, and :any:`Frame.mux_static_signals`,
+        even if :any:`Database.show_invalid_from_open` is ``False``
+        and Configuration Status returns an error code.
+        For example, if you open a :any:`Frame<_frame.Frame>` with valid properties,
+        then you set :any:`Signal.start_bit` beyond the :any:`Frame.payload_len`,
+        the :any:`Frame.config_status` returns an error, but the frame is returned from :any:`Cluster.frames`.
+        """
         return _props.get_database_show_invalid_from_open(self._handle)
 
     @show_invalid_from_open.setter

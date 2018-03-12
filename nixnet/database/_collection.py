@@ -13,7 +13,7 @@ from nixnet import constants  # NOQA: F401
 
 
 class DbCollection(collections.Mapping):
-    """Collection of Database objects."""
+    """Collection of database objects."""
 
     def __init__(self, handle, db_type, prop_id, factory):
         # type: (int, constants.ObjectClass, int, typing.Any) -> None

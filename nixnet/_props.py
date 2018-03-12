@@ -1560,14 +1560,14 @@ def set_session_j1939_name(
     )
 
 
-def set_session_j1939ecu(
+def set_session_j1939_ecu(
     ref,  # type: int
     value,  # type: int
 ):
     # type: (...) -> None
     _cprops.set_session_ref(
         ref,
-        _cconsts.NX_PROP_SESSION_J1939ECU,
+        _cconsts.NX_PROP_SESSION_J1939_ECU,
         value,
     )
 
@@ -1836,24 +1836,24 @@ def set_session_j1939_write_queue_size(
     )
 
 
-def get_session_j1939ecu_busy(
+def get_session_j1939_ecu_busy(
     ref,  # type: int
 ):
     # type: (...) -> bool
     return _cprops.get_session_bool(
         ref,
-        _cconsts.NX_PROP_SESSION_J1939ECU_BUSY,
+        _cconsts.NX_PROP_SESSION_J1939_ECU_BUSY,
     )
 
 
-def set_session_j1939ecu_busy(
+def set_session_j1939_ecu_busy(
     ref,  # type: int
     value,  # type: bool
 ):
     # type: (...) -> None
     _cprops.set_session_bool(
         ref,
-        _cconsts.NX_PROP_SESSION_J1939ECU_BUSY,
+        _cconsts.NX_PROP_SESSION_J1939_ECU_BUSY,
         value,
     )
 
@@ -2504,13 +2504,13 @@ def get_cluster_pdu_refs(
     )
 
 
-def get_cluster_pd_us_reqd(
+def get_cluster_pdus_reqd(
     ref,  # type: int
 ):
     # type: (...) -> bool
     return _cprops.get_database_bool(
         ref,
-        _cconsts.NX_PROP_CLST_PD_US_REQD,
+        _cconsts.NX_PROP_CLST_PDUS_REQD,
     )
 
 
@@ -4968,46 +4968,46 @@ def set_ecu_lin_function_id(
     )
 
 
-def get_ecu_linp_2min(
+def get_ecu_lin_p2_min(
     ref,  # type: int
 ):
     # type: (...) -> float
     return _cprops.get_database_f64(
         ref,
-        _cconsts.NX_PROP_ECU_LINP_2MIN,
+        _cconsts.NX_PROP_ECU_LIN_P2_MIN,
     )
 
 
-def set_ecu_linp_2min(
+def set_ecu_lin_p2_min(
     ref,  # type: int
     value,  # type: float
 ):
     # type: (...) -> None
     _cprops.set_database_f64(
         ref,
-        _cconsts.NX_PROP_ECU_LINP_2MIN,
+        _cconsts.NX_PROP_ECU_LIN_P2_MIN,
         value,
     )
 
 
-def get_ecu_lins_tmin(
+def get_ecu_lin_st_min(
     ref,  # type: int
 ):
     # type: (...) -> float
     return _cprops.get_database_f64(
         ref,
-        _cconsts.NX_PROP_ECU_LINS_TMIN,
+        _cconsts.NX_PROP_ECU_LIN_ST_MIN,
     )
 
 
-def set_ecu_lins_tmin(
+def set_ecu_lin_st_min(
     ref,  # type: int
     value,  # type: float
 ):
     # type: (...) -> None
     _cprops.set_database_f64(
         ref,
-        _cconsts.NX_PROP_ECU_LINS_TMIN,
+        _cconsts.NX_PROP_ECU_LIN_ST_MIN,
         value,
     )
 
