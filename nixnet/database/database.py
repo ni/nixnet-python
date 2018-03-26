@@ -45,7 +45,7 @@ class Database(object):
     def __enter__(self):
         return self
 
-    def __exit__(self, type, value, traceback):
+    def __exit__(self, exception_type, exception_value, traceback):
         self.close()
 
     def __eq__(self, other):
