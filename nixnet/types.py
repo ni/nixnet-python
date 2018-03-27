@@ -28,7 +28,8 @@ __all__ = [
     'DelayFrame',
     'LogTriggerFrame',
     'StartTriggerFrame',
-    'XnetFrame']
+    'XnetFrame',
+    'PduProperties']
 
 
 DriverVersion_ = collections.namedtuple(
@@ -151,6 +152,24 @@ class LinComm(LinComm_):
         """
 
     pass
+
+
+PduProperties_ = collections.namedtuple(
+    'PDU_PROPERTIES_',
+    ['pdu', 'start_bit', 'update_bit'])
+
+
+class PduProperties(PduProperties_):
+    """Properties that map a PDU onto a frame.
+
+    Mapping PDUs to a frame requires setting three frame properties that are combined into this tuple.
+
+    Attributes:
+        pdu (:any:`Pdu`): Defines the sequence of values for the other two properties.
+        start_bit (int): Defines the start bit of the PDU inside the frame.
+        update_bit (int): Defines the update bit for the PDU inside the frame.
+            If the update bit is not used, set the value to ``-1``.
+    """
 
 
 class CanIdentifier(object):
