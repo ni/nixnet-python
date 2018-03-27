@@ -286,7 +286,7 @@ class SessionBase(object):
         _funcs.nx_wait(self._handle, constants.Condition.INTF_REMOTE_WAKEUP, 0, timeout)
 
     def connect_terminals(self, source, destination):
-        # type: (typing.Text, typing.Text) -> None
+        # type: (constants.Terminal, constants.Terminal) -> None
         """Connect terminals on the XNET interface.
 
         This function connects a source terminal to a destination terminal on
@@ -304,10 +304,10 @@ class SessionBase(object):
             source(str): Connection source name.
             destination(str): Connection destination name.
         """
-        _funcs.nx_connect_terminals(self._handle, source, destination)
+        _funcs.nx_connect_terminals(self._handle, source.value, destination.value)
 
     def disconnect_terminals(self, source, destination):
-        # type: (typing.Text, typing.Text) -> None
+        # type: (constants.Terminal, constants.Terminal) -> None
         """Disconnect terminals on the XNET interface.
 
         This function disconnects a specific pair of source/destination terminals
@@ -334,7 +334,7 @@ class SessionBase(object):
             source(str): Connection source name.
             destination(str): Connection destination name.
         """
-        _funcs.nx_disconnect_terminals(self._handle, source, destination)
+        _funcs.nx_disconnect_terminals(self._handle, source.value, destination.value)
 
     def change_lin_schedule(self, sched_index):
         # type: (int) -> None

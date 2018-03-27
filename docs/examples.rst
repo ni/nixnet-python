@@ -15,3 +15,5 @@ Examples
    examples/can_lin_diff
    examples/programmatic_databases
    examples/dynamic_database_creation
+   examples/generic_synchronization
+   
