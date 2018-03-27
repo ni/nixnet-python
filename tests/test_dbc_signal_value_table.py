@@ -62,10 +62,10 @@ def test_signal_dbc_signal_value_table():
 
         # test container
         assert sorted(sig1.dbc_signal_value_table.keys()) == ['High', 'Low', 'Zero']
-        assert sorted(sig1.dbc_signal_value_table.values()) == ['-10', '0', '4']
-        assert sorted(sig1.dbc_signal_value_table.items()) == [('High', '4'), ('Low', '-10'), ('Zero', '0')]
+        assert sorted(sig1.dbc_signal_value_table.values()) == [-10, 0, 4]
+        assert sorted(sig1.dbc_signal_value_table.items()) == [('High', 4), ('Low', -10), ('Zero', 0)]
 
         # test values
-        assert sig1.dbc_signal_value_table['Low'] == '-10'
-        assert sig1.dbc_signal_value_table['High'] == '4'
-        assert sig1.dbc_signal_value_table['Zero'] == '0'
+        assert sig1.dbc_signal_value_table['Low'] == -10
+        assert sig1.dbc_signal_value_table['High'] == 4
+        assert sig1.dbc_signal_value_table['Zero'] == 0
