@@ -43,7 +43,7 @@ class DbcSignalValueTable(collections.Mapping):
         return self.keys()
 
     def __getitem__(self, key):
-        # type: (typing.Text) -> typing.Text
+        # type: (typing.Text) -> int
         """Return the value.
 
             Args:
@@ -82,7 +82,7 @@ class DbcSignalValueTable(collections.Mapping):
 
     @property
     def _value_table(self):
-        # type: () -> typing.Dict[typing.Text, typing.Text]
+        # type: () -> typing.Dict[typing.Text, int]
         mode = constants.GetDbcAttributeMode.VALUE_TABLE_LIST
         attribute_size = _funcs.nxdb_get_dbc_attribute_size(self._handle, mode, '')
         attribute_info = _funcs.nxdb_get_dbc_attribute(self._handle, mode, '', attribute_size)
@@ -97,6 +97,6 @@ class DbcSignalValueTable(collections.Mapping):
         # table_string is of the format 'value1, key1, value2, key2, ...'
         # convert to a dict: { 'key1': int('value1'), 'key2': int('value2'), ... }
         table_dict = dict(
-            (key, value)
+            (key, int(value))
             for value, key in zip(table_list[0::2], table_list[1::2]))
         return table_dict
