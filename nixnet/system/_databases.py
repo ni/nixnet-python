@@ -102,8 +102,8 @@ class AliasCollection(collections.Mapping):
         for alias, filepath in self._get_database_list(''):
             yield alias, self._create_item(alias, filepath)
 
-    def add_alias(self, database_alias, database_filepath, default_baud_rate):
-        # type: (typing.Text, typing.Text, int) -> None
+    def add_alias(self, database_alias, database_filepath, default_baud_rate=None):
+        # type: (typing.Text, typing.Text, typing.Optional[int]) -> None
         """Add a new alias with baud rate size of up to 64 bits to a database file.
 
         NI-XNET uses alias names for database files. The alias names provide a
@@ -130,6 +130,9 @@ class AliasCollection(collections.Mapping):
                 LDF database formats require a valid baud rate for every
                 cluster, and NI-XNET uses that baud rate as the default.
         """
+        if default_baud_rate is None:
+            default_baud_rate = 0
+
         _funcs.nxdb_add_alias64(database_alias, database_filepath, default_baud_rate)
 
     def _create_item(self, database_alias, database_filepath):
