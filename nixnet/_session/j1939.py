@@ -35,7 +35,7 @@ class J1939(object):
         _props.set_session_j1939_name(self._handle, value)
 
     def set_ecu(self, value):
-        _props.set_session_j1939ecu(self._handle, value)
+        _props.set_session_j1939_ecu(self._handle, value)
 
     @property
     def timeout_t1(self):
@@ -135,8 +135,8 @@ class J1939(object):
 
     @property
     def ecu_busy(self):
-        return _props.get_session_j1939ecu_busy(self._handle)
+        return _props.get_session_j1939_ecu_busy(self._handle)
 
     @ecu_busy.setter
     def ecu_busy(self, value):
-        _props.set_session_j1939ecu_busy(self._handle, value)
+        _props.set_session_j1939_ecu_busy(self._handle, value)
