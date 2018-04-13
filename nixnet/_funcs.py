@@ -141,12 +141,13 @@ def nx_read_signal_single_point(
 def nx_read_state(
     session_ref,  # type: int
     state_id,  # type: _enums.ReadState
+    state_size,  # type: int
     state_value_ctypes_ptr,  # type: typing.Any
 ):
     # type: (...) -> typing.Tuple[typing.Any, int]
     session_ref_ctypes = _ctypedefs.nxSessionRef_t(session_ref)
     state_id_ctypes = _ctypedefs.u32(state_id.value)
-    state_size_ctypes = _ctypedefs.u32(ctypes.sizeof(state_value_ctypes_ptr))
+    state_size_ctypes = _ctypedefs.u32(state_size)
     fault_ctypes = _ctypedefs.nxStatus_t()
     result = _cfuncs.lib.nx_read_state(
         session_ref_ctypes,

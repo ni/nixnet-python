@@ -377,9 +377,11 @@ class SessionBase(object):
         # type: () -> int
         """int: Current interface time."""
         state_value_ctypes = _ctypedefs.nxTimestamp_t()
+        state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
             self._handle,
             constants.ReadState.TIME_CURRENT,
+            state_size,
             ctypes.pointer(state_value_ctypes))
         time = state_value_ctypes.value
         return time
@@ -389,9 +391,11 @@ class SessionBase(object):
         # type: () -> int
         """int: Time the interface was started."""
         state_value_ctypes = _ctypedefs.nxTimestamp_t()
+        state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
             self._handle,
             constants.ReadState.TIME_START,
+            state_size,
             ctypes.pointer(state_value_ctypes))
         time = state_value_ctypes.value
         if time == 0:
@@ -408,9 +412,11 @@ class SessionBase(object):
         must undergo a communication startup procedure.
         """
         state_value_ctypes = _ctypedefs.nxTimestamp_t()
+        state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
             self._handle,
             constants.ReadState.TIME_COMMUNICATING,
+            state_size,
             ctypes.pointer(state_value_ctypes))
         time = state_value_ctypes.value
         if time == 0:
@@ -423,9 +429,11 @@ class SessionBase(object):
         # type: () -> constants.SessionInfoState
         """:any:`nixnet._enums.SessionInfoState`: Session running state."""
         state_value_ctypes = _ctypedefs.u32()
+        state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
             self._handle,
             constants.ReadState.SESSION_INFO,
+            state_size,
             ctypes.pointer(state_value_ctypes))
         state = state_value_ctypes.value
         return constants.SessionInfoState(state)
@@ -435,9 +443,11 @@ class SessionBase(object):
         # type: () -> types.CanComm
         """:any:`nixnet.types.CanComm`: CAN Communication state"""
         state_value_ctypes = _ctypedefs.u32()
+        state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
             self._handle,
             constants.ReadState.CAN_COMM,
+            state_size,
             ctypes.pointer(state_value_ctypes))
         bitfield = state_value_ctypes.value
         return _utils.parse_can_comm_bitfield(bitfield)
@@ -447,9 +457,11 @@ class SessionBase(object):
         # type: () -> types.LinComm
         """:any:`nixnet.types.LinComm`: LIN Communication state"""
         state_value_ctypes = (_ctypedefs.u32 * 2)()  # type: ignore
+        state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
             self._handle,
             constants.ReadState.LIN_COMM,
+            state_size,
             ctypes.pointer(state_value_ctypes))
         first = state_value_ctypes[0].value
         second = state_value_ctypes[1].value
@@ -468,9 +480,11 @@ class SessionBase(object):
         of checking the communication state.
         """
         state_value_ctypes = _ctypedefs.u32()
+        state_size = ctypes.sizeof(state_value_ctypes)
         fault = _funcs.nx_read_state(
             self._handle,
             constants.ReadState.SESSION_INFO,
+            state_size,
             ctypes.pointer(state_value_ctypes))
         _errors.check_for_error(fault)
 
