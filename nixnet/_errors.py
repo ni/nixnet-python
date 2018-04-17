@@ -13,11 +13,15 @@ from nixnet import errors
 
 def check_for_error(error_code):
     if error_code & _cconsts.NX_STATUS_ERROR:
-        status = status_to_string(error_code)
-        raise errors.XnetError(status, error_code)
+        raise_xnet_error(error_code)
     elif error_code != _cconsts.NX_SUCCESS:
         status = status_to_string(error_code)
         warnings.warn(errors.XnetWarning(status, error_code))
+
+
+def raise_xnet_error(error_code):
+    status = status_to_string(error_code)
+    raise errors.XnetError(status, error_code)
 
 
 def status_to_string(status_code):

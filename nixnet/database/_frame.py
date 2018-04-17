@@ -521,8 +521,8 @@ class Frame(object):
         """
         ref = _props.get_frame_mux_data_mux_sig_ref(self._handle)
         if ref == 0:
-            # A bit of an abuse of errors
-            _errors.check_for_error(_cconsts.NX_ERR_SIGNAL_NOT_FOUND)
+            _errors.raise_xnet_error(_cconsts.NX_ERR_SIGNAL_NOT_FOUND)
+
         return _signal.Signal(ref)
 
     @property

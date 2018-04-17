@@ -201,8 +201,8 @@ class Pdu(object):
         """
         handle = _props.get_pdu_mux_data_mux_sig_ref(self._handle)
         if handle == 0:
-            # A bit of an abuse of errors
-            _errors.check_for_error(_cconsts.NX_ERR_SIGNAL_NOT_FOUND)
+            _errors.raise_xnet_error(_cconsts.NX_ERR_SIGNAL_NOT_FOUND)
+
         return _signal.Signal(handle)
 
     @property

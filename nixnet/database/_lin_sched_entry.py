@@ -53,8 +53,8 @@ class LinSchedEntry(object):
         """
         handle = _props.get_lin_sched_entry_collision_res_sched(self._handle)
         if handle == 0:
-            # A bit of an abuse of errors
-            _errors.check_for_error(_cconsts.NX_ERR_DATABASE_OBJECT_NOT_FOUND)
+            _errors.raise_xnet_error(_cconsts.NX_ERR_DATABASE_OBJECT_NOT_FOUND)
+
         return _lin_sched.LinSched(handle)
 
     @collision_res_sched.setter

@@ -28,8 +28,7 @@ def flatten_items(list):
         # For FRAME_IN_QUEUED / FRAME_OUT_QUEUED
         # Convenience for everything else
         if ',' in list:
-            # A bit of an abuse of an error code
-            _errors.check_for_error(_cconsts.NX_ERR_INVALID_PROPERTY_VALUE)
+            _errors.raise_xnet_error(_cconsts.NX_ERR_INVALID_PROPERTY_VALUE)
         flattened = list
     elif isinstance(list, collections.Iterable):
         flattened = ",".join(list)
@@ -37,8 +36,7 @@ def flatten_items(list):
         # For FRAME_IN_STREAM / FRAME_OUT_STREAM
         flattened = ''
     else:
-        # A bit of an abuse of an error code
-        _errors.check_for_error(_cconsts.NX_ERR_INVALID_PROPERTY_VALUE)
+        _errors.raise_xnet_error(_cconsts.NX_ERR_INVALID_PROPERTY_VALUE)
 
     return flattened
 

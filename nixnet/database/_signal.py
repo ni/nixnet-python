@@ -496,6 +496,6 @@ class Signal(object):
         from nixnet.database import _subframe
         ref = _props.get_signal_mux_subfrm_ref(self._handle)
         if ref == 0:
-            # A bit of an abuse of errors
-            _errors.check_for_error(_cconsts.NX_ERR_FRAME_NOT_FOUND)
+            _errors.raise_xnet_error(_cconsts.NX_ERR_FRAME_NOT_FOUND)
+
         return _subframe.SubFrame(ref)

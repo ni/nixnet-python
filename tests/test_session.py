@@ -3,22 +3,22 @@ from __future__ import division
 from __future__ import print_function
 
 import mock  # type: ignore
+import pytest  # type: ignore
 import time
 
-import pytest  # type: ignore
-
 import nixnet
+from nixnet import _cfuncs
+from nixnet import _ctypedefs
 from nixnet import _utils
 from nixnet import constants
 from nixnet import errors
 from nixnet import types
 
+MockXnetLibrary = mock.create_autospec(_cfuncs.XnetLibrary, spec_set=True, instance=True)
+MockXnetLibrary.nx_status_to_string.return_value = _ctypedefs.u32(0)
 
-def raise_code(code):
-    raise errors.XnetError("", code)
 
-
-@mock.patch('nixnet._errors.check_for_error', raise_code)
+@mock.patch('nixnet._cfuncs.lib', MockXnetLibrary)
 def test_flatten_items_invalid():
     with pytest.raises(errors.XnetError):
         _utils.flatten_items('A,B')
