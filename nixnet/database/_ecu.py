@@ -40,6 +40,23 @@ class Ecu(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def check_config_status(self):
+        # type: () -> None
+        """Check this ECU's configuration status.
+
+        By default, incorrectly configured ECUs in the database are not returned from
+        :any:`Cluster.ecus` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When an ECU configuration status becomes invalid after the database is opened,
+        the ECU still is returned from :any:`Cluster.ecus`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The ECU is incorrectly configured.
+        """
+        status_code = _props.get_ecu_config_status(self._handle)
+        _errors.check_for_error(status_code)
+
     @property
     def clst(self):
         # type: () -> _cluster.Cluster
@@ -64,13 +81,6 @@ class Ecu(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_ecu_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> typing.Tuple[int, typing.Text]
-        status_code = _props.get_ecu_config_status(self._handle)
-        status_text = _errors.status_to_string(status_code)
-        return status_code, status_text
 
     @property
     def dbc_attributes(self):

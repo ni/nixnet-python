@@ -42,12 +42,22 @@ class SubFrame(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
-    @property
-    def config_status(self):
-        # type: () -> typing.Tuple[int, typing.Text]
+    def check_config_status(self):
+        # type: () -> None
+        """Check this subframe's configuration status.
+
+        By default, incorrectly configured subframes in the database are not returned from
+        :any:`Frame.mux_subframes` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a subframe configuration status becomes invalid after the database is opened,
+        the subframe still is returned from :any:`Frame.mux_subframes`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The subframe is incorrectly configured.
+        """
         status_code = _props.get_subframe_config_status(self._handle)
-        status_text = _errors.status_to_string(status_code)
-        return status_code, status_text
+        _errors.check_for_error(status_code)
 
     @property
     def dyn_signals(self):

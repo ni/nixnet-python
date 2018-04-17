@@ -47,6 +47,23 @@ class Frame(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def check_config_status(self):
+        # type: () -> None
+        """Check this frame's configuration status.
+
+        By default, incorrectly configured frames in the database are not returned from
+        :any:`Cluster.frames` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a frame configuration status becomes invalid after the database is opened,
+        the frame still is returned from :any:`Cluster.frames`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The frame is incorrectly configured.
+        """
+        status_code = _props.get_frame_config_status(self._handle)
+        _errors.check_for_error(status_code)
+
     @property
     def application_protocol(self):
         # type: () -> constants.AppProtocol
@@ -81,13 +98,6 @@ class Frame(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_frame_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> typing.Tuple[int, typing.Text]
-        status_code = _props.get_frame_config_status(self._handle)
-        status_text = _errors.status_to_string(status_code)
-        return status_code, status_text
 
     @property
     def default_payload(self):
@@ -572,7 +582,7 @@ class Frame(object):
 
         For CAN and LIN, NI-XNET supports only a one-to-one relationship between frames and PDUs.
         For those interfaces, advanced PDU configuration returns
-        an error from the :any:`Frame.config_status` property and when creating a session.
+        raises an exception when calling :any:`Frame.check_config_status` and when creating a session.
         If you do not use advanced PDU configuration,
         you can avoid using PDUs in the database API
         and create signals and subframes directly on a frame.

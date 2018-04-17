@@ -41,6 +41,34 @@ class Signal(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def check_config_status(self):
+        # type: () -> None
+        """Check this signal's configuration status.
+
+        By default, incorrectly configured signals in the database are not returned from
+        :any:`Frame.sigs` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a signal configuration status becomes invalid after the database is opened,
+        the signal still is returned from :any:`Frame.sigs`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Examples of invalid signal configuration:
+
+        *   The signal is specified using bits outside the frame payload.
+        *   The signal overlaps another signal in the frame.
+            For example,
+            two multiplexed signals with the same multiplexer value are using the same bit in the frame payload.
+        *   The signal with integer data type (signed or unsigned) is specified with more than 52 bits.
+            This is not allowed due to internal limitation of the double data type that NI-XNET uses for signal values.
+        *   The frame containing the signal is invalid
+            (for example, a CAN frame is defined with more than 8 payload bytes).
+
+        Raises:
+            XnetError: The signal is incorrectly configured.
+        """
+        status_code = _props.get_signal_config_status(self._handle)
+        _errors.check_for_error(status_code)
+
     @property
     def byte_ordr(self):
         # type: () -> constants.SigByteOrdr
@@ -84,13 +112,6 @@ class Signal(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_signal_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> typing.Tuple[int, typing.Text]
-        status_code = _props.get_signal_config_status(self._handle)
-        status_text = _errors.status_to_string(status_code)
-        return status_code, status_text
 
     @property
     def data_type(self):

@@ -54,6 +54,23 @@ class Cluster(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def check_config_status(self):
+        # type: () -> None
+        """Check this cluster's configuration status.
+
+        By default, incorrectly configured clusters in the database are not returned from
+        :any:`Database.clusters` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a cluster configuration status becomes invalid after the database is opened,
+        the cluster still is returned from :any:`Database.clusters`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The cluster is incorrectly configured.
+        """
+        status_code = _props.get_cluster_config_status(self._handle)
+        _errors.check_for_error(status_code)
+
     def export(self, db_filepath):
         # type: (typing.Text) -> None
         """Exports this cluster to a CANdb++ or LIN database file format.
@@ -180,13 +197,6 @@ class Cluster(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_cluster_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> typing.Tuple[int, typing.Text]
-        status_code = _props.get_cluster_config_status(self._handle)
-        status_text = _errors.status_to_string(status_code)
-        return status_code, status_text
 
     @property
     def database_ref(self):

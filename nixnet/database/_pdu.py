@@ -47,6 +47,23 @@ class Pdu(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def check_config_status(self):
+        # type: () -> None
+        """Check this PDU's configuration status.
+
+        By default, incorrectly configured PDUs in the database are not returned from
+        :any:`Cluster.pdus` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a PDU configuration status becomes invalid after the database is opened,
+        the PDU still is returned from :any:`Cluster.pdus`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The PDU is incorrectly configured.
+        """
+        status_code = _props.get_pdu_config_status(self._handle)
+        _errors.check_for_error(status_code)
+
     @property
     def cluster(self):
         # type: () -> _cluster.Cluster
@@ -78,13 +95,6 @@ class Pdu(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_pdu_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> typing.Tuple[int, typing.Text]
-        status_code = _props.get_pdu_config_status(self._handle)
-        status_text = _errors.status_to_string(status_code)
-        return status_code, status_text
 
     @property
     def frms(self):

@@ -45,6 +45,23 @@ class LinSched(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def check_config_status(self):
+        # type: () -> None
+        """Check this LIN schedule's configuration status.
+
+        By default, incorrectly configured schedules in the database are not returned from
+        :any:`Cluster.lin_schedules` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a schedule configuration status becomes invalid after the database is opened,
+        the schedule still is returned from :any:`Cluster.lin_schedules`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The LIN schedule is incorrectly configured.
+        """
+        status_code = _props.get_lin_sched_config_status(self._handle)
+        _errors.check_for_error(status_code)
+
     @property
     def clst(self):
         # type: () -> _cluster.Cluster
@@ -68,13 +85,6 @@ class LinSched(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_lin_sched_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> typing.Tuple[int, typing.Text]
-        status_code = _props.get_lin_sched_config_status(self._handle)
-        status_text = _errors.status_to_string(status_code)
-        return status_code, status_text
 
     @property
     def entries(self):
