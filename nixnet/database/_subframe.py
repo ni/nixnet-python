@@ -5,6 +5,7 @@ from __future__ import print_function
 import typing  # NOQA: F401
 
 from nixnet import _cconsts
+from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
@@ -41,23 +42,22 @@ class SubFrame(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
-    @property
-    def config_status(self):
-        # type: () -> int
-        """int: Returns the subframe object configuration status.
-
-        Configuration Status returns an NI-XNET error code.
-        You can pass the value to the `nxStatusToString` function to
-        convert the value to a text description of the configuration problem.
+    def check_config_status(self):
+        # type: () -> None
+        """Check this subframe's configuration status.
 
         By default, incorrectly configured subframes in the database are not returned from
         :any:`Frame.mux_subframes` because they cannot be used in the bus communication.
-        You can change this behavior by setting :any:`Database.show_invalid_from_open` to ``True``.
-        When the configuration status of a subframe becomes invalid after opening the database,
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a subframe configuration status becomes invalid after the database is opened,
         the subframe still is returned from :any:`Frame.mux_subframes`
-        even if :any:`Database.show_invalid_from_open` is ``False``.
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The subframe is incorrectly configured.
         """
-        return _props.get_subframe_config_status(self._handle)
+        status_code = _props.get_subframe_config_status(self._handle)
+        _errors.check_for_error(status_code)
 
     @property
     def dyn_signals(self):

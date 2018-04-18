@@ -47,6 +47,23 @@ class Pdu(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def check_config_status(self):
+        # type: () -> None
+        """Check this PDU's configuration status.
+
+        By default, incorrectly configured PDUs in the database are not returned from
+        :any:`Cluster.pdus` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a PDU configuration status becomes invalid after the database is opened,
+        the PDU still is returned from :any:`Cluster.pdus`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The PDU is incorrectly configured.
+        """
+        status_code = _props.get_pdu_config_status(self._handle)
+        _errors.check_for_error(status_code)
+
     @property
     def cluster(self):
         # type: () -> _cluster.Cluster
@@ -78,24 +95,6 @@ class Pdu(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_pdu_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> int
-        """int: Returns the PDU object configuration status.
-
-        Configuration Status returns an NI-XNET error code.
-        You can pass the value to the `nxStatusToString` function to
-        convert the value to a text description of the configuration problem.
-
-        By default, incorrectly configured frames in the database are not returned from
-        :any:`Cluster.frames` because they cannot be used in the bus communication.
-        You can change this behavior by setting :any:`Database.show_invalid_from_open` to ``True``.
-        When the configuration status of a frames becomes invalid after opening the database,
-        the frame still is returned from :any:`Cluster.frames`
-        even if :any:`Database.show_invalid_from_open` is ``False``.
-        """
-        return _props.get_pdu_config_status(self._handle)
 
     @property
     def frms(self):
@@ -202,8 +201,8 @@ class Pdu(object):
         """
         handle = _props.get_pdu_mux_data_mux_sig_ref(self._handle)
         if handle == 0:
-            # A bit of an abuse of errors
-            _errors.check_for_error(_cconsts.NX_ERR_SIGNAL_NOT_FOUND)
+            _errors.raise_xnet_error(_cconsts.NX_ERR_SIGNAL_NOT_FOUND)
+
         return _signal.Signal(handle)
 
     @property

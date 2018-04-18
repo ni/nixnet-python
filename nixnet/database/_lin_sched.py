@@ -5,6 +5,7 @@ from __future__ import print_function
 import typing  # NOQA: F401
 
 from nixnet import _cconsts
+from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
@@ -44,6 +45,23 @@ class LinSched(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def check_config_status(self):
+        # type: () -> None
+        """Check this LIN schedule's configuration status.
+
+        By default, incorrectly configured schedules in the database are not returned from
+        :any:`Cluster.lin_schedules` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a schedule configuration status becomes invalid after the database is opened,
+        the schedule still is returned from :any:`Cluster.lin_schedules`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The LIN schedule is incorrectly configured.
+        """
+        status_code = _props.get_lin_sched_config_status(self._handle)
+        _errors.check_for_error(status_code)
+
     @property
     def clst(self):
         # type: () -> _cluster.Cluster
@@ -67,27 +85,6 @@ class LinSched(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_lin_sched_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> int
-        """int: Returns the LIN schedule object configuration status.
-
-        Configuration Status returns an NI-XNET error code.
-        You can pass the value to the `nxStatusToString` function to
-        convert the value to a text description of the configuration problem.
-
-        By default, incorrectly configured schedules in the database are not returned from
-        :any:`Cluster.lin_schedules` because they cannot be used in the bus communication.
-        You can change this behavior by setting :any:`Database.show_invalid_from_open` to ``True``.
-        When the configuration status of a schedule becomes invalid after opening the database,
-        the schedule still is returned from :any:`Cluster.lin_schedules`
-        even if :any:`Database.show_invalid_from_open` is ``False``.
-
-        An example of invalid schedule configuration is when a required schedule property has not been defined.
-        For example, a schedule entry within this schedule has an undefined delay time.
-        """
-        return _props.get_lin_sched_config_status(self._handle)
 
     @property
     def entries(self):

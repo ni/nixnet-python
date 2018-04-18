@@ -5,6 +5,7 @@ from __future__ import print_function
 import typing  # NOQA: F401
 
 from nixnet import _cconsts
+from nixnet import _errors
 from nixnet import _funcs
 from nixnet import _props
 from nixnet import constants
@@ -52,6 +53,23 @@ class Cluster(object):
 
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
+
+    def check_config_status(self):
+        # type: () -> None
+        """Check this cluster's configuration status.
+
+        By default, incorrectly configured clusters in the database are not returned from
+        :any:`Database.clusters` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When a cluster configuration status becomes invalid after the database is opened,
+        the cluster still is returned from :any:`Database.clusters`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The cluster is incorrectly configured.
+        """
+        status_code = _props.get_cluster_config_status(self._handle)
+        _errors.check_for_error(status_code)
 
     def export(self, db_filepath):
         # type: (typing.Text) -> None
@@ -179,24 +197,6 @@ class Cluster(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_cluster_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> int
-        """int: Returns the cluster object configuration status.
-
-        Configuration Status returns an NI-XNET error code.
-        You can pass the value to the `nxStatusToString` function to
-        convert the value to a text description of the configuration problem.
-
-        By default, incorrectly configured clusters in the database are not returned from
-        :any:`Database.clusters` because they cannot be used in the bus communication.
-        You can change this behavior by setting :any:`Database.show_invalid_from_open` to ``True``.
-        When the configuration status of a cluster becomes invalid after the database has been opened,
-        the cluster still is returned from :any:`Database.clusters` even if
-        :any:`Database.show_invalid_from_open` to ``False``.
-        """
-        return _props.get_cluster_config_status(self._handle)
 
     @property
     def database_ref(self):

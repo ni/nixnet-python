@@ -179,10 +179,10 @@ class Database(object):
         (for example, :any:`Cluster.frames` and :any:`Frame.mux_static_signals`).
 
         For invalid objects,
-        the :any:`Cluster.config_status`,
-        :any:`Frame.config_status`,
-        and :any:`Signal.config_status` properties return an error code that explains the problem.
-        For valid objects, Configuration Status returns success (no error).
+        the :any:`Cluster.check_config_status`,
+        :any:`Frame.check_config_status`,
+        and :any:`Signal.check_config_status` methods raise an exception if there is a problem.
+        For valid objects, no error is raised.
 
         :any:`Cluster`, :any:`Frame<_frame.Frame>`, and :any:`Signal<_signal.Signal>` objects that became
         invalid after the database is opened are still returned from the
@@ -191,7 +191,8 @@ class Database(object):
         and Configuration Status returns an error code.
         For example, if you open a :any:`Frame<_frame.Frame>` with valid properties,
         then you set :any:`Signal.start_bit` beyond the :any:`Frame.payload_len`,
-        the :any:`Frame.config_status` returns an error, but the frame is returned from :any:`Cluster.frames`.
+        :any:`Frame.check_config_status` raises an exception,
+        but the frame is returned from :any:`Cluster.frames`.
         """
         return _props.get_database_show_invalid_from_open(self._handle)
 

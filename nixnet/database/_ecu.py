@@ -4,6 +4,7 @@ from __future__ import print_function
 
 import typing  # NOQA: F401
 
+from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
@@ -39,6 +40,23 @@ class Ecu(object):
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)
 
+    def check_config_status(self):
+        # type: () -> None
+        """Check this ECU's configuration status.
+
+        By default, incorrectly configured ECUs in the database are not returned from
+        :any:`Cluster.ecus` because they cannot be used in the bus communication.
+        You can change this behavior by setting :any:`Database.show_invalid_from_open` to `True`.
+        When an ECU configuration status becomes invalid after the database is opened,
+        the ECU still is returned from :any:`Cluster.ecus`
+        even if :any:`Database.show_invalid_from_open` is `False`.
+
+        Raises:
+            XnetError: The ECU is incorrectly configured.
+        """
+        status_code = _props.get_ecu_config_status(self._handle)
+        _errors.check_for_error(status_code)
+
     @property
     def clst(self):
         # type: () -> _cluster.Cluster
@@ -63,24 +81,6 @@ class Ecu(object):
     def comment(self, value):
         # type: (typing.Text) -> None
         _props.set_ecu_comment(self._handle, value)
-
-    @property
-    def config_status(self):
-        # type: () -> int
-        """int: Returns the ECU object configuration status.
-
-        Configuration Status returns an NI-XNET error code.
-        You can pass the value to the `nxStatusToString` function to
-        convert the value to a text description of the configuration problem.
-
-        By default, incorrectly configured ECUs in the database are not returned from
-        :any:`Cluster.ecus` because they cannot be used in the bus communication.
-        You can change this behavior by setting :any:`Database.show_invalid_from_open` to ``True``.
-        When the configuration status of a ECU becomes invalid after opening the database,
-        the ECU still is returned from :any:`Cluster.ecus`
-        even if :any:`Database.show_invalid_from_open` is ``False``.
-        """
-        return _props.get_ecu_config_status(self._handle)
 
     @property
     def dbc_attributes(self):
