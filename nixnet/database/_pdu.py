@@ -104,9 +104,7 @@ class Pdu(object):
         A PDU is transmitted within the frames to which it is mapped.
 
         To map a PDU to a frame,
-        use the :any:`Frame.pdus`,
-        :any:`Frame.pdu_start_bits`,
-        and :any:`Frame.pdu_update_bits` properties.
+        use the :any:`Frame.pdu_properties` property.
         You can map one PDU to multiple frames.
         """
         for handle in _props.get_pdu_frm_refs(self._handle):

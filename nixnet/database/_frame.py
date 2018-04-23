@@ -2,12 +2,14 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
+import operator
 import typing  # NOQA: F401
 
 from nixnet import _cconsts
 from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
+from nixnet import types
 
 from nixnet.database import _cluster
 from nixnet.database import _collection
@@ -552,26 +554,20 @@ class Frame(object):
         return self._mux_subframes
 
     @property
-    def pdus(self):
-        # actually returns typing.Iterable[_pdu.Pdu], but avoiding a circular import
-        # type: () -> typing.Iterable[typing.Any]
-        """list of :any:`Pdu`: Get or set a list that maps existing PDUs to a frame.
+    def pdu_properties(self):
+        # type: () -> typing.Iterable[types.PduProperties]
+        """list of :any:`PduProperties`: Get or set a list that maps existing PDUs to a frame.
 
         A mapped PDU is transmitted inside the frame payload when the frame is transmitted.
         You can map one or more PDUs to a frame and one PDU to multiple frames.
 
-        Mapping PDUs to a frame requires setting three frame properties.
-        All three properties are lists of values:
+        Mapping PDUs to a frame requires setting pdu_properties with a list of PduProperties tuples.
+        Each tuple contains the following properties:
 
-        *   :any:`Frame.pdus`: Set this property first to define
-            the sequence of values for the other two properties.
-        *   :any:`Frame.pdu_start_bits`: Defines the start bit of the PDU inside the frame.
-        *   :any:`Frame.pdu_update_bits`: Defines the update bit for the PDU inside the frame.
+        *   :any:`PduProperties.pdu`: Defines the sequence of values for the other two properties.
+        *   :any:`PduProperties.start_bit`: Defines the start bit of the PDU inside the frame.
+        *   :any:`PduProperties.update_bit`: Defines the update bit for the PDU inside the frame.
             If the update bit is not used, set the value to ``-1``.
-
-        Values on the same list position are corresponding.
-        For example, ``pdus[0]``, ``pdu_start_bits[0]``,
-        and ``pdu_update_bits[0]`` define the mapping for the first PDU in the frame.
 
         Databases imported from FIBEX prior to version 3.0,
         from DBC, NCD, or LDF files have a strong one-to-one relationship between frames and PDUs.
@@ -587,74 +583,22 @@ class Frame(object):
         you can avoid using PDUs in the database API
         and create signals and subframes directly on a frame.
         """
-        from nixnet.database import _pdu
-        for handle in _props.get_frame_pdu_refs(self._handle):
-            yield _pdu.Pdu(handle)
+        handles = _props.get_frame_pdu_refs(self._handle)
+        pdu_tuples = zip(*(handles,
+                           _props.get_frame_pdu_start_bits(self._handle),
+                           _props.get_frame_pdu_update_bits(self._handle)))
+        for (ref, start_bit, update_bit) in pdu_tuples:
+            yield types.PduProperties(ref, start_bit, update_bit)
 
-    @pdus.setter
-    def pdus(self, value):
-        # value is actually typing.Iterable[_pdu.Pdu], but avoiding a circular import
-        # type: (typing.Iterable[typing.Any]) -> None
-        handle_list = [pdu._handle for pdu in value]
-        _props.set_frame_pdu_refs(self._handle, handle_list)
-
-    @property
-    def pdu_start_bits(self):
-        # type: () -> typing.Iterable[int]
-        """list of int: This property defines the start bits of PDUs mapped to a frame.
-
-        A mapped PDU is transmitted inside the frame payload when the frame is transmitted.
-        You can map one or more PDUs to a frame and one PDU to multiple frames.
-
-        Mapping PDUs to a frame requires setting of three frame properties.
-        All three properties are lists of values:
-
-        *   :any:`Frame.pdus`: Set this property first to define
-            the sequence of values for the other two properties.
-        *   :any:`Frame.pdu_start_bits`: Defines the start bit of the PDU inside the frame.
-        *   :any:`Frame.pdu_update_bits`: Defines the update bit for the PDU inside the frame.
-            If the update bit is not used, set the value to ``-1``.
-
-        Values on the same list position are corresponding.
-        For example, ``pdus[0]``, ``pdu_start_bits[0]``,
-        and ``pdu_update_bits[0]`` define the mapping for the first PDU in the frame.
-        """
-        return _props.get_frame_pdu_start_bits(self._handle)
-
-    @pdu_start_bits.setter
-    def pdu_start_bits(self, value):
-        # type: (typing.List[int]) -> None
-        _props.set_frame_pdu_start_bits(self._handle, value)
-
-    @property
-    def pdu_update_bits(self):
-        # type: () -> typing.Iterable[int]
-        """list of int: Get or set the update bits of PDUs mapped to a frame.
-
-        If the update bit is not used for the PDU, set the value to -1.
-        The receiver uses the update bit to determine whether the frame sender has updated data in a particular PDU.
-        Update bits allow for the decoupling of a signal update from a frame occurrence.
-        Update bits is an optional PDU property.
-
-        Mapping PDUs to a frame requires setting three frame properties.
-        All three properties are lists of values:
-
-        *   :any:`Frame.pdus`: Set this property first to define
-            the sequence of values for the other two properties.
-        *   :any:`Frame.pdu_start_bits`: Defines the start bit of the PDU inside the frame.
-        *   :any:`Frame.pdu_update_bits`: Defines the update bit for the PDU inside the frame.
-            If the update bit is not used, set the value to ``-1``.
-
-        Values on the same list position are corresponding.
-        For example, ``pdus[0]``, ``pdu_start_bits[0]``,
-        and ``pdu_update_bits[0]`` define the mapping for the first PDU in the frame.
-        """
-        return _props.get_frame_pdu_update_bits(self._handle)
-
-    @pdu_update_bits.setter
-    def pdu_update_bits(self, value):
-        # type: (typing.List[int]) -> None
-        _props.set_frame_pdu_update_bits(self._handle, value)
+    @pdu_properties.setter
+    def pdu_properties(self, pdus):
+        # type: (typing.Iterable[types.PduProperties]) -> None
+        _props.set_frame_pdu_refs(self._handle,
+                                  list(map(lambda p: p.pdu._handle, pdus)))
+        _props.set_frame_pdu_start_bits(self._handle,
+                                        list(map(operator.attrgetter('start_bit'), pdus)))
+        _props.set_frame_pdu_update_bits(self._handle,
+                                         list(map(operator.attrgetter('update_bit'), pdus)))
 
     @property
     def variable_payload(self):
