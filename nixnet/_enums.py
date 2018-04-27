@@ -1678,7 +1678,7 @@ class DevForm(enum.Enum):
     PXI = _cconsts.NX_DEV_FORM_PXI
     PCI = _cconsts.NX_DEV_FORM_PCI
     C_SERIES = _cconsts.NX_DEV_FORM_C_SERIES
-    PX_IE = _cconsts.NX_DEV_FORM_PX_IE
+    PXIE = _cconsts.NX_DEV_FORM_PXIE
     USB = _cconsts.NX_DEV_FORM_USB
 
 
