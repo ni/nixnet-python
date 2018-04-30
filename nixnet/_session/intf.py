@@ -139,7 +139,7 @@ class Interface(object):
         .. note:: Only CAN and LIN interfaces currently support this property.
         '''
         for ref in _props.get_session_intf_out_strm_list(self._handle):
-            yield _frame.Frame(ref)
+            yield _frame.Frame(_handle=ref)
 
     @out_strm_list.setter
     def out_strm_list(self, value):

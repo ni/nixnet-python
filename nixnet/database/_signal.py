@@ -9,16 +9,30 @@ from nixnet import _errors
 from nixnet import _props
 from nixnet import constants
 
+from nixnet.database import _database_object
 from nixnet.database import _dbc_attributes
 from nixnet.database import _dbc_signal_value_table
 
+# workaround to avoid circular imports caused by mypy type annotations
+MYPY = False
+if MYPY:
+    from nixnet.database import _frame  # NOQA: F401
+    from nixnet.database import _pdu  # NOQA: F401
+    from nixnet.database import _subframe  # NOQA: F401
 
-class Signal(object):
+
+class Signal(_database_object.DatabaseObject):
     """Database signal"""
 
-    def __init__(self, handle):
-        # type: (int) -> None
-        self._handle = handle
+    def __init__(
+            self,
+            **kwargs  # type: int
+    ):
+        # type: (...) -> None
+        if not kwargs or '_handle' not in kwargs:
+            raise TypeError()
+
+        self._handle = kwargs['_handle']
         self._dbc_attributes = None  # type: typing.Optional[_dbc_attributes.DbcAttributeCollection]
         self._dbc_signal_value_table = _dbc_signal_value_table.DbcSignalValueTable(self._handle)
 
@@ -64,7 +78,7 @@ class Signal(object):
             (for example, a CAN frame is defined with more than 8 payload bytes).
 
         Raises:
-            XnetError: The signal is incorrectly configured.
+            :any:`XnetError`: The signal is incorrectly configured.
         """
         status_code = _props.get_signal_config_status(self._handle)
         _errors.check_for_error(status_code)
@@ -186,15 +200,14 @@ class Signal(object):
 
     @property
     def frame(self):
-        # actually returns _frame.Frame, but avoiding a circular import
-        # type: () -> typing.Any
+        # type: () -> _frame.Frame
         """:any:`Frame<_frame.Frame>`: Returns the signal parent frame object.
 
         The parent frame is defined when the signal object is created. You cannot change it afterwards.
         """
-        from nixnet.database import _frame
+        from nixnet.database import _frame  # NOQA: F811
         ref = _props.get_signal_frame_ref(self._handle)
-        return _frame.Frame(ref)
+        return _frame.Frame(_handle=ref)
 
     @property
     def max(self):
@@ -302,16 +315,15 @@ class Signal(object):
 
     @property
     def pdu(self):
-        # actually returns _pdu.Pdu, but avoiding a circular import
-        # type: () -> typing.Any
+        # type: () -> _pdu.Pdu
         """:any:`Pdu`: Returns to the signal's parent PDU.
 
         The parent PDU is defined when the signal object is created.
         You cannot change it afterwards.
         """
-        from nixnet.database import _pdu
+        from nixnet.database import _pdu  # NOQA: F811
         ref = _props.get_signal_pdu_ref(self._handle)
-        return _pdu.Pdu(ref)
+        return _pdu.Pdu(_handle=ref)
 
     @property
     def scale_fac(self):
@@ -482,20 +494,19 @@ class Signal(object):
 
     @property
     def mux_subfrm(self):
-        # actually returns _subframe.SubFrame, but avoiding a circular import
-        # type: () -> typing.Any
+        # type: () -> _subframe.SubFrame
         """:any:`SubFrame`: Returns the subframe parent.
 
         This property is valid only for dynamic signals that have a subframe parent.
         For static signals or the multiplexer signal,
-        this property raises an XnetError exception.
+        this property raises an :any:`XnetError` exception.
 
         Raises:
-            XnetError: The signal does not have a subframe parent.
+            :any:`XnetError`: The signal does not have a subframe parent.
         """
-        from nixnet.database import _subframe
+        from nixnet.database import _subframe  # NOQA: F811
         ref = _props.get_signal_mux_subfrm_ref(self._handle)
         if ref == 0:
             _errors.raise_xnet_error(_cconsts.NX_ERR_FRAME_NOT_FOUND)
 
-        return _subframe.SubFrame(ref)
+        return _subframe.SubFrame(_handle=ref)

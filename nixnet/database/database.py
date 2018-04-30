@@ -12,9 +12,11 @@ from nixnet import constants
 from nixnet import errors
 
 from nixnet.database import _collection
+from nixnet.database import _database_object
+from nixnet.database import _find_object
 
 
-class Database(object):
+class Database(_database_object.DatabaseObject):
     """Opens a database file.
 
     When an already open database is opened,
@@ -108,6 +110,55 @@ class Database(object):
 
         _funcs.nxdb_close_database(self._handle, close_all_refs)
         self._handle = None
+
+    def find(
+            self,
+            object_class,  # type: typing.Type[_database_object.DatabaseObject]
+            object_name,  # type: typing.Text
+    ):
+        # type: (...) -> _database_object.DatabaseObject
+        """Finds an object in the database.
+
+        This function finds a database object relative to this parent object.
+        This object may be a grandparent or great-grandparent.
+
+        If this object is a direct parent
+        (for example, :any:`Frame<_frame.Frame>` for :any:`Signal<_signal.Signal>`),
+        the ``object_name`` to search for can be short, and the search proceeds quickly.
+
+        If this object is not a direct parent
+        (for example, :any:`Database` for :any:`Signal<_signal.Signal>`),
+        the ``object_name`` to search for must be qualified such
+        that it is unique within the scope of this object.
+
+        For example, if the class of this object is :any:`Cluster`,
+        and ``object_class`` is :any:`Signal<_signal.Signal>`,
+        you can specify ``object_name`` of ``mySignal``,
+        assuming that signal name is unique to the cluster.
+        If not, you must include the :any:`Frame<_frame.Frame>` name as a prefix,
+        such as ``myFrameA.mySignal``.
+
+        NI-XNET supports the following subclasses of ``DatabaseObject`` as arguments for ``object_class``:
+
+        *   :any:`nixnet.database.Cluster<Cluster>`
+        *   :any:`nixnet.database.Frame<_frame.Frame>`
+        *   :any:`nixnet.database.Pdu<Pdu>`
+        *   :any:`nixnet.database.Signal<_signal.Signal>`
+        *   :any:`nixnet.database.SubFrame<SubFrame>`
+        *   :any:`nixnet.database.Ecu<Ecu>`
+        *   :any:`nixnet.database.LinSched<LinSched>`
+        *   :any:`nixnet.database.LinSchedEntry<LinSchedEntry>`
+
+        Args:
+            object_class(``DatabaseObject``): The class of the object to find.
+            object_name(str): The name of the object to find.
+        Returns:
+            An instance of the found object.
+        Raises:
+            ValueError: Unsupported value provided for argument ``object_class``.
+            :any:`XnetError`: The object is not found.
+        """
+        return _find_object.find_object(self._handle, object_class, object_name)
 
     def save(self, db_filepath=""):
         # type: (typing.Text) -> None

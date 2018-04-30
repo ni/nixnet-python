@@ -11,6 +11,8 @@ from nixnet import _cprops
 from nixnet import _funcs
 from nixnet import constants  # NOQA: F401
 
+from nixnet.database import _database_object  # NOQA: F401
+
 
 class DbCollection(collections.Mapping):
     """Collection of database objects."""
@@ -58,7 +60,7 @@ class DbCollection(collections.Mapping):
         """
         if isinstance(index, six.string_types):
             ref = _funcs.nxdb_find_object(self._handle, self._type, index)
-            return self._factory(ref)
+            return self._factory(_handle=ref)
         else:
             raise TypeError(index)
 
@@ -93,15 +95,17 @@ class DbCollection(collections.Mapping):
             yield child.name, child
 
     def add(self, name):
-        # type: (typing.Text) -> typing.Any
+        # type: (typing.Text) -> _database_object.DatabaseObject
         """Add a new database object to the collection.
 
         Args:
             name(str): Name of the new database object.
+        Returns:
+            ``DatabaseObject``: An instance of the new database object.
         """
         ref = _funcs.nxdb_create_object(self._handle, self._type, name)
-        return self._factory(ref)
+        return self._factory(_handle=ref)
 
     def _get_children(self):
         for ref in _cprops.get_database_ref_array(self._handle, self._prop_id):
-            yield self._factory(ref)
+            yield self._factory(_handle=ref)

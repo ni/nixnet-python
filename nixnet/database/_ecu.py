@@ -9,16 +9,23 @@ from nixnet import _props
 from nixnet import constants
 
 from nixnet.database import _cluster
+from nixnet.database import _database_object
 from nixnet.database import _dbc_attributes
 from nixnet.database import _frame
 
 
-class Ecu(object):
+class Ecu(_database_object.DatabaseObject):
     """Database ECU"""
 
-    def __init__(self, handle):
-        # type: (int) -> None
-        self._handle = handle
+    def __init__(
+            self,
+            **kwargs  # type: int
+    ):
+        # type: (...) -> None
+        if not kwargs or '_handle' not in kwargs:
+            raise TypeError()
+
+        self._handle = kwargs['_handle']
         self._dbc_attributes = None  # type: typing.Optional[_dbc_attributes.DbcAttributeCollection]
 
     def __eq__(self, other):
@@ -52,7 +59,7 @@ class Ecu(object):
         even if :any:`Database.show_invalid_from_open` is `False`.
 
         Raises:
-            XnetError: The ECU is incorrectly configured.
+            :any:`XnetError`: The ECU is incorrectly configured.
         """
         status_code = _props.get_ecu_config_status(self._handle)
         _errors.check_for_error(status_code)
@@ -66,7 +73,7 @@ class Ecu(object):
         You cannot change it afterwards.
         """
         handle = _props.get_ecu_clst_ref(self._handle)
-        return _cluster.Cluster(handle)
+        return _cluster.Cluster(_handle=handle)
 
     @property
     def comment(self):
@@ -123,7 +130,7 @@ class Ecu(object):
         All frames an ECU receives in a given cluster must be defined in the same cluster.
         """
         for ref in _props.get_ecu_rx_frm_refs(self._handle):
-            yield _frame.Frame(ref)
+            yield _frame.Frame(_handle=ref)
 
     @rx_frms.setter
     def rx_frms(self, value):
@@ -140,7 +147,7 @@ class Ecu(object):
         All frames an ECU transmits in a given cluster must be defined in the same cluster.
         """
         for ref in _props.get_ecu_tx_frm_refs(self._handle):
-            yield _frame.Frame(ref)
+            yield _frame.Frame(_handle=ref)
 
     @tx_frms.setter
     def tx_frms(self, value):
