@@ -206,7 +206,7 @@ def set_session_string(ref, prop_id, value):
     ref_ctypes = _ctypedefs.nxSessionRef_t(ref)
     prop_id_ctypes = _ctypedefs.u32(prop_id)
     prop_size_ctypes = _ctypedefs.u32(value_size)
-    value_ctypes = ctypes.create_string_buffer(value_bytes, value_size)
+    value_ctypes = ctypes.create_string_buffer(value_bytes)
     result = _cfuncs.lib.nx_set_property(
         ref_ctypes,
         prop_id_ctypes,
@@ -338,7 +338,7 @@ def set_session_sub_string(ref, sub, prop_id, value):
     sub_ctypes = _ctypedefs.u32(sub)
     prop_id_ctypes = _ctypedefs.u32(prop_id)
     prop_size_ctypes = _ctypedefs.u32(value_size)
-    value_ctypes = ctypes.create_string_buffer(value_bytes, value_size)
+    value_ctypes = ctypes.create_string_buffer(value_bytes)
     result = _cfuncs.lib.nx_set_sub_property(
         ref_ctypes,
         sub_ctypes,
@@ -579,7 +579,7 @@ def set_database_string(ref, prop_id, value):
     ref_ctypes = _ctypedefs.nxDatabaseRef_t(ref)
     prop_id_ctypes = _ctypedefs.u32(prop_id)
     prop_size_ctypes = _ctypedefs.u32(value_size)
-    value_ctypes = ctypes.create_string_buffer(value_bytes, value_size)
+    value_ctypes = ctypes.create_string_buffer(value_bytes)
     result = _cfuncs.lib.nxdb_set_property(
         ref_ctypes,
         prop_id_ctypes,
