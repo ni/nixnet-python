@@ -58,7 +58,7 @@ def main():
 
             frame.payload = payload
             output_session.frames.write([frame])
-            print('Sent frame with ID %s payload: %s' % (id, payload))
+            print('Sent frame with ID: {} payload: {}'.format(frame.identifier, list(frame.payload)))
             i += 1
 
     with system.System() as my_system:
