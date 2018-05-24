@@ -55,7 +55,8 @@ def main():
 
                 frame.payload = payload
                 output_session.frames.write([frame])
-                print('Sent frame with ID {} payload: {}'.format(id, payload))
+                print('Sent frame with ID: {} payload: {}'.format(frame.identifier,
+                                                                  list(frame.payload)))
 
                 # Wait 1 s and then read the received values.
                 # They should be the same as the ones sent.
@@ -64,8 +65,8 @@ def main():
                 count = 1
                 frames = input_session.frames.read(count)
                 for frame in frames:
-                    print('Received frame: {}'.format(frame))
-                    print('    payload={}'.format(list(six.iterbytes(frame.payload))))
+                    print('Received frame with ID: {} payload: {}'.format(frame.identifier,
+                                                                          list(six.iterbytes(frame.payload))))
 
                 i += 1
                 if max(payload) + i > 0xFF:
