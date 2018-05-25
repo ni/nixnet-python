@@ -48,7 +48,7 @@ of NI-XNET.
 
 **nixnet** can be installed with `pip <http://pypi.python.org/pypi/pip>`__::
 
-  $ python -m pip install nixnet
+  $ python -m pip install nixnet~=0.3.0
 
 Now you should be able to move onto the `Examples <https://github.com/ni/nixnet-python/tree/master/nixnet_examples>`__.
 
@@ -80,7 +80,7 @@ Status
 * The following support is included:
    * CAN and LIN protocol
    * Frames, Signals, and frame/signal conversion
-   * Database import
+   * Database APIs
    * For a complete list of supported features and functions, see the `documentation <http://nixnet.readthedocs.io>`__.
 * See the `enhancement issues <https://github.com/ni/nixnet-python/issues?q=is%3Aissue+is%3Aopen+label%3Aenhancement>`__ for potential future work.
 * Breaking API changes will be kept to a minimum. If a breaking change is made, it will be planned through
