@@ -1674,10 +1674,20 @@ class Phase(enum.Enum):
 
 
 class DevForm(enum.Enum):
-    '''Device physical form factor.'''
-    PXI = _cconsts.NX_DEV_FORM_PXI
-    PCI = _cconsts.NX_DEV_FORM_PCI
+    '''Device physical form factor.
+
+    Values:
+        C_SERIES
+        PCI
+        PCIE
+        PXI
+        PXIE
+        USB
+    '''
     C_SERIES = _cconsts.NX_DEV_FORM_C_SERIES
+    PCI = _cconsts.NX_DEV_FORM_PCI
+    PCIE = _cconsts.NX_DEV_FORM_PCIE
+    PXI = _cconsts.NX_DEV_FORM_PXI
     PXIE = _cconsts.NX_DEV_FORM_PXIE
     USB = _cconsts.NX_DEV_FORM_USB
 

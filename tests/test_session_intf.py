@@ -37,6 +37,22 @@ def test_intf_container(can_in_interface):
 
 
 @pytest.mark.integration
+def test_intf_lin_properties(lin_out_interface):
+    database_name = 'NIXNET_exampleLDF'
+    cluster_name = 'Cluster'
+    frame_name = 'MasterFrame1'
+
+    with nixnet.FrameOutQueuedSession(
+            lin_out_interface,
+            database_name,
+            cluster_name,
+            frame_name) as output_session:
+        # todo: Add testing for other LIN properties in session interface.
+        output_session.intf.lin_checksum_to_in_strm = True
+        assert output_session.intf.lin_checksum_to_in_strm
+
+
+@pytest.mark.integration
 def test_intf_properties_settable_only_when_stopped(can_out_interface):
     """Verify Interface properties settable only when stopped.
 

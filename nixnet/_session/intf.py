@@ -1012,6 +1012,21 @@ class Interface(object):
         _props.set_session_intf_lin_no_response_to_in_strm(self._handle, value)
 
     @property
+    def lin_checksum_to_in_strm(self):
+        # type: () -> bool
+        """bool: LIN Checksum to Input Stream?
+
+        Configure the hardware to place the received checksum for each LIN Data frame into the Event ID (Info) field.
+        When ``False``, the Event ID field contains ``0`` for all LIN Data stream input frames.
+        """
+        return _props.get_session_intf_lin_checksum_to_in_strm(self._handle)
+
+    @lin_checksum_to_in_strm.setter
+    def lin_checksum_to_in_strm(self, value):
+        # type: (bool) -> None
+        _props.set_session_intf_lin_checksum_to_in_strm(self._handle, value)
+
+    @property
     def src_term_start_trigger(self):
         # type: () -> typing.Text
         '''string: Source Terminal Start Trigger
