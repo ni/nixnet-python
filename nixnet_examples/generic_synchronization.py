@@ -25,7 +25,7 @@ def main():
                 interface1_input.intf.can_term = constants.CanTerm.ON
 
                 # Connect the start trigger terminals for the listening interface
-                interface1_input.connect_terminals(constants.Terminal.FRONT_PANEL_0, constants.Terminal.START_TRIGGER)
+                interface1_input.connect_terminals(constants.Terminal.PXI_TRIG_0, constants.Terminal.START_TRIGGER)
 
                 # Start the listening interface sessions
                 interface1_input.start()
@@ -37,7 +37,7 @@ def main():
                 interface2_input.intf.echo_tx = True
 
                 # Connect the start trigger terminals for the interface driving the start trigger
-                interface2_input.connect_terminals(constants.Terminal.START_TRIGGER, constants.Terminal.FRONTPANEL_1)
+                interface2_input.connect_terminals(constants.Terminal.START_TRIGGER, constants.Terminal.PXI_TRIG_0)
 
                 # Starting the sessions on the driving interface will trigger the start of the listening sessions
                 interface2_input.start(constants.StartStopScope.SESSION_ONLY)
