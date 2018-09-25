@@ -301,8 +301,8 @@ class SessionBase(object):
         pair is an internal and the other an external.
 
         Args:
-            source(str): Connection source name.
-            destination(str): Connection destination name.
+            source(constants.Terminal): Connection source name.
+            destination(constants.Terminal): Connection destination name.
         """
         _funcs.nx_connect_terminals(self._handle, source.value, destination.value)
 
@@ -331,8 +331,8 @@ class SessionBase(object):
         Attempting to disconnect a nonconnected terminal results in an error.
 
         Args:
-            source(str): Connection source name.
-            destination(str): Connection destination name.
+            source(constants.Terminal): Connection source name.
+            destination(constants.Terminal): Connection destination name.
         """
         _funcs.nx_disconnect_terminals(self._handle, source.value, destination.value)
 
