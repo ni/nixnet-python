@@ -1494,6 +1494,28 @@ def set_session_intf_lin_no_response_to_in_strm(
     )
 
 
+def get_session_intf_lin_checksum_to_in_strm(
+    ref,  # type: int
+):
+    # type: (...) -> bool
+    return _cprops.get_session_bool(
+        ref,
+        _cconsts.NX_PROP_SESSION_INTF_LIN_CHECKSUM_TO_IN_STRM,
+    )
+
+
+def set_session_intf_lin_checksum_to_in_strm(
+    ref,  # type: int
+    value,  # type: bool
+):
+    # type: (...) -> None
+    _cprops.set_session_bool(
+        ref,
+        _cconsts.NX_PROP_SESSION_INTF_LIN_CHECKSUM_TO_IN_STRM,
+        value,
+    )
+
+
 def get_session_intf_src_term_start_trigger(
     ref,  # type: int
 ):
@@ -1854,6 +1876,28 @@ def set_session_j1939_ecu_busy(
     _cprops.set_session_bool(
         ref,
         _cconsts.NX_PROP_SESSION_J1939_ECU_BUSY,
+        value,
+    )
+
+
+def get_session_j1939_include_dest_addr_in_pgn(
+    ref,  # type: int
+):
+    # type: (...) -> bool
+    return _cprops.get_session_bool(
+        ref,
+        _cconsts.NX_PROP_SESSION_J1939_INCLUDE_DEST_ADDR_IN_PGN,
+    )
+
+
+def set_session_j1939_include_dest_addr_in_pgn(
+    ref,  # type: int
+    value,  # type: bool
+):
+    # type: (...) -> None
+    _cprops.set_session_bool(
+        ref,
+        _cconsts.NX_PROP_SESSION_J1939_INCLUDE_DEST_ADDR_IN_PGN,
         value,
     )
 

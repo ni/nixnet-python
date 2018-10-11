@@ -140,3 +140,34 @@ class J1939(object):
     @ecu_busy.setter
     def ecu_busy(self, value):
         _props.set_session_j1939_ecu_busy(self._handle, value)
+
+    @property
+    def include_dest_addr_in_pgn(self):
+        # type: () -> bool
+        """bool: SAE J1939 Include Destination Address in PGN
+
+        Incoming J1939 frames are matched to an XNET database by the Parameter Group Number (PGN) of the frame.
+        When receiving PDU1 frames,
+        the destination address of the frame (J1939 PS field) is ignored when calculating the PGN,
+        in accordance to the J1939 specification.
+        This causes an XNET session to receive all frames that share the same PGN,
+        making it difficult to distinguish destinations for traffic.
+
+        When set to ``True``,
+        this property instructs NI-XNET to include the destination address when extracting the PGN from the frame.
+        This allows the same PGN sent to different destination addresses to be handled by separate input sessions.
+
+        This property may be set at any time.
+        When set after session start,
+        it will not affect frames already received.
+
+        This property is valid only for input sessions.
+        It is not valid for stream sessions.
+        This property affects all frames in a session.
+        """
+        return _props.get_session_j1939_include_dest_addr_in_pgn(self._handle)
+
+    @include_dest_addr_in_pgn.setter
+    def include_dest_addr_in_pgn(self, value):
+        # type: (bool) -> None
+        _props.set_session_j1939_include_dest_addr_in_pgn(self._handle, value)
