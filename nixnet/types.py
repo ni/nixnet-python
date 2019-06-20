@@ -180,7 +180,7 @@ class CanIdentifier(object):
         extended(bool): If the identifier is extended
     """
 
-    _FRAME_ID_MASK = 0x000003FF
+    _FRAME_ID_MASK = 0x000007FF
     _EXTENDED_FRAME_ID_MASK = 0x1FFFFFFF
 
     def __init__(self, identifier, extended=False):
