@@ -29,4 +29,4 @@ Uploading packages
 #. ``pip install wheel``
 #. ``python setup.py bdist_wheel --universal``
 #. ``pip install twine``
-#. ``twine upload dist/* -u <PyPI username> -p <PyPI password``
+#. ``twine upload dist/* -u <PyPI username> -p <PyPI password>``
