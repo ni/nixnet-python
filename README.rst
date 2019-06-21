@@ -48,7 +48,7 @@ of NI-XNET.
 
 **nixnet** can be installed with `pip <http://pypi.python.org/pypi/pip>`__::
 
-  $ python -m pip install nixnet~=0.3.0
+  $ python -m pip install nixnet~=0.3.1
 
 Now you should be able to move onto the `Examples <https://github.com/ni/nixnet-python/tree/master/nixnet_examples>`__.
 
