@@ -7,6 +7,7 @@ Cutting a release
 Update the version
 
 #. ``nixnet/VERSION``
+#. ``README.rst``
 #. Create release notes (`clog-cli <https://github.com/clog-tool/clog-cli/releases>`__ can help)
 #. ``git clean -ndx`` to see what files to clean up
 #. ``git clean -fdx`` to clean up files
