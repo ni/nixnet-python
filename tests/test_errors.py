@@ -75,7 +75,4 @@ def test_driver_call():
         _errors.check_for_error(_enums.Err.SELF_TEST_ERROR1.value)
     assert excinfo.value.error_code == _enums.Err.SELF_TEST_ERROR1.value
     assert excinfo.value.error_type == _enums.Err.SELF_TEST_ERROR1
-    assert excinfo.value.args == (
-        'NI-XNET:  (Hex 0xBFF63002) Board self test failed(code 2). '
-        'Solution: try reinstalling the driver or switching the slot(s) of the board(s). '
-        'If the error persists,contact National Instruments.', )
+    assert '(Hex 0xBFF63002)' in excinfo.value.args[0]

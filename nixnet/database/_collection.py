@@ -25,7 +25,7 @@ class DbCollection(collections.Mapping):
         self._factory = factory
 
     def __repr__(self):
-        return '{}(handle={0}, db_type={1})'.format(type(self).__name__, self._handle, self._type)
+        return '{}(handle={}, db_type={})'.format(type(self).__name__, self._handle, self._type)
 
     def __eq__(self, other):
         if isinstance(other, self.__class__):
