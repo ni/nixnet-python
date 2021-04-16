@@ -82,3 +82,22 @@ def test_conversion_roundtrip():
         converted_signals = session.convert_frames_to_signals(frames)
         for expected, (_, converted) in zip(expected_signals, converted_signals):
             assert pytest.approx(expected) == converted
+
+
+@pytest.mark.integration
+def test_conversion_multiframe():
+    database_name = 'NIXNET_example'
+    cluster_name = 'CAN_Cluster'
+    signal_names = ['CANCyclicSignal1', 'CANCyclicSignal3', 'CANEventSignal2', 'CANEventSignal4',
+                    'Speedometer', 'TransmissionOilTemp']
+
+    with convert.SignalConversionSinglePointSession(
+            database_name,
+            cluster_name,
+            signal_names) as session:
+
+        expected_signals = [2, 3, 4, 5, 39.06, 16]
+        frames = session.convert_signals_to_frames(expected_signals)
+        converted_signals = session.convert_frames_to_signals(frames)
+        for expected, (_, converted) in zip(expected_signals, converted_signals):
+            assert pytest.approx(expected) == converted
