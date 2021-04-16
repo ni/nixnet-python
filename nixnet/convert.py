@@ -245,7 +245,7 @@ class SignalConversionSinglePointSession(object):
                 break
             except errors.XnetError as e:
                 if e.error_type == constants.Err.BUFFER_TOO_SMALL:
-                    num_bytes_to_read *= 2
+                    num_frames_to_read *= 2
                 else:
                     raise
         for frame in _frames.iterate_frames(buffer):
