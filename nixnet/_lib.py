@@ -57,11 +57,22 @@ def _import_win_lib():
     return XnetLibrary(cdll)
 
 
+def _import_linux_lib():
+    lib_name = "libnixnet.so"
+    try:
+        cdll = ctypes.cdll.LoadLibrary(lib_name)
+    except OSError:
+        raise XnetNotFoundError()
+    return XnetLibrary(cdll)
+
+
 def _import_unsupported():
     raise PlatformUnsupportedError(sys.platform)
 
 
 if sys.platform.startswith('win') or sys.platform.startswith('cli'):
     import_lib = _import_win_lib
+elif sys.platform.startswith('linux'):
+    import_lib = _import_linux_lib
 else:
     import_lib = _import_unsupported
