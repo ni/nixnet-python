@@ -6,6 +6,8 @@ import itertools
 import typing  # NOQA: F401
 import warnings
 
+import six
+
 from nixnet import _frames
 from nixnet import _funcs
 from nixnet import _props
@@ -176,7 +178,7 @@ class SignalConversionSinglePointSession(object):
         # type: (bytes) -> typing.Iterable[typing.Tuple[int, float]]
         num_signals = len(self.signals)
         timestamps, values = _funcs.nx_convert_frames_to_signals_single_point(self._handle, bytes, num_signals)
-        for timestamp, value in zip(timestamps, values):
+        for timestamp, value in six.moves.zip(timestamps, values):
             yield timestamp.value, value.value
 
     def convert_frames_to_signals(self, frames):
