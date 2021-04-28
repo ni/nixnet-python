@@ -445,7 +445,7 @@ def test_connect_terminals_failures(can_in_interface):
             cluster_name,
             frame_name) as input_session:
         with pytest.raises(errors.XnetError) as excinfo:
-            input_session.connect_terminals("FrontPanel0", "FrontPanel1")
+            input_session.connect_terminals(constants.Terminal.FRONT_PANEL_0, constants.Terminal.FRONT_PANEL_1)
         assert excinfo.value.error_type in [
             constants.Err.SYNCHRONIZATION_NOT_ALLOWED,
             constants.Err.INVALID_SYNCHRONIZATION_COMBINATION]
@@ -464,7 +464,7 @@ def test_disconnect_terminals_failures(can_in_interface):
             cluster_name,
             frame_name) as input_session:
         with pytest.raises(errors.XnetError) as excinfo:
-            input_session.disconnect_terminals("FrontPanel0", "FrontPanel1")
+            input_session.disconnect_terminals(constants.Terminal.FRONT_PANEL_0, constants.Terminal.FRONT_PANEL_1)
         assert excinfo.value.error_type in [
             constants.Err.SYNCHRONIZATION_NOT_ALLOWED,
             constants.Err.INVALID_SYNCHRONIZATION_COMBINATION]
