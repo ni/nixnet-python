@@ -11,6 +11,7 @@ python:
   - pypy3.5-6.0
 
 install:
+  - python -m pip install --update pip
   - pip install --upgrade setuptools
   - pip install -U tox-travis
   - pip install -U coveralls
