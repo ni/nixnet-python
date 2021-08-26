@@ -11,43 +11,42 @@ class PyTest(test):
 
     def run_tests(self):
         import pytest
+
         pytest.main(self.test_args)
 
 
-pypi_name = 'nixnet'
+pypi_name = "nixnet"
 
 
 def read_contents(file_to_read):
-    with open(file_to_read, 'r') as f:
+    with open(file_to_read, "r") as f:
         return f.read()
 
 
 def get_version():
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    version_path = os.path.join(script_dir, pypi_name, 'VERSION')
+    version_path = os.path.join(script_dir, pypi_name, "VERSION")
     return read_contents(version_path).strip()
 
 
 setup(
     name=pypi_name,
     version=get_version(),
-    description='NI-XNET Python API',
-    long_description=read_contents('README.rst'),
-    author='National Instruments',
-    author_email='ed.page@ni.com',
-    url='https://github.com/ni/nixnet-python',
-    maintainer="Ed Page, Ajay Jashnani",
-    maintainer_email="ed.page@ni.com, ajay.jashnani@ni.com",
-    keywords=['nixnet'],
-    license='MIT',
+    description="NI-XNET Python API",
+    long_description=read_contents("README.rst"),
+    author="National Instruments",
+    author_email="opensource@ni.com",
+    url="https://github.com/ni/nixnet-python",
+    keywords=["nixnet"],
+    license="MIT",
     include_package_data=True,
-    packages=['nixnet'],
+    packages=["nixnet"],
     install_requires=[
         'enum34;python_version<"3.4"',
         'typing;python_version<"3.5"',
-        'six'
+        "six",
     ],
-    tests_require=['pytest', 'mock'],
+    tests_require=["pytest", "mock"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -64,8 +63,8 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
-        "Topic :: System :: Hardware :: Hardware Drivers"
+        "Topic :: System :: Hardware :: Hardware Drivers",
     ],
-    cmdclass={'test': PyTest},
-    package_data={pypi_name: ['VERSION']},
+    cmdclass={"test": PyTest},
+    package_data={pypi_name: ["VERSION"]},
 )
