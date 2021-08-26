@@ -12,19 +12,19 @@ Author       National Instruments
     :alt: Documentation
 
 .. image:: https://img.shields.io/pypi/l/nixnet.svg
-    :target: https://github.com/ni/nixnet-python/blob/master/LICENSE
+    :target: https://github.com/ni/nixnet-python/blob/main/LICENSE
     :alt: License
 
 .. image:: https://img.shields.io/pypi/pyversions/nixnet.svg
     :target: https://pypi.python.org/pypi/nixnet
     :alt: Language versions
 
-.. image:: https://travis-ci.org/ni/nixnet-python.svg?branch=master
+.. image:: https://travis-ci.org/ni/nixnet-python.svg?branch=main
     :target: https://travis-ci.org/ni/nixnet-python
     :alt: Build
 
-.. image:: https://coveralls.io/repos/github/ni/nixnet-python/badge.svg?branch=master
-    :target: https://coveralls.io/github/ni/nixnet-python?branch=master
+.. image:: https://coveralls.io/repos/github/ni/nixnet-python/badge.svg?branch=main
+    :target: https://coveralls.io/github/ni/nixnet-python?branch=main
     :alt: Unit-test Coverage
 
 .. code-block:: python
@@ -50,7 +50,7 @@ of NI-XNET.
 
   $ python -m pip install nixnet~=0.3.1
 
-Now you should be able to move onto the `Examples <https://github.com/ni/nixnet-python/tree/master/nixnet_examples>`__.
+Now you should be able to move onto the `Examples <https://github.com/ni/nixnet-python/tree/main/nixnet_examples>`__.
 
 Resources
 =========
@@ -70,7 +70,7 @@ Bugs / Feature Requests
 We welcome all kinds of contributions.  If you have a bug to report or a feature
 request for **nixnet**, feel free to `open an issue on Github
 <https://github.com/ni/nixnet-python/issues>`__ or `contribute the change yourself
-<https://github.com/ni/nixnet-python/blob/master/CONTRIBUTING.rst>`__.
+<https://github.com/ni/nixnet-python/blob/main/CONTRIBUTING.rst>`__.
 
 Status
 ======
@@ -98,6 +98,6 @@ License
 =======
 
 **nixnet** is licensed under an MIT-style license (see
-`LICENSE <https://github.com/ni/nixnet-python/blob/master/LICENSE>`__).
+`LICENSE <https://github.com/ni/nixnet-python/blob/main/LICENSE>`__).
 Other incorporated projects may be licensed under different licenses. All
 licenses allow for non-commercial and commercial use.

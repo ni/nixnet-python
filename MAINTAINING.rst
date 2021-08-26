@@ -16,8 +16,8 @@ Update the version
 
 Tagging a release
 
-#. (on master) ``git tag -a v<X>.<Y>.<Z>`` with the release notes as the message
-#. ``git push <UPSTREAM> master --tag v<X>.<Y>.<Z>``
+#. (on main) ``git tag -a v<X>.<Y>.<Z>`` with the release notes as the message
+#. ``git push <UPSTREAM> main --tag v<X>.<Y>.<Z>``
 #. Go to https://github.com/ni/nixnet-python/releases
 #. The new release should be there, but it will be poorly formatted.
 #. Draft a new release. Use the same tag version. You don't need to attach any new files.

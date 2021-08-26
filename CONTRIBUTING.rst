@@ -29,7 +29,7 @@ To contribute to this project, it is recommended that you follow these steps:
 4. Make your change.
 5. Run all the unit tests again (which include the tests you just added),
    and confirm that they all pass.
-6. Send a GitHub Pull Request to the main repository's master branch. GitHub
+6. Send a GitHub Pull Request to the ni/nixnet-python main branch. GitHub
    Pull Requests are the expected method of code collaboration on this project.
 
 .. _testing-section:
@@ -97,5 +97,5 @@ By making a contribution to this project, I certify that:
 
 (taken from `developercertificate.org <http://developercertificate.org/>`_)
 
-See `LICENSE <https://github.com/ni/nixnet-python/blob/master/LICENSE>`_
+See `LICENSE <https://github.com/ni/nixnet-python/blob/main/LICENSE>`_
 for details about how **nixnet** is licensed.
