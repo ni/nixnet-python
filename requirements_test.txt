@@ -68,7 +68,7 @@ pytest-cov==2.5.1
     # via -r requirements_test.in
 pytz==2017.2
     # via babel
-requests==2.18.2
+requests==2.20.0
     # via sphinx
 six==1.10.0
     # via
