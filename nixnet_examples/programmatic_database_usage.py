@@ -15,7 +15,7 @@ from nixnet import types
 def main():
     with system.System() as my_system:
         database_alias = 'custom_database'
-        database_filepath = os.path.join(os.path.dirname(__file__), 'databases\custom_database.dbc')
+        database_filepath = os.path.join(os.path.dirname(__file__), 'databases', 'custom_database.dbc')
         default_baud_rate = 500000
         my_system.databases.add_alias(database_alias, database_filepath, default_baud_rate)
 
