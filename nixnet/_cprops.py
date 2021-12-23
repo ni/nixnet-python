@@ -573,7 +573,7 @@ def get_database_string(ref, prop_id):
 
 def set_database_string(ref, prop_id, value):
     # type: (int, int, typing.Text) -> None
-    value_bytes = value.encode("ansi")
+    value_bytes = value.encode("utf-8")
     value_size = len(value_bytes) * _ctypedefs.char.BYTES
 
     ref_ctypes = _ctypedefs.nxDatabaseRef_t(ref)
