@@ -2,7 +2,10 @@
 from __future__ import division
 from __future__ import print_function
 
-import collections
+try:
+    from collections.abc import Mapping  # python 3.3+
+except ImportError:
+    from collections import Mapping  # python 2.7
 import typing  # NOQA: F401
 
 import six
@@ -10,7 +13,7 @@ import six
 from nixnet import _funcs
 
 
-class AliasCollection(collections.Mapping):
+class AliasCollection(Mapping):
     """Alias aliases."""
 
     def __init__(self, handle):

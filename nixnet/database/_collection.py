@@ -2,7 +2,10 @@
 from __future__ import division
 from __future__ import print_function
 
-import collections
+try:
+    from collections.abc import Mapping  # python 3.3+
+except ImportError:
+    from collections import Mapping  # python 2.7
 import typing  # NOQA: F401
 
 import six
@@ -14,7 +17,7 @@ from nixnet import constants  # NOQA: F401
 from nixnet.database import _database_object  # NOQA: F401
 
 
-class DbCollection(collections.Mapping):
+class DbCollection(Mapping):
     """Collection of database objects."""
 
     def __init__(self, handle, db_type, prop_id, factory):

@@ -3,7 +3,10 @@ from __future__ import division
 from __future__ import print_function
 
 import abc
-import collections
+try:
+    from collections.abc import Sequence  # python 3.3+
+except ImportError:
+    from collections import Sequence  # python 2.7
 import typing  # NOQA: F401
 
 import six
@@ -12,7 +15,7 @@ from nixnet import _props
 
 
 @six.add_metaclass(abc.ABCMeta)
-class Collection(collections.Sequence):
+class Collection(Sequence):
     """Collection of items in a session."""
 
     def __init__(self, handle):
