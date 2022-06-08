@@ -568,12 +568,12 @@ def get_database_string(ref, prop_id):
         prop_size_ctypes,
         value_ctypes)
     _errors.check_for_error(result.value)
-    return value_ctypes.value.decode("ascii")
+    return "".join(chr(x) for x in value_ctypes.value)
 
 
 def set_database_string(ref, prop_id, value):
     # type: (int, int, typing.Text) -> None
-    value_bytes = value.encode("ascii")
+    value_bytes = value.encode("utf-8")
     value_size = len(value_bytes) * _ctypedefs.char.BYTES
 
     ref_ctypes = _ctypedefs.nxDatabaseRef_t(ref)
