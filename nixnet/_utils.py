@@ -2,7 +2,10 @@
 from __future__ import division
 from __future__ import print_function
 
-import collections
+try:
+    from collections.abc import Iterable # python 3.3+
+except ImportError:
+    from collections import Iterable  # python 2.7
 import typing  # NOQA: F401
 
 import six
@@ -30,7 +33,7 @@ def flatten_items(list):
         if ',' in list:
             _errors.raise_xnet_error(_cconsts.NX_ERR_INVALID_PROPERTY_VALUE)
         flattened = list
-    elif isinstance(list, collections.Iterable):
+    elif isinstance(list, Iterable):
         flattened = ",".join(list)
     elif list is None:
         # For FRAME_IN_STREAM / FRAME_OUT_STREAM

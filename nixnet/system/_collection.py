@@ -2,13 +2,16 @@
 from __future__ import division
 from __future__ import print_function
 
-import collections
+try:
+    from collections.abc import Iterable, Sized  # python 3.3+
+except ImportError:
+    from collections import Iterable, Sized  # python 2.7
 import typing  # NOQA: F401
 
 from nixnet import _cprops
 
 
-class SystemCollection(collections.Iterable, collections.Sized):
+class SystemCollection(Iterable, Sized):
     """Collection of System related objects."""
 
     def __init__(self, handle, prop_id, factory):
