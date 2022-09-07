@@ -16,7 +16,7 @@ python:
 
 install:
   - python -m pip install --upgrade pip
-  - pip install --upgrade 'importlib-metadata > 4'
+  - pip install -U importlib-metadata
   - pip install --upgrade setuptools
   - pip install -U tox-travis
   - pip install -U coveralls
