@@ -10,11 +10,13 @@ python:
   - 3.7
   - 3.8
   - 3.9
+  - 3.10
   - pypy2.7-6.0
   - pypy3.5-6.0
 
 install:
   - python -m pip install --upgrade pip
+  - pip install --upgrade 'importlib-metadata > 4'
   - pip install --upgrade setuptools
   - pip install -U tox-travis
   - pip install -U coveralls
