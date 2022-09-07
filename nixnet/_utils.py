@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 try:
-    from collections.abc import Iterable # python 3.3+
+    from collections.abc import Iterable  # python 3.3+
 except ImportError:
     from collections import Iterable  # python 2.7
 import typing  # NOQA: F401
