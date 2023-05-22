@@ -10,7 +10,7 @@ babel==2.4.0
     # via sphinx
 certifi==2017.7.27.1
     # via requests
-chardet==3.0.4
+charset-normalizer==3.1.0
     # via requests
 check-manifest==0.35
     # via -r requirements_test.in
@@ -68,7 +68,7 @@ pytest-cov==2.5.1
     # via -r requirements_test.in
 pytz==2017.2
     # via babel
-requests==2.20.0
+requests==2.31.0
     # via sphinx
 six==1.10.0
     # via
