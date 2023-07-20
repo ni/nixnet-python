@@ -56,7 +56,7 @@ pyflakes==0.8.1
     # via
     #   flake8
     #   hacking
-pygments==2.2.0
+pygments==2.15.0
     # via
     #   -r requirements_test.in
     #   sphinx
