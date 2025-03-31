@@ -9,11 +9,6 @@ of NI-XNET.
 
   $ python -m pip install nixnet
 
-Or **easy_install** from
-`setuptools <http://pypi.python.org/pypi/setuptools>`_::
-
-  $ python -m easy_install nixnet
-
 You also can download the project source and run::
 
-  $ python setup.py install
+  $ poetry install

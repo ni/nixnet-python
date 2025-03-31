@@ -3,6 +3,7 @@
 .tox/
 junit/
 docs/_build/
+dist/
 __pycache__
 .coverage
 coverage.xml

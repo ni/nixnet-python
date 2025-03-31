@@ -18,6 +18,7 @@ install:
   - pip install --upgrade packaging setuptools
   - pip install -U tox-travis
   - pip install -U coveralls
+  - pip install -U poetry
 
 script:
   - tox
