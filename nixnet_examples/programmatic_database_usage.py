@@ -64,5 +64,6 @@ def main():
     with system.System() as my_system:
         del my_system.databases[database_name]
 
+
 if __name__ == '__main__':
     main()
