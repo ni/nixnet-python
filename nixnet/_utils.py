@@ -3,9 +3,11 @@ from __future__ import division
 from __future__ import print_function
 
 try:
-    from collections.abc import Iterable # python 3.3+
+    # Python 3.3+
+    from collections.abc import Iterable
 except ImportError:
-    from collections import Iterable  # python 2.7
+    # Python 2.7
+    from collections import Iterable  # type: ignore
 import typing  # NOQA: F401
 
 import six
@@ -17,7 +19,7 @@ from nixnet import types
 
 
 def flatten_items(list):
-    # type: (typing.Union[typing.Text, typing.List[typing.Text]]) -> typing.Text
+    # type: (typing.Union[typing.Text, typing.List[typing.Text], None]) -> typing.Text
     """Flatten an item list to a string
 
     >>> str(flatten_items('Item'))

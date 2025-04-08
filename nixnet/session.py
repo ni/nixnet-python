@@ -86,7 +86,7 @@ class FrameInStreamSession(base.SessionBase):
             flattened_list,
             interface_name,
             constants.CreateSessionMode.FRAME_IN_STREAM)
-        self._frames = session_frames.InFrames(self._handle)
+        self._frames = session_frames.InFrames(self._handle)  # type: ignore
 
     @property
     def frames(self):
@@ -164,7 +164,7 @@ class FrameOutStreamSession(base.SessionBase):
             flattened_list,
             interface_name,
             constants.CreateSessionMode.FRAME_OUT_STREAM)
-        self._frames = session_frames.OutFrames(self._handle)
+        self._frames = session_frames.OutFrames(self._handle)  # type: ignore
 
     @property
     def frames(self):
@@ -229,7 +229,7 @@ class FrameInQueuedSession(base.SessionBase):
             flattened_list,
             interface_name,
             constants.CreateSessionMode.FRAME_IN_QUEUED)
-        self._frames = session_frames.InFrames(self._handle)
+        self._frames = session_frames.InFrames(self._handle)  # type: ignore
 
     @property
     def frames(self):
@@ -307,7 +307,7 @@ class FrameOutQueuedSession(base.SessionBase):
             flattened_list,
             interface_name,
             constants.CreateSessionMode.FRAME_OUT_QUEUED)
-        self._frames = session_frames.OutFrames(self._handle)
+        self._frames = session_frames.OutFrames(self._handle)  # type: ignore
 
     @property
     def frames(self):
@@ -375,7 +375,7 @@ class FrameInSinglePointSession(base.SessionBase):
             flattened_list,
             interface_name,
             constants.CreateSessionMode.FRAME_IN_SINGLE_POINT)
-        self._frames = session_frames.SinglePointInFrames(self._handle)
+        self._frames = session_frames.SinglePointInFrames(self._handle)  # type: ignore
 
     @property
     def frames(self):
@@ -453,7 +453,7 @@ class FrameOutSinglePointSession(base.SessionBase):
             flattened_list,
             interface_name,
             constants.CreateSessionMode.FRAME_OUT_SINGLE_POINT)
-        self._frames = session_frames.SinglePointOutFrames(self._handle)
+        self._frames = session_frames.SinglePointOutFrames(self._handle)  # type: ignore
 
     @property
     def frames(self):
@@ -538,7 +538,7 @@ class SignalInSinglePointSession(base.SessionBase):
             flattened_list,
             interface_name,
             constants.CreateSessionMode.SIGNAL_IN_SINGLE_POINT)
-        self._signals = session_signals.SinglePointInSignals(self._handle)
+        self._signals = session_signals.SinglePointInSignals(self._handle)  # type: ignore
 
     @property
     def signals(self):
@@ -617,7 +617,7 @@ class SignalOutSinglePointSession(base.SessionBase):
             flattened_list,
             interface_name,
             constants.CreateSessionMode.SIGNAL_OUT_SINGLE_POINT)
-        self._signals = session_signals.SinglePointOutSignals(self._handle)
+        self._signals = session_signals.SinglePointOutSignals(self._handle)  # type: ignore
 
     @property
     def signals(self):

@@ -71,7 +71,7 @@ class XnetWarning(Warning):
         self._warning_code = warning_code
 
         try:
-            self._warning_type = _enums.Warn(self._warning_code)
+            self._warning_type = _enums.Warn(self._warning_code)  # type: typing.Optional[_enums.Warn]
         except ValueError:
             self._warning_type = None
 
@@ -83,7 +83,7 @@ class XnetWarning(Warning):
 
     @property
     def warning_type(self):
-        # type: (...) -> _enums.Warn
+        # type: (...) -> typing.Optional[_enums.Warn]
         """:any:`nixnet._enums.Warn`: Warning type reported by NI-XNET."""
         return self._warning_type
 

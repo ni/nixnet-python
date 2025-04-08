@@ -1,5 +1,6 @@
 include *.txt
 include LICENSE
+include mypy.ini
 include nixnet/VERSION
 recursive-include nixnet *.py
 recursive-include nixnet_examples *.py
