@@ -1,18 +1,5 @@
 ﻿import os
-from setuptools.command.test import test
 from setuptools import setup
-
-
-class PyTest(test):
-    def finalize_options(self):
-        test.finalize_options(self)
-        self.test_args = []
-        self.test_suite = True
-
-    def run_tests(self):
-        import pytest
-
-        pytest.main(self.test_args)
 
 
 pypi_name = "nixnet"
@@ -46,7 +33,6 @@ setup(
         'typing;python_version<"3.5"',
         "six",
     ],
-    tests_require=["pytest", "mock"],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
@@ -68,6 +54,5 @@ setup(
         "Programming Language :: Python :: Implementation :: PyPy",
         "Topic :: System :: Hardware :: Hardware Drivers",
     ],
-    cmdclass={"test": PyTest},
     package_data={pypi_name: ["VERSION"]},
 )
