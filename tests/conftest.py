@@ -26,6 +26,10 @@ def pytest_addoption(parser):
         help="The LIN interface to use with the tests")
 
 
+def pytest_configure(config):
+    config.addinivalue_line("markers", "integration: Integration test.")
+
+
 @pytest.fixture
 def can_in_interface(request):
     interface = request.config.getoption("--can-in-interface")
