@@ -30,7 +30,7 @@ idna==2.5
     # via requests
 imagesize==0.7.1
     # via sphinx
-jinja2==2.9.6
+jinja2==2.11.3
     # via sphinx
 markupsafe==1.1
     # via jinja2
