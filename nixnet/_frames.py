@@ -10,7 +10,7 @@ from nixnet import constants
 from nixnet import types
 
 
-nxFrameFixed_t = struct.Struct('QIBBBB8s')  # NOQA: N801
+nxFrameFixed_t = struct.Struct('QIBBBB8s')  # NOQA: N801, N816
 assert nxFrameFixed_t.size == 24, 'Incorrectly specified frame.'
 FRAME_TIMESTAMP_INDEX = 0
 FRAME_IDENTIFIER_INDEX = 1

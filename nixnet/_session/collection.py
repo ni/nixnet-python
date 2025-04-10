@@ -91,8 +91,9 @@ class Collection(Sequence):
         if isinstance(other, self.__class__):
             other_collection = typing.cast(Collection, other)
             return (
-                self._handle == other_collection._handle and
-                self._list_cache == other_collection._list_cache)
+                self._handle == other_collection._handle
+                and self._list_cache == other_collection._list_cache
+            )
         else:
             return NotImplemented
 
@@ -132,8 +133,9 @@ class Item(object):
         if isinstance(other, self.__class__):
             other_item = typing.cast(Item, other)
             return (
-                self._handle == other_item._handle and
-                self._index == other_item._index)
+                self._handle == other_item._handle
+                and self._index == other_item._index
+            )
         else:
             return NotImplemented
 
