@@ -4,9 +4,11 @@ from __future__ import print_function
 
 import abc
 try:
-    from collections.abc import Sequence  # python 3.3+
+    # Python 3.3+
+    from collections.abc import Sequence
 except ImportError:
-    from collections import Sequence  # python 2.7
+    # Python 2.7
+    from collections import Sequence  # type: ignore
 import typing  # NOQA: F401
 
 import six
@@ -21,7 +23,7 @@ class Collection(Sequence):
     def __init__(self, handle):
         # type: (int) -> None
         self._handle = handle
-        self.__list_cache = None  # type: typing.List[typing.Text]
+        self.__list_cache = None  # type: typing.Optional[typing.List[typing.Text]]
 
     def __repr__(self):
         return '{}(handle={})'.format(type(self).__name__, self._handle)

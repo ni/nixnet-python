@@ -154,7 +154,7 @@ class LinComm(LinComm_):
     pass
 
 
-PduProperties_ = collections.namedtuple(
+PduProperties_ = collections.namedtuple(  # type: ignore
     'PDU_PROPERTIES_',
     ['pdu', 'start_bit', 'update_bit'])
 

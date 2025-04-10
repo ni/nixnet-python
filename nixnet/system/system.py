@@ -148,24 +148,24 @@ class System(object):
     @property
     def _ver_build(self):
         # type: () -> int
-        return _props.get_system_ver_build(self._handle)
+        return _props.get_system_ver_build(self._handle)  # type: ignore
 
     @property
     def _ver_major(self):
         # type: () -> int
-        return _props.get_system_ver_major(self._handle)
+        return _props.get_system_ver_major(self._handle)  # type: ignore
 
     @property
     def _ver_minor(self):
         # type: () -> int
-        return _props.get_system_ver_minor(self._handle)
+        return _props.get_system_ver_minor(self._handle)  # type: ignore
 
     @property
     def _ver_phase(self):
         # type: () -> constants.Phase
-        return constants.Phase(_props.get_system_ver_phase(self._handle))
+        return constants.Phase(_props.get_system_ver_phase(self._handle))  # type: ignore
 
     @property
     def _ver_update(self):
         # type: () -> int
-        return _props.get_system_ver_update(self._handle)
+        return _props.get_system_ver_update(self._handle)  # type: ignore

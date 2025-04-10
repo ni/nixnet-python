@@ -3,11 +3,13 @@ from __future__ import division
 from __future__ import print_function
 
 try:
-    from collections.abc import Iterable  # python 3.3+
-    from collections.abc import Sized  # python 3.3+
+    # Python 3.3+
+    from collections.abc import Iterable
+    from collections.abc import Sized
 except ImportError:
-    from collections import Iterable  # python 2.7
-    from collections import Sized  # python 2.7
+    # Python 2.7
+    from collections import Iterable  # type: ignore
+    from collections import Sized  # type: ignore
 import typing  # NOQA: F401
 
 from nixnet import _cprops

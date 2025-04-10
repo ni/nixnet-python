@@ -158,7 +158,7 @@ class Database(_database_object.DatabaseObject):
             ValueError: Unsupported value provided for argument ``object_class``.
             :any:`XnetError`: The object is not found.
         """
-        return _find_object.find_object(self._handle, object_class, object_name)
+        return _find_object.find_object(self._handle, object_class, object_name)  # type: ignore
 
     def save(self, db_filepath=""):
         # type: (typing.Text) -> None
@@ -184,12 +184,12 @@ class Database(_database_object.DatabaseObject):
             db_filepath(str): Contains the pathname to the database file or is
                 empty (saves to the original filepath).
         """
-        _funcs.nxdb_save_database(self._handle, db_filepath)
+        _funcs.nxdb_save_database(self._handle, db_filepath)  # type: ignore
 
     @property
     def name(self):
         # type: () -> typing.Text
-        return _props.get_database_name(self._handle)
+        return _props.get_database_name(self._handle)  # type: ignore
 
     @property
     def clusters(self):
@@ -245,9 +245,9 @@ class Database(_database_object.DatabaseObject):
         :any:`Frame.check_config_status` raises an exception,
         but the frame is returned from :any:`Cluster.frames`.
         """
-        return _props.get_database_show_invalid_from_open(self._handle)
+        return _props.get_database_show_invalid_from_open(self._handle)  # type: ignore
 
     @show_invalid_from_open.setter
     def show_invalid_from_open(self, value):
         # type: (bool) -> None
-        _props.set_database_show_invalid_from_open(self._handle, value)
+        _props.set_database_show_invalid_from_open(self._handle, value)  # type: ignore

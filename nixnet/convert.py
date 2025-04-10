@@ -143,19 +143,20 @@ class SignalConversionSinglePointSession(object):
 
         The database used with the session determines the application protocol.
         """
-        return constants.AppProtocol(_props.get_session_application_protocol(self._handle))
+        return constants.AppProtocol(
+            _props.get_session_application_protocol(self._handle))  # type: ignore
 
     @property
     def cluster_name(self):
         # type: () -> typing.Text
         """str: This property returns the cluster (network) name used with the session."""
-        return _props.get_session_cluster_name(self._handle)
+        return _props.get_session_cluster_name(self._handle)  # type: ignore
 
     @property
     def database_name(self):
         # type: () -> typing.Text
         """str: This property returns the database name used with the session."""
-        return _props.get_session_database_name(self._handle)
+        return _props.get_session_database_name(self._handle)  # type: ignore
 
     @property
     def mode(self):
@@ -164,18 +165,21 @@ class SignalConversionSinglePointSession(object):
 
         For more information, refer to :any:`nixnet._enums.CreateSessionMode`.
         """
-        return constants.CreateSessionMode(_props.get_session_mode(self._handle))
+        return constants.CreateSessionMode(
+            _props.get_session_mode(self._handle))  # type: ignore
 
     @property
     def protocol(self):
         # type: () -> constants.Protocol
         """:any:`nixnet._enums.Protocol`: This property returns the protocol that the interface in the session uses."""
-        return constants.Protocol(_props.get_session_protocol(self._handle))
+        return constants.Protocol(
+            _props.get_session_protocol(self._handle))  # type: ignore
 
     def _convert_bytes_to_signals(self, bytes):
         # type: (bytes) -> typing.Iterable[typing.Tuple[int, float]]
         num_signals = len(self.signals)
-        timestamps, values = _funcs.nx_convert_frames_to_signals_single_point(self._handle, bytes, num_signals)
+        timestamps, values = _funcs.nx_convert_frames_to_signals_single_point(
+            self._handle, bytes, num_signals)  # type: ignore
         for timestamp, value in zip(timestamps, values):
             yield timestamp.value, value.value
 
@@ -207,7 +211,7 @@ class SignalConversionSinglePointSession(object):
     def _convert_signals_to_bytes(self, signals, num_bytes):
         # type: (typing.Iterable[float], int) -> bytes
         buffer, number_of_bytes_returned = _funcs.nx_convert_signals_to_frames_single_point(
-            self._handle,
+            self._handle,  # type: ignore
             list(signals),
             num_bytes)
         return buffer[0:number_of_bytes_returned]

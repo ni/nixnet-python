@@ -162,7 +162,7 @@ class SessionBase(object):
                 this operation on the underlying state models for the session
                 and its interface.
         """
-        _funcs.nx_start(self._handle, scope)
+        _funcs.nx_start(self._handle, scope)  # type: ignore
 
     def stop(self, scope=constants.StartStopScope.NORMAL):
         # type: (constants.StartStopScope) -> None
@@ -191,7 +191,7 @@ class SessionBase(object):
                 this operation on the underlying state models for the session
                 and its interface.
         """
-        _funcs.nx_stop(self._handle, scope)
+        _funcs.nx_stop(self._handle, scope)  # type: ignore
 
     def flush(self):
         # type: () -> None
@@ -225,7 +225,7 @@ class SessionBase(object):
         only frames received after the calling
         :any:`nixnet._session.base.SessionBase.start`.
         """
-        _funcs.nx_flush(self._handle)
+        _funcs.nx_flush(self._handle)  # type: ignore
 
     def wait_for_transmit_complete(self, timeout=10):
         # type: (float) -> None
@@ -238,7 +238,11 @@ class SessionBase(object):
         Args:
             timeout(float): The maximum amount of time to wait in seconds.
         """
-        _funcs.nx_wait(self._handle, constants.Condition.TRANSMIT_COMPLETE, 0, timeout)
+        _funcs.nx_wait(
+            self._handle,  # type: ignore
+            constants.Condition.TRANSMIT_COMPLETE,
+            0,
+            timeout)
 
     def wait_for_intf_communicating(self, timeout=10):
         # type: (float) -> None
@@ -261,7 +265,11 @@ class SessionBase(object):
         Args:
             timeout(float): The maximum amount of time to wait in seconds.
         """
-        _funcs.nx_wait(self._handle, constants.Condition.INTF_COMMUNICATING, 0, timeout)
+        _funcs.nx_wait(
+            self._handle,  # type: ignore
+            constants.Condition.INTF_COMMUNICATING,
+            0,
+            timeout)
 
     def wait_for_intf_remote_wakeup(self, timeout=10):
         # type: (float) -> None
@@ -283,7 +291,11 @@ class SessionBase(object):
         Args:
             timeout(float): The maximum amount of time to wait in seconds.
         """
-        _funcs.nx_wait(self._handle, constants.Condition.INTF_REMOTE_WAKEUP, 0, timeout)
+        _funcs.nx_wait(
+            self._handle,  # type: ignore
+            constants.Condition.INTF_REMOTE_WAKEUP,
+            0,
+            timeout)
 
     def connect_terminals(self, source, destination):
         # type: (typing.Text, typing.Text) -> None
@@ -304,7 +316,7 @@ class SessionBase(object):
             source(str): Connection source name.
             destination(str): Connection destination name.
         """
-        _funcs.nx_connect_terminals(self._handle, source, destination)
+        _funcs.nx_connect_terminals(self._handle, source, destination)  # type: ignore
 
     def disconnect_terminals(self, source, destination):
         # type: (typing.Text, typing.Text) -> None
@@ -334,7 +346,7 @@ class SessionBase(object):
             source(str): Connection source name.
             destination(str): Connection destination name.
         """
-        _funcs.nx_disconnect_terminals(self._handle, source, destination)
+        _funcs.nx_disconnect_terminals(self._handle, source, destination)  # type: ignore
 
     def change_lin_schedule(self, sched_index):
         # type: (int) -> None
@@ -357,7 +369,10 @@ class SessionBase(object):
                 database with the `nixnet.database._cluster.Cluster.lin_schedules`
                 property.
         """
-        _funcs.nx_write_state(self._handle, constants.WriteState.LIN_SCHEDULE_CHANGE, _ctypedefs.u32(sched_index))
+        _funcs.nx_write_state(
+            self._handle,  # type: ignore
+            constants.WriteState.LIN_SCHEDULE_CHANGE,
+            _ctypedefs.u32(sched_index))
 
     def change_lin_diagnostic_schedule(self, schedule):
         # type: (constants.LinDiagnosticSchedule) -> None
@@ -370,7 +385,10 @@ class SessionBase(object):
             schedule(:any:`nixnet._enums.LinDiagnosticSchedule`): Diagnostic schedule
                 that the LIN master executes.
         """
-        _funcs.nx_write_state(self._handle, constants.WriteState.LIN_DIAGNOSTIC_SCHEDULE_CHANGE, _ctypedefs.u32(schedule.value))  # NOQA: E501
+        _funcs.nx_write_state(
+            self._handle,  # type: ignore
+            constants.WriteState.LIN_DIAGNOSTIC_SCHEDULE_CHANGE,
+            _ctypedefs.u32(schedule.value))
 
     @property
     def time_current(self):
@@ -379,7 +397,7 @@ class SessionBase(object):
         state_value_ctypes = _ctypedefs.nxTimestamp_t()
         state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
-            self._handle,
+            self._handle,  # type: ignore
             constants.ReadState.TIME_CURRENT,
             state_size,
             ctypes.pointer(state_value_ctypes))
@@ -393,7 +411,7 @@ class SessionBase(object):
         state_value_ctypes = _ctypedefs.nxTimestamp_t()
         state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
-            self._handle,
+            self._handle,  # type: ignore
             constants.ReadState.TIME_START,
             state_size,
             ctypes.pointer(state_value_ctypes))
@@ -414,7 +432,7 @@ class SessionBase(object):
         state_value_ctypes = _ctypedefs.nxTimestamp_t()
         state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
-            self._handle,
+            self._handle,  # type: ignore
             constants.ReadState.TIME_COMMUNICATING,
             state_size,
             ctypes.pointer(state_value_ctypes))
@@ -431,7 +449,7 @@ class SessionBase(object):
         state_value_ctypes = _ctypedefs.u32()
         state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
-            self._handle,
+            self._handle,  # type: ignore
             constants.ReadState.SESSION_INFO,
             state_size,
             ctypes.pointer(state_value_ctypes))
@@ -445,7 +463,7 @@ class SessionBase(object):
         state_value_ctypes = _ctypedefs.u32()
         state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
-            self._handle,
+            self._handle,  # type: ignore
             constants.ReadState.CAN_COMM,
             state_size,
             ctypes.pointer(state_value_ctypes))
@@ -459,7 +477,7 @@ class SessionBase(object):
         state_value_ctypes = (_ctypedefs.u32 * 2)()  # type: ignore
         state_size = ctypes.sizeof(state_value_ctypes)
         _funcs.nx_read_state(
-            self._handle,
+            self._handle,  # type: ignore
             constants.ReadState.LIN_COMM,
             state_size,
             ctypes.pointer(state_value_ctypes))
@@ -482,7 +500,7 @@ class SessionBase(object):
         state_value_ctypes = _ctypedefs.u32()
         state_size = ctypes.sizeof(state_value_ctypes)
         fault = _funcs.nx_read_state(
-            self._handle,
+            self._handle,  # type: ignore
             constants.ReadState.SESSION_INFO,
             state_size,
             ctypes.pointer(state_value_ctypes))
@@ -507,7 +525,8 @@ class SessionBase(object):
 
         The database used with the session determines the application protocol.
         """
-        return constants.AppProtocol(_props.get_session_application_protocol(self._handle))
+        return constants.AppProtocol(
+            _props.get_session_application_protocol(self._handle))  # type: ignore
 
     @property
     def auto_start(self):
@@ -532,24 +551,24 @@ class SessionBase(object):
         This starts the session itself, and if the interface is not already
         started, it starts the interface also.
         """
-        return _props.get_session_auto_start(self._handle)
+        return _props.get_session_auto_start(self._handle)  # type: ignore
 
     @auto_start.setter
     def auto_start(self, value):
         # type: (bool) -> None
-        _props.set_session_auto_start(self._handle, value)
+        _props.set_session_auto_start(self._handle, value)  # type: ignore
 
     @property
     def cluster_name(self):
         # type: () -> typing.Text
         """str: This property returns the cluster (network) name used with the session."""
-        return _props.get_session_cluster_name(self._handle)
+        return _props.get_session_cluster_name(self._handle)  # type: ignore
 
     @property
     def database_name(self):
         # type: () -> typing.Text
         """str: This property returns the database name used with the session."""
-        return _props.get_session_database_name(self._handle)
+        return _props.get_session_database_name(self._handle)  # type: ignore
 
     @property
     def mode(self):
@@ -558,7 +577,8 @@ class SessionBase(object):
 
         For more information, refer to :any:`nixnet._enums.CreateSessionMode`.
         """
-        return constants.CreateSessionMode(_props.get_session_mode(self._handle))
+        return constants.CreateSessionMode(
+            _props.get_session_mode(self._handle))  # type: ignore
 
     @property
     def num_pend(self):
@@ -586,7 +606,7 @@ class SessionBase(object):
             and the maximum frame size in the dynamic segment. The XNET Cluster
             FlexRay Payload Length Maximum property provides this value.
         """
-        return _props.get_session_num_pend(self._handle)
+        return _props.get_session_num_pend(self._handle)  # type: ignore
 
     @property
     def num_unused(self):
@@ -622,13 +642,14 @@ class SessionBase(object):
             and the maximum frame size in the dynamic segment. The XNET Cluster
             FlexRay Payload Length Maximum property provides this value.
         """
-        return _props.get_session_num_unused(self._handle)
+        return _props.get_session_num_unused(self._handle)  # type: ignore
 
     @property
     def protocol(self):
         # type: () -> constants.Protocol
         """:any:`nixnet._enums.Protocol`: This property returns the protocol that the interface in the session uses."""
-        return constants.Protocol(_props.get_session_protocol(self._handle))
+        return constants.Protocol(
+            _props.get_session_protocol(self._handle))  # type: ignore
 
     @property
     def queue_size(self):
@@ -688,9 +709,9 @@ class SessionBase(object):
         For Single-Point sessions (signal or frame), this property is ignored.
         Single-Point sessions always use a value of 1 as the effective queue size.
         """
-        return _props.get_session_queue_size(self._handle)
+        return _props.get_session_queue_size(self._handle)  # type: ignore
 
     @queue_size.setter
     def queue_size(self, value):
         # type: (int) -> None
-        _props.set_session_queue_size(self._handle, value)
+        _props.set_session_queue_size(self._handle, value)  # type: ignore

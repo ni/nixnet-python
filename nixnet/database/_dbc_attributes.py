@@ -3,9 +3,11 @@ from __future__ import division
 from __future__ import print_function
 
 try:
-    from collections.abc import Mapping  # python 3.3+
+    # Python 3.3+
+    from collections.abc import Mapping
 except ImportError:
-    from collections import Mapping  # python 2.7
+    # Python 2.7
+    from collections import Mapping  # type: ignore
 import six
 import typing  # NOQA: F401
 
