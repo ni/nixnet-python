@@ -2,9 +2,9 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-import mock  # type: ignore
 import pytest  # type: ignore
 import time
+from unittest import mock  # type: ignore
 
 import nixnet
 from nixnet import _cfuncs

@@ -3,7 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import copy
-import mock  # type: ignore
+from unittest import mock  # type: ignore
 
 import pytest  # type: ignore
 

@@ -1,6 +1,5 @@
 # Test dependencies
 pytest
-mock
 pytest-cov
 coverage
 

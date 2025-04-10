@@ -2,6 +2,8 @@ include *.txt
 include LICENSE
 include mypy.ini
 include nixnet/VERSION
+recursive-include docs *.gif
+recursive-include docs *.rst
 recursive-include nixnet *.py
 recursive-include nixnet_examples *.py
 include nixnet_examples/databases/custom_database.dbc

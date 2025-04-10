@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import time
 
-import mock  # type: ignore
+from unittest import mock  # type: ignore
 
 import pytest  # type: ignore
 

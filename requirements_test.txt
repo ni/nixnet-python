@@ -38,12 +38,8 @@ mccabe==0.2.1
     # via
     #   flake8
     #   hacking
-mock==2.0.0
-    # via -r requirements_test.in
 pbr==3.1.1
-    # via
-    #   hacking
-    #   mock
+    # via hacking
 pep8==1.5.7
     # via
     #   flake8
@@ -73,7 +69,6 @@ requests==2.20.0
 six==1.10.0
     # via
     #   hacking
-    #   mock
     #   sphinx
 snowballstemmer==1.2.1
     # via sphinx
