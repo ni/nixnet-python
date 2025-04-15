@@ -88,19 +88,6 @@ class XnetWarning(Warning):
         return self._warning_type
 
 
-class _ResourceWarning(Warning):
-    """Resource warning raised by any NI-XNET method.
-
-    Used in place of built-in ResourceWarning to allow Python 2.7 support.
-    """
-    pass
-
-
-# If ResourceWarning is in exceptions, it is also in the built-in namespace.
-try:
-    XnetResourceWarning = ResourceWarning  # type: typing.Type[Warning]
-except NameError:
-    XnetResourceWarning = _ResourceWarning  # type: ignore
-
+XnetResourceWarning = ResourceWarning  # type: typing.Type[Warning]
 warnings.filterwarnings("always", category=XnetWarning)
 warnings.filterwarnings("always", category=XnetResourceWarning)

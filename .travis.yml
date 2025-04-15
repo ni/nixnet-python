@@ -3,14 +3,12 @@ cache: pip
 language: python
 # For pypy versions, see https://github.com/pyenv/pyenv/tree/master/plugins/python-build/share/python-build
 python:
-  - 2.7
   - 3.4
   - 3.5
   - 3.6
   - 3.7
   - 3.8
   - 3.9
-  - pypy2.7-6.0
   - pypy3.5-6.0
 
 install:

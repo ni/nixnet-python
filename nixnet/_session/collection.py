@@ -3,12 +3,7 @@ from __future__ import division
 from __future__ import print_function
 
 import abc
-try:
-    # Python 3.3+
-    from collections.abc import Sequence
-except ImportError:
-    # Python 2.7
-    from collections import Sequence  # type: ignore
+from collections.abc import Sequence
 import typing  # NOQA: F401
 
 import six

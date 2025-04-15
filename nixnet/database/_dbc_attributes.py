@@ -2,12 +2,7 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-try:
-    # Python 3.3+
-    from collections.abc import Mapping
-except ImportError:
-    # Python 2.7
-    from collections import Mapping  # type: ignore
+from collections.abc import Mapping
 import six
 import typing  # NOQA: F401
 
