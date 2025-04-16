@@ -1,15 +1,5 @@
-﻿from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-try:
-    # Python 3.3+
-    from collections.abc import Iterable
-    from collections.abc import Sized
-except ImportError:
-    # Python 2.7
-    from collections import Iterable  # type: ignore
-    from collections import Sized  # type: ignore
+﻿from collections.abc import Iterable
+from collections.abc import Sized
 import typing  # NOQA: F401
 
 from nixnet import _cprops

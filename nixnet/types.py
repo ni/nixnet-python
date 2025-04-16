@@ -1,7 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
 import abc
 import collections
 import typing  # NOQA: F401
@@ -10,7 +6,6 @@ import six
 
 from nixnet import _cconsts
 from nixnet import _errors
-from nixnet import _py2
 from nixnet import constants
 
 __all__ = [
@@ -270,7 +265,8 @@ class FrameFactory(object):
 
     __slots__ = ()
 
-    @_py2.abstractclassmethod
+    @classmethod
+    @abc.abstractmethod
     def from_raw(cls, frame):  # NOQA: N805 can't detect abstractclassmethod
         # No type annotation because mypy doesn't understand
         # abstractclassmethod is the same as classmethod

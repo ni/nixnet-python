@@ -1,8 +1,4 @@
-﻿from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-from nixnet import _props
+﻿from nixnet import _props
 
 
 class J1939(object):
