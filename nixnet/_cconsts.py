@@ -1,8 +1,3 @@
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-
 NX_STATUS_QUALIFIER = (0x3FF63000)
 NX_STATUS_WARNING = (0x00000000)
 NX_STATUS_ERROR = (0x80000000)
