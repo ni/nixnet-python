@@ -85,7 +85,7 @@ class Collection(Sequence):
             other_collection = typing.cast(Collection, other)
             return (
                 self._handle == other_collection._handle
-                and self._list_cache == other_collection._list_cache
+                and self._list_cache == other_collection._list_cache  # NOQA: W503
             )
         else:
             return NotImplemented
@@ -127,7 +127,7 @@ class Item(object):
             other_item = typing.cast(Item, other)
             return (
                 self._handle == other_item._handle
-                and self._index == other_item._index
+                and self._index == other_item._index  # NOQA: W503
             )
         else:
             return NotImplemented
