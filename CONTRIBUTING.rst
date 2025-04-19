@@ -59,12 +59,12 @@ To run the tests::
 
 Examples for debugging failures::
 
-  $ # Only run python3 unit tests
-  $ tox -e py3-test
+  $ # Only run Python 3.9 unit tests
+  $ tox -e py39-test
   $ # Further filter those tests to all starting with test_frames
-  $ tox -e py3-test -- -k test_frames
+  $ tox -e py39-test -- -k test_frames
   $ # Drop into PDB on first failure and quit when done
-  $ tox -e py3-test -- -x --pdb
+  $ tox -e py39-test -- -x --pdb
 
 Developer Certificate of Origin (DCO)
 -------------------------------------

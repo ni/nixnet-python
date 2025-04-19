@@ -91,7 +91,7 @@ Status
 **nixnet** currently supports
 
 * Windows operating system.
-* CPython 3.4+ and PyPy3.
+* CPython 3.9+ and PyPy3.
 * NI-XNET 15.5+
 
 License

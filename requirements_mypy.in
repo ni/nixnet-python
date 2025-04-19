@@ -3,3 +3,4 @@
 # aren't pre-compiled wheels for all combinations of python versions and
 # platforms.
 mypy
+types-six
