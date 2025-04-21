@@ -1,19 +1,21 @@
-sudo: false
 cache: pip
+dist: jammy
 language: python
 # For pypy versions, see https://github.com/pyenv/pyenv/tree/master/plugins/python-build/share/python-build
+# For Travis-supported Python versions, see https://docs.travis-ci.com/user/languages/python/#python-versions
 python:
-  - 3.4
-  - 3.5
-  - 3.6
-  - 3.7
-  - 3.8
   - 3.9
-  - pypy3.5-6.0
+  - 3.10
+  - 3.11
+  - 3.12
+  - 3.13
+  - pypy3.9-7.3.9
 
 install:
   - python -m pip install --upgrade pip
-  - pip install --upgrade setuptools
+  # Specifically upgrade packaging to prevent
+  # `canonicalize_version() got an unexpected keyword argument 'strip_trailing_zero'` error
+  - pip install --upgrade packaging setuptools
   - pip install -U tox-travis
   - pip install -U coveralls
 
