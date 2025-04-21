@@ -2,13 +2,14 @@ cache: pip
 dist: jammy
 language: python
 # For pypy versions, see https://github.com/pyenv/pyenv/tree/master/plugins/python-build/share/python-build
+# For Travis-supported Python versions, see https://docs.travis-ci.com/user/languages/python/#python-versions
 python:
   - 3.9
   - 3.10
   - 3.11
   - 3.12
   - 3.13
-  - pypy3.9-7.3.8
+  - pypy3.9-7.3.9
 
 install:
   - python -m pip install --upgrade pip
