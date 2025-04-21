@@ -13,7 +13,9 @@ python:
 
 install:
   - python -m pip install --upgrade pip
-  - pip install --upgrade setuptools
+  # Specifically upgrade packaging to prevent
+  # `canonicalize_version() got an unexpected keyword argument 'strip_trailing_zero'` error
+  - pip install --upgrade packaging setuptools
   - pip install -U tox-travis
   - pip install -U coveralls
 
