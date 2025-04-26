@@ -9,21 +9,25 @@ python:
   - 3.11
   - 3.12
   - 3.13
-  - pypy3.9-7.3.9
-
 install:
   - python -m pip install --upgrade pip
   - pip install --upgrade tox-travis
   - pip install --upgrade coveralls
-  # poetry-plugin-export is required for Poetry 2.0+ to export a requirements.txt file as a
-  # workaround for the AsssertionError from cpyext (CPython compatibility layer) issue with
-  # `poetry install / sync` when using pypy3.9-7.3.9 in Ubuntu Jammy
-  - pip install --upgrade --prefer-binary poetry poetry-plugin-export
-
 script:
   - tox
   # Verify the file is at least valid even if it isn't run.
   - tox -c tox-integration.ini -l
-
 after_success:
   - coveralls
+# Explicitly include the pypy3.9-7.3.9 job since it requires different install steps
+jobs:
+  include:
+    - python: pypy3.9-7.3.9
+      install:
+        - python -m pip install --upgrade pip
+        - pip install --upgrade tox-travis
+        - pip install --upgrade coveralls
+        # poetry-plugin-export is required for Poetry 2.0+ to export a requirements.txt file as a
+        # workaround for the AsssertionError from cpyext (CPython compatibility layer) issue with
+        # `poetry install / sync` when using pypy3.9-7.3.9 in Ubuntu Jammy
+        - pip install --upgrade --prefer-binary poetry poetry-plugin-export
