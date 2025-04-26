@@ -15,7 +15,10 @@ install:
   - python -m pip install --upgrade pip
   - pip install --upgrade tox-travis
   - pip install --upgrade coveralls
-  - pip install --upgrade --prefer-binary poetry
+  # poetry-plugin-export is required for Poetry 2.0+ to export a requirements.txt file as a
+  # workaround for the AsssertionError from cpyext (CPython compatibility layer) issue with
+  # `poetry install / sync` when using pypy3.9-7.3.9 in Ubuntu Jammy
+  - pip install --upgrade --prefer-binary poetry poetry-plugin-export
 
 script:
   - tox
