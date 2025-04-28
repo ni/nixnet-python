@@ -1,0 +1,74 @@
+[tool.poetry]
+name = "nixnet"
+version = "0.3.2"
+description = "NI-XNET Python API"
+authors = ["NI <opensource@ni.com>"]
+license = "MIT"
+readme = "README.rst"
+repository = "https://github.com/ni/nixnet-python"
+documentation = "https://nixnet.readthedocs.io"
+keywords = ["nixnet"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Manufacturing",
+    "Intended Audience :: Science/Research",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Topic :: System :: Hardware :: Hardware Drivers",
+]
+packages = [
+    { include = "nixnet" },
+]
+
+
+[tool.poetry.dependencies]
+python = "^3.9"
+six = "*"
+
+
+[tool.poetry.group.test]
+optional = true
+
+[tool.poetry.group.test.dependencies]
+coverage = "*"
+pytest = "*"
+pytest-cov = "*"
+
+
+[tool.poetry.group.flake8]
+optional = true
+
+[tool.poetry.group.flake8.dependencies]
+hacking = "*"
+pep8-naming = "*"
+
+
+[tool.poetry.group.mypy]
+optional = true
+
+[tool.poetry.group.mypy.dependencies]
+mypy = "*"
+types-six = "*"
+
+
+[tool.poetry.group.docs]
+optional = true
+
+[tool.poetry.group.docs.dependencies]
+sphinx = "*"
+sphinx-rtd-theme = "*"
+tomli = "*"
+
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

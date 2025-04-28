@@ -6,7 +6,7 @@ Cutting a release
 
 Update the version
 
-#. ``nixnet/VERSION``
+#. ``pyproject.toml``
 #. ``README.rst``
 #. Create release notes (`clog-cli <https://github.com/clog-tool/clog-cli/releases>`__ can help)
 #. ``git clean -ndx`` to see what files to clean up
@@ -24,9 +24,6 @@ Tagging a release
 
 Uploading packages to PyPI
 
+#. ``poetry config pypi-token.pypi <PyPI API token>`` (only need to be done once)
 #. ``rm -Rf dist``
-#. ``python setup.py sdist``
-#. ``pip install wheel``
-#. ``python setup.py bdist_wheel --universal``
-#. ``pip install twine``
-#. ``twine upload dist/* -u <PyPI username> -p <PyPI password>``
+#. ``poetry publish --build``
