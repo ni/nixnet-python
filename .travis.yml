@@ -13,6 +13,7 @@ install:
   - python -m pip install --upgrade pip
   - pip install --upgrade tox-travis
   - pip install --upgrade coveralls
+  - pip install --upgrade --prefer-binary poetry
 script:
   - tox
   # Verify the file is at least valid even if it isn't run.
