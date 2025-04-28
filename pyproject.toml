@@ -28,9 +28,6 @@ classifiers = [
 packages = [
     { include = "nixnet" },
 ]
-include = [
-    "nixnet/VERSION",
-]
 
 
 [tool.poetry.dependencies]
@@ -69,6 +66,7 @@ optional = true
 [tool.poetry.group.docs.dependencies]
 sphinx = "*"
 sphinx-rtd-theme = "*"
+tomli = "*"
 
 
 [build-system]
