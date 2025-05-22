@@ -1,6 +1,6 @@
 ===========  =============================================================
 Info         Communicate over CAN or LIN via NI-XNET hardware with Python.
-Author       National Instruments
+Author       NI
 ===========  =============================================================
 
 .. image:: https://img.shields.io/pypi/v/nixnet.svg
@@ -75,7 +75,7 @@ request for **nixnet**, feel free to `open an issue on Github
 Status
 ======
 
-**nixnet** package is created and maintained by National Instruments.
+**nixnet** package is created and maintained by NI.
 
 * The following support is included:
    * CAN and LIN protocol
