@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "nixnet"
-version = "0.3.2"
+version = "1.0.0"
 description = "NI-XNET Python API"
 authors = ["NI <opensource@ni.com>"]
 license = "MIT"
