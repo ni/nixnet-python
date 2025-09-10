@@ -20,6 +20,5 @@ build:
 sphinx:
   configuration: docs/conf.py
 
-formats:
-  - pdf
-  - epub
+# Build all formats supported by Sphinx (htmlzip, pdf, epub)
+formats: all
